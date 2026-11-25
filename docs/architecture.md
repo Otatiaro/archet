@@ -143,7 +143,7 @@ Two connectors, both industry standards, no in-house adapter. Pinouts in [`hardw
 - **Target supply: adjustable 1.6–5 V out, the target logic voltage comes back**, as with the J-Link pin 19 (fixed 5 V there): the probe sends **TGT_VSUP** (STDC14 pin 1), set by the firmware to what the target expects (1.8, 3.3 or 5 V, 5 V for a STLINK-V3SET board, or its regulator input), and the target returns its logic rail on T_VCC. **TGT_VCC** (T_VCC and PROG VDD) is a sense input only (ADC PF11), the reference of the translators.
   - **TPS63020 buck-boost** fed from +5V: 1.2–5.5 V out, 3 A switch, true 5 V even when +5V is in dropout on a 5 V USB port. Output disconnected in shutdown: no back-feed from a target that has its own supply.
   - **Set** by DAC1_OUT1 (PA4) injecting into the FB divider: continuous range, clamped by the resistor network to 1.6–5.2 V whatever the DAC does; EN on PC8, off at reset.
-  - **Monitored** by a fourth INA226: voltage and current, alert on overcurrent or undervoltage, budget enforced by firmware (default 300 mA). The firmware enables TGT_VSUP only when T_VCC reads zero, and cuts it if T_VCC exceeds the setpoint (target powered from elsewhere).
+  - **Monitored** by a fourth INA226: voltage and current, alert on overcurrent or undervoltage, limit enforced by firmware: **1 A max** (one supply pin on STDC14, 1.27 mm ribbon ~1 A per conductor), set lower per target; the TPS63020 can deliver more, the limit is software. The firmware enables TGT_VSUP only when T_VCC reads zero, and cuts it if T_VCC exceeds the setpoint (target powered from elsewhere).
 
 ## Daughter boards
 
@@ -261,7 +261,7 @@ Probe +3V3 rail, estimates to be confirmed against datasheets and on the prototy
 | Crystals, INA226, EEPROM, translators (MCU side), pull-ups | 10 | 20 |
 | **Total +3V3** | **340 (1.1 W)** | **520 (1.7 W)** |
 
-Efficiencies: TLV62569 ~90 %, LMR33630 ~90 %, DP5700 ~87 % *(to check)*. **Probe: 1.4 W typical, 2.1 W max at VSYS.** Target supply: up to 5 V 300 mA, 1.7 W at VSYS.
+Efficiencies: TLV62569 ~90 %, LMR33630 ~90 %, DP5700 ~87 % *(to check)*. **Probe: 1.4 W typical, 2.1 W max at VSYS.** Target supply: 1 A max (5.6 W at VSYS at 5 V); 300 mA (1.7 W) reserved by default, anything above is taken from the shield and VIN_BUS share by the firmware.
 
 The +5V rail is sized for 3 A (15 W, the LMR33630 rating: thermal to check at schematic, ESOP-8 with exposed pad). After the probe and the target (~3.5 W on +5V), **11.5 W remain on +5V for 5V_OUT and 3V3_OUT**. VIN_BUS does not go through it: the boost draws on VSYS.
 
