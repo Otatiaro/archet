@@ -116,7 +116,7 @@ Conditions:
 
 | Function | IO |
 |---|---|
-| MCU link (QSPI: CLK, CS, 4 data) + IRQ | 7 (configuration SPI pins are reusable after loading) |
+| MCU link (QSPI: CLK, CS, 4 data) + IRQ | 7 (QSPI on the configuration SPI pins: the MCU loads the bitstream through them) |
 | Reference clock (PTP-disciplined by the MCU) | 1 |
 | Target: TCK/SWCLK, TMS/SWDIO, SWDIO direction, TDI, TDO/SWO, nRST, IO0/BOOT, UART TX/RX | ~10 |
 | Shield raw IOs | 16 |
@@ -244,24 +244,35 @@ Residual risk: reports of dead ULPI PHYs on H723/H750 with no established cause.
 
 Errata (read 2026-11-25): ES0491 rev 9 (H72x/73x) has no entry on `_C` pins or on ULPI; its only OTG_HS entry concerns host mode through a hub. The 1 mA limit comes from ES0445 rev 7 (H747, §2.3.10), which classifies it as a documentation erratum: "current sunk or sourced by Pxy_C pins is limited to 1 mA when the analog switch … is closed", with no workaround required. Same erratum: no Ethernet MII on these packages, RMII only (our choice).
 
-### Pin budget (114 IO)
+### Pin assignment (114 IO)
 
-| Function | IO |
-|---|---|
-| ULPI + PHY reset | 13 |
-| RMII + PHY reset/IRQ | 11 |
-| OCTOSPI2 + IRQ + PPS + reference clock (MCO) | 9 |
-| iCE40 configuration (SPI, CRESET, CDONE) | 5 |
-| Bornier bus (SPI 3, CS 12, I²C 2, IRQ, LATCH, OE) + VIN_BUS / 3V3_BUS switch controls and faults | ~26 |
-| PD controller (shared I²C, IRQ) | 1 |
-| Shield services (I²C, presence, reset, secondary SWD) | 6 |
-| Power: eFuses, target supply, boost, source detection, PoE at | ~11 |
-| Analog measurements (voltages, currents, target VTref) | ~8 |
-| MCU debug (SWD + SWO), UART console | 5 |
-| HSE crystal, LEDs, stop button | 6 |
-| **Total** | **~101 / 114** |
+Source of truth: [`hardware/mcu-pins.csv`](../hardware/mcu-pins.csv) (pin, signal, net, group), checked against ST's CubeMX XML (pin exists, signal available on it, no duplicate pin, signal or net). **98 assigned, 16 spare.**
 
-Margin ~13 IO. Lever if needed: I²C power monitors (INA type) instead of ADC inputs.
+| Group | IO | Pins |
+|---|---|---|
+| ULPI + PHY reset | 13 | fixed above, ULPI_RST PD10 |
+| RMII + PHY reset/IRQ | 11 | fixed above, PG6 reset, PG7 IRQ |
+| FPGA: OCTOSPI2, PPS, PPS loopback, MCO2, IRQ, CRESET_B, CDONE | 12 | PF0–PF4, PG12, PG8, PA0, PC9, PG3–PG5 |
+| MCU debug (SWD, SWO), console USART3 | 5 | PA13, PA14, PB3, PD8, PD9 |
+| HSE 25 MHz | 2 | PH0, PH1 |
+| Bornier bus: SPI2, CS0–CS11, I2C1, IRQ, LATCH, OE | 20 | PD3, PB14, PB15, **PE0–PE11**, PB6, PB7, PD11, PA15, PD14 |
+| Bornier power: VIN_BUS1/2 and 3V3_BUS enables and faults, boost | 7 | PD0, PD1, PD4–PD7, PD15 |
+| Shield: I2C4, presence, reset, secondary SWD | 6 | PD12, PD13, PC14, PG10, PE12, PE13 |
+| Power: internal I2C5, PD and INA alerts, eFuses, target supply, PoE at, DAC setpoint | 11 | PC10, PC11, PG0, PG1, PC6–PC8, PA8, PA9, PC15, PA4 |
+| Analog: VTref, VIN_EXT, VBUS, PoE 12 V, VSYS, VIN_BUS, target current, 3V3_BUS | 8 | PF11–PF14, PA6, PF5–PF7 |
+| LEDs (TIM4 PWM), stop button | 3 | PB8, PB9, PC13 |
+
+Spare: PF8, PF9, PF10 (ADC3), PB2, PF15, PE14, PE15, PG2, PA10, PA11, PA12, PC12, PD2, PG9, PG15, PB4.
+
+Choices made at assignment:
+
+- **iCE40 configured through the OCTOSPI2 pins** (single-line indirect write: CLK → SPI_SCK, NCS → SPI_SS, IO0 → SPI_SI, IO1 → SPI_SO), no separate configuration SPI. NCS and CLK switch to GPIO for the 8 clocks with SS high that precede the bitstream. The FPGA QSPI pins are therefore its configuration pins, and only CRESET_B and CDONE remain dedicated. No configuration flash.
+- **Three I²C buses**: internal (I2C5: STUSB4500, INA226), Bornier (I2C1), shield (I2C4). An external bus fault (ribbon cable, unknown shield) never cuts the power management.
+- **CS0–CS11 on PE0–PE11**: a CS is selected with one BSRR write, and port E carries nothing else at high speed.
+- **LATCH on TIM2_CH1 (PA15)**, 32-bit timer; the PPS (PG8) is looped back to TIM2_ETR (PA0) to reset its phase every PTP second. The loopback can go if an internal ETH PPS → TIM2 trigger exists *(to be checked in RM0468)*.
+- **FPGA reference clock on MCO2 (PC9)**, from PLL2P: frequency chosen in firmware, same crystal as the MAC.
+- LSE unused: PC13–PC15 (low-speed pads, 3 mA) only carry slow inputs (stop button, shield presence, PoE at).
+- JTAG disabled (SWD only): PA15 and PB4 are regular GPIOs.
 
 ## Sourcing (JLCPCB, surveyed 2026-11-25)
 
@@ -298,7 +309,6 @@ Unit price for 1 to 9 parts (first runs of 2 to 5 boards). Type: BASIC and PREF 
 | EEPROM | M24C02-WMN6TP | C7562 | PREF | $0.12 |
 | 25 MHz crystal (RMII PHY / HSE) | X322525MOB4SI | C9006 | BASIC | $0.09 |
 | 24 V boost if VIN_BUS ≤ ~50 mA (400 mA switch); otherwise MT3608 C84817 (ext, $0.06) | TPS61040DBVR | C7722 | PREF | $0.81 |
-| iCE40 configuration flash, if kept | W25Q128JVSIQ | C97521 | BASIC | $1.87 |
 
 The basic/preferred library (≈ 1,600 parts, mostly passives) has nothing for: PHY, ULPI, PoE, PD, USB-C, RJ45, variable-voltage translators (only the LVC4245A, with fixed port voltages), ideal diode, eFuse, load switch, current measurement, high-side switch. Discrete substitutes (AO3401A P-MOS rated 30 V with no margin, Schottky dissipating ~1 W at 2 A, LM358 + shunt) cost more in quality than they save.
 
@@ -324,7 +334,8 @@ To check: no fee for preferred parts in Standard assembly (granted in Economic).
 
 ## Open items
 
-- Complete H723 pin assignment (CubeMX or a script on ST's XML), including timers for LATCH and ADC channels.
+- iCE40 pin assignment: the QSPI clock arrives on SPI_SCK, which is not a global buffer input; check DTR timing at 50 MHz or also wire it to a GBIN pin (one IO out of a budget of 37 / 39).
+- Variant of the TPS27S100 (current-sense output or fault flag): decides whether VIN_BUS currents need ADC inputs (3 ADC3 spares).
 - Module EEPROM choice and descriptor format (shared with Bornier).
 - Shield descriptor format.
 - Future of the earlier Archet harness schematic (HV/LV channels, RS-485, DAC): first generic shield?
