@@ -101,3 +101,23 @@ J_SHIELD_SVC,31,GND,
 J_SHIELD_SVC,32,GND,
 J_SHIELD_SVC,33,VIN_EXT,"10.8-24 V input from the shield supply, through the probe ideal diode; ~1.3 A max"
 J_SHIELD_SVC,34,VIN_EXT,"10.8-24 V input from the shield supply, through the probe ideal diode; ~1.3 A max"
+J_TARGET,1,NC,"reserved by ST, not connected"
+J_TARGET,2,NC,"reserved by ST, not connected"
+J_TARGET,3,TGT_VCC,"target reference, sensed (PF11); driven on command, see Target connectors"
+J_TARGET,4,TGT_SWDIO,T_JTMS/T_SWDIO
+J_TARGET,5,GND,
+J_TARGET,6,TGT_SWCLK,T_JTCK/T_SWCLK
+J_TARGET,7,GND,
+J_TARGET,8,TGT_SWO,T_JTDO/T_SWO
+J_TARGET,9,NC,"T_JRCLK (RTCK), not used"
+J_TARGET,10,TGT_TDI,T_JTDI
+J_TARGET,11,GND,GNDDetect
+J_TARGET,12,TGT_NRST,open drain
+J_TARGET,13,TGT_UART_TX,"T_VCP_RX: probe output, to the target RX"
+J_TARGET,14,TGT_UART_RX,"T_VCP_TX: probe input, from the target TX"
+J_PROG,1,TGT_NRST,"ESP_EN, same line as STDC14 pin 12"
+J_PROG,2,TGT_VCC,"VDD, same net as STDC14 pin 3"
+J_PROG,3,TGT_UART_RX,"ESP_TXD: target TX, probe input"
+J_PROG,4,GND,
+J_PROG,5,TGT_UART_TX,"ESP_RXD: target RX, probe output"
+J_PROG,6,TGT_IO0,ESP_IO0 / BOOT

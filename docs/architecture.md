@@ -50,7 +50,7 @@ The probe implements the platform part of the Archet HIL harness specification:
 
 ```
  USB-C (HS, PD) ─┐                  ┌────────── iCE40UP5K ──────────┐
-                 ├── STM32H723 ═════╡ SWD/JTAG/cJTAG engine          ├── level shifters ── target
+                 ├── STM32H723 ═════╡ SWD/JTAG/cJTAG engine          ├── level shifters ── target: STDC14 + ESP-Prog PROG
  Ethernet ───────┤   USB, TCP,  QSPI│ SWO capture + timestamping     │   1.2–5 V
  + PoE+          │   PTP, Maestro,  │ target UART, reset, EN/IO0     │
                  │   CMSIS-DAP      │ raw IOs: timestamping, rules   ├── shield: 2 × IDC 2 × 17
@@ -124,6 +124,21 @@ Conditions:
 | **Total** | **~37 / 39** |
 
 The budget is tight: 16 raw IOs is the maximum on this package.
+
+## Target connectors
+
+Two connectors, both industry standards, no in-house adapter. Pinouts in [`hardware/connectors.csv`](../hardware/connectors.csv).
+
+| Probe | Target connector | UART | Target supply |
+|---|---|---|---|
+| J-Link | 20-pin 2.54 mm (adapters to 10-pin 1.27 mm) | VCOM on 2 pins of the 20 | 5 V on pin 19 |
+| STLINK-V3 | STDC14 (Cortex 10-pin + UART on 13–14) | yes | no, T_VCC is a sense input |
+| Black Magic Probe | Cortex 10-pin | separate | 3.3 V on VTref, on command |
+| ESP-Prog | JTAG 2×5 + PROG 2×3 (EN, IO0, UART, VDD) | on PROG | VDD |
+
+- **J_TARGET: STDC14** (2 × 7, 1.27 mm). SWD/JTAG, SWO, nRST, T_VCC and the UART (T_VCP_RX on pin 13 is a probe output, to the target RX). A 10-pin Cortex target plugs on the centre pins 3–12. Pins 1–2 are reserved by ST and left unconnected; pin 9 (RTCK) too: no IO left on the iCE40.
+- **J_PROG: ESP-Prog PROG pinout** (2 × 3, 2.54 mm): EN, VDD, TXD, GND, RXD, IO0. An ESP32 board with this header plugs in directly; also takes Dupont wires for any board. EN is the same line as nRST, TXD/RXD the same UART as STDC14: one connector in use at a time.
+- **TGT_VCC**, one net on T_VCC and VDD: sensed by the ADC (PF11) as the translator reference, and **driven on command, as on the Black Magic Probe**. The firmware closes the target supply switch only when TGT_VCC reads zero; the current is measured (PF6) and the switch limited. A board with only a debug connector is powered with no extra wire. Reverse current blocking is required: a target powered later must not feed +3V3_AUX (the TPS22918 has none, to check: switch with reverse blocking or ideal diode).
 
 ## Daughter boards
 
@@ -404,5 +419,7 @@ To check: no fee for preferred parts in Standard assembly (granted in Economic).
 - Shield descriptor format.
 - Future of the earlier Archet harness schematic (HV/LV channels, RS-485, DAC): first generic shield?
 - Boost MOSFET (60 V, logic level, ~5 A) and inductor: choose at schematic, basic library first.
+- Target supply switch with reverse current blocking (TPS22918 to check, or another part).
+- ESP-Prog PROG pinout to confirm against the Espressif documentation.
 - Power budget figures to confirm against datasheets (H723 at 550 MHz, LAN8742A, DP5700 efficiency) and on the prototype; "PSE at" signal on the DP5700.
 - Transport protocol specification (`docs/protocol.md`), aligned with Maestro.
