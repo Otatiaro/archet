@@ -53,12 +53,12 @@ The probe implements the platform part of the Archet HIL harness specification:
                  ├── STM32H723 ═════╡ SWD/JTAG/cJTAG engine          ├── level shifters ── target
  Ethernet ───────┤   USB, TCP,  QSPI│ SWO capture + timestamping     │   1.2–5 V
  + PoE+          │   PTP, Maestro,  │ target UART, reset, EN/IO0     │
-                 │   CMSIS-DAP      │ raw IOs: timestamping, rules   ├── shield connector
+                 │   CMSIS-DAP      │ raw IOs: timestamping, rules   ├── shield: 2 × IDC 2 × 17
                  │                  └────────────────────────────────┘
                  ├── ULPI PHY USB3320C ── USB-C (HS)
                  ├── RMII PHY ── RJ45
                  ├── Bornier bus (SPI, 12 CS, I²C, LATCH, OE, IRQ) ── IDC 2 × 17
-                 └── shield I²C, secondary SWD, shield iCE40 configuration
+                 └── shield I²C, secondary SWD, UART
 ```
 
 ### SWD/JTAG engine (FPGA)
@@ -131,7 +131,7 @@ Two independent interfaces:
 
 | Interface | Probe side | Typical use |
 |---|---|---|
-| **Stacked shield** | iCE40 3.3 V LVCMOS raw IOs (16) + STM32 services | Project-specific shield: transceivers, level shifters, relays, measurements |
+| **Shield** (stacked or on ribbons) | iCE40 3.3 V LVCMOS raw IOs (16) + STM32 services | Project-specific shield: transceivers, level shifters, relays, measurements |
 | **Bornier local bus** | STM32 | Bornier DIN-rail extension modules: slow IOs on SPI chips |
 
 **Throughput ceiling to the host**: about 40 MB/s over USB HS and 11 MB/s over Ethernet.
@@ -156,16 +156,32 @@ Adaptation to the probe:
   - pulling a CS low without SPI clock must not trigger anything on the module (beware of ADCs starting a conversion on the CS edge);
 - the Bornier schematic block (`bus.py`, `kicadgen` generator) is reused as is.
 
-### Shield connector *(to be validated)*
+### Shield connectors
 
-**2 × 20 at 2.54 mm pitch**: power rails, 16 raw IOs, common services. A simple shield can be built on perfboard.
+**Two IDC 2 × 17 headers, the same part as the Bornier bus** (shrouded and keyed, C20920): one part for the three connectors, a 34-way ribbon or a direct plug. A simple shield can be built on perfboard. Pinout of all three: [`hardware/connectors.csv`](../hardware/connectors.csv).
+
+- **J_SHIELD_IO**: the 16 raw IOs (iCE40 3.3 V LVCMOS, 33 Ω series, ESD at the header), each on an even pin between two grounds, as on Bornier: conductor n = pin n, so every IO has a ground on each side in the ribbon. Pins 33–34 are grounds.
+- **J_SHIELD_SVC**: services, then power.
 
 | Signal | Role |
 |---|---|
-| I2C + ID EEPROM | Shield detection and **descriptor**: role of each IO (functional name, interface type), limits, power budget. The library and the MCP server expose these names with no specific firmware |
-| SYNC_IN / SYNC_OUT | Cross-triggering |
-| SHIELD_PRESENT, SHIELD_RESET | Detection and reset |
+| SYNC_IN / SYNC_OUT | Cross-triggering (iCE40) |
+| SHIELD_OE_N | Global enable of the shield output drivers (iCE40), pulled up on the probe: off at power-up, on reset, when the host goes silent |
+| I2C4 + ID EEPROM | Shield detection and **descriptor**: role of each IO (functional name, interface type), limits, power budget. The library and the MCP server expose these names with no specific firmware |
 | Secondary SWD | The probe programs the shield MCU, if any, with no external tool |
+| UART5 | Console of the shield MCU, tunnelled to the host |
+| SHIELD_RESET_N, SHIELD_PRESENT_N | Reset (open drain) and detection (tied to ground on the shield) |
+| +3V3_OUT ×2, +5V_OUT ×4 | 0.5 A per pin at the eFuse ceilings |
+| VIN_EXT ×2 | Shield supply into the probe (~1.3 A max: probe and full VIN_BUS at 12 V) |
+
+Signals on even pins 2–22, a ground on each odd pin; rail groups separated by a column of grounds (pins 25–26, 31–32), VIN_EXT last with a ground as its only ribbon neighbour.
+
+**Crossed ribbon** (a shield cable on the Bornier header or the reverse), all three headers being identical:
+
+- J_SHIELD_IO pins 33–34 are grounds: they meet VIN_BUS, which the 480 mA switches limit;
+- 5V_OUT and 3V3_OUT stay off until a valid shield descriptor is read on I2C4. On the Bornier header, the shield I²C pins face CS lines: no descriptor, no rail;
+- VIN_BUS and +3V3_BUS faults are limited by their switches; the other lines are 3.3 V logic on both sides, behind series resistors;
+- silkscreen names each header; a second key would need a different part.
 
 ## Power
 
@@ -345,6 +361,7 @@ Unit price for 1 to 9 parts (first runs of 2 to 5 boards). Type: BASIC and PREF 
 | Load switch | TPS22918DBVR | C131941 | ext | 49,792 | $0.34 |
 | Target translators (×~10) | SN74LVC1T45DBVR | C7843 | ext | 256,161 | $0.08 |
 | Dual translator | SN74LVC2T45DCUR | C15741 | ext | 52,973 | $0.21 |
+| Header ESD, flow-through (×14: 26 Bornier + 27 shield lines) | TPD4E05U06DQAR | C138714 | ext | 38,971 | $0.08 |
 | USB-C 16-pin | TYPE-C-31-M-12 | C165948 | ext | 437,460 | $0.19 |
 | 24 MHz crystal (USB3320) | X322524MOB4SI | C70590 | ext | 371,417 | $0.09 |
 | 1.2 V LDO (iCE40 core) | AMS1117-1.2 | C347218 | ext | 52,766 | $0.05 |
@@ -361,19 +378,19 @@ The basic/preferred library (≈ 1,600 parts, mostly passives) has nothing for: 
 
 Out of stock on 2026-11-25: DP9700-AT, DP83825IRMQR, CH224K.
 
-**Cost per board (excluding PCB, assembly and IDC / 2×20 connectors)**
+**Cost per board (excluding PCB, assembly and the three IDC headers)**
 
 | | 2 boards | 5 boards |
 |---|---|---|
-| Active parts | ~$61 | ~$61 |
+| Active parts | ~$62 | ~$62 |
 | Passives and small connectors | ~$10 | ~$10 |
-| Extended-part fees (~21 parts × $3 = $63 per order) | ~$32 | ~$13 |
-| **Total** | **~$103** | **~$84** |
+| Extended-part fees (~22 parts × $3 = $66 per order) | ~$33 | ~$13 |
+| **Total** | **~$105** | **~$85** |
 
 Fixed costs (PCB, assembly setup, stencil) are also divided by the run size. Consequences:
 
 - order 5 boards: JLCPCB makes at least 5 PCBs, the extra 3 cost ~$200 in parts;
-- hand-solder through-hole parts (RJ45, IDC, 2×20): no through-hole assembly to pay for;
+- hand-solder through-hole parts (RJ45, three IDC headers): no through-hole assembly to pay for;
 - each extended part removed saves $1.50 per board on a run of 2: take the alternatives above, without bending the design;
 - reserve the PoE module, PoE RJ45 and iCE40 (stock < 160) in JLCPCB parts inventory as soon as the schematic is frozen.
 
@@ -386,7 +403,6 @@ To check: no fee for preferred parts in Standard assembly (granted in Economic).
 - Module EEPROM choice and descriptor format (shared with Bornier).
 - Shield descriptor format.
 - Future of the earlier Archet harness schematic (HV/LV channels, RS-485, DAC): first generic shield?
-- Shield connector pinout.
 - Boost MOSFET (60 V, logic level, ~5 A) and inductor: choose at schematic, basic library first.
 - Power budget figures to confirm against datasheets (H723 at 550 MHz, LAN8742A, DP5700 efficiency) and on the prototype; "PSE at" signal on the DP5700.
 - Transport protocol specification (`docs/protocol.md`), aligned with Maestro.

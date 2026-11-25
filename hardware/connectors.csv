@@ -1,0 +1,103 @@
+connector,pin,net,note
+J_BUS,1,BUS_CS0,identical to Bornier hardware/base/gen/circuit.py BUS_PINOUT
+J_BUS,2,BUS_CS1,identical to Bornier hardware/base/gen/circuit.py BUS_PINOUT
+J_BUS,3,BUS_CS2,identical to Bornier hardware/base/gen/circuit.py BUS_PINOUT
+J_BUS,4,BUS_CS3,identical to Bornier hardware/base/gen/circuit.py BUS_PINOUT
+J_BUS,5,BUS_CS4,identical to Bornier hardware/base/gen/circuit.py BUS_PINOUT
+J_BUS,6,BUS_CS5,identical to Bornier hardware/base/gen/circuit.py BUS_PINOUT
+J_BUS,7,BUS_CS6,identical to Bornier hardware/base/gen/circuit.py BUS_PINOUT
+J_BUS,8,BUS_CS7,identical to Bornier hardware/base/gen/circuit.py BUS_PINOUT
+J_BUS,9,BUS_CS8,identical to Bornier hardware/base/gen/circuit.py BUS_PINOUT
+J_BUS,10,BUS_CS9,identical to Bornier hardware/base/gen/circuit.py BUS_PINOUT
+J_BUS,11,BUS_CS10,identical to Bornier hardware/base/gen/circuit.py BUS_PINOUT
+J_BUS,12,BUS_CS11,identical to Bornier hardware/base/gen/circuit.py BUS_PINOUT
+J_BUS,13,GND,identical to Bornier hardware/base/gen/circuit.py BUS_PINOUT
+J_BUS,14,+3V3_BUS,identical to Bornier hardware/base/gen/circuit.py BUS_PINOUT
+J_BUS,15,GND,identical to Bornier hardware/base/gen/circuit.py BUS_PINOUT
+J_BUS,16,BUS_SDA,identical to Bornier hardware/base/gen/circuit.py BUS_PINOUT
+J_BUS,17,GND,identical to Bornier hardware/base/gen/circuit.py BUS_PINOUT
+J_BUS,18,BUS_SCL,identical to Bornier hardware/base/gen/circuit.py BUS_PINOUT
+J_BUS,19,GND,identical to Bornier hardware/base/gen/circuit.py BUS_PINOUT
+J_BUS,20,BUS_SCK,identical to Bornier hardware/base/gen/circuit.py BUS_PINOUT
+J_BUS,21,GND,identical to Bornier hardware/base/gen/circuit.py BUS_PINOUT
+J_BUS,22,BUS_MOSI,identical to Bornier hardware/base/gen/circuit.py BUS_PINOUT
+J_BUS,23,GND,identical to Bornier hardware/base/gen/circuit.py BUS_PINOUT
+J_BUS,24,BUS_MISO,identical to Bornier hardware/base/gen/circuit.py BUS_PINOUT
+J_BUS,25,GND,identical to Bornier hardware/base/gen/circuit.py BUS_PINOUT
+J_BUS,26,BUS_LATCH,identical to Bornier hardware/base/gen/circuit.py BUS_PINOUT
+J_BUS,27,GND,identical to Bornier hardware/base/gen/circuit.py BUS_PINOUT
+J_BUS,28,BUS_OE,identical to Bornier hardware/base/gen/circuit.py BUS_PINOUT
+J_BUS,29,GND,identical to Bornier hardware/base/gen/circuit.py BUS_PINOUT
+J_BUS,30,BUS_IRQ,identical to Bornier hardware/base/gen/circuit.py BUS_PINOUT
+J_BUS,31,+3V3_BUS,identical to Bornier hardware/base/gen/circuit.py BUS_PINOUT
+J_BUS,32,GND,identical to Bornier hardware/base/gen/circuit.py BUS_PINOUT
+J_BUS,33,+VIN_BUS1,identical to Bornier hardware/base/gen/circuit.py BUS_PINOUT
+J_BUS,34,+VIN_BUS2,identical to Bornier hardware/base/gen/circuit.py BUS_PINOUT
+J_SHIELD_IO,1,GND,
+J_SHIELD_IO,2,SHIELD_IO0,"iCE40 3.3 V LVCMOS, 33 ohm series, ESD"
+J_SHIELD_IO,3,GND,
+J_SHIELD_IO,4,SHIELD_IO1,"iCE40 3.3 V LVCMOS, 33 ohm series, ESD"
+J_SHIELD_IO,5,GND,
+J_SHIELD_IO,6,SHIELD_IO2,"iCE40 3.3 V LVCMOS, 33 ohm series, ESD"
+J_SHIELD_IO,7,GND,
+J_SHIELD_IO,8,SHIELD_IO3,"iCE40 3.3 V LVCMOS, 33 ohm series, ESD"
+J_SHIELD_IO,9,GND,
+J_SHIELD_IO,10,SHIELD_IO4,"iCE40 3.3 V LVCMOS, 33 ohm series, ESD"
+J_SHIELD_IO,11,GND,
+J_SHIELD_IO,12,SHIELD_IO5,"iCE40 3.3 V LVCMOS, 33 ohm series, ESD"
+J_SHIELD_IO,13,GND,
+J_SHIELD_IO,14,SHIELD_IO6,"iCE40 3.3 V LVCMOS, 33 ohm series, ESD"
+J_SHIELD_IO,15,GND,
+J_SHIELD_IO,16,SHIELD_IO7,"iCE40 3.3 V LVCMOS, 33 ohm series, ESD"
+J_SHIELD_IO,17,GND,
+J_SHIELD_IO,18,SHIELD_IO8,"iCE40 3.3 V LVCMOS, 33 ohm series, ESD"
+J_SHIELD_IO,19,GND,
+J_SHIELD_IO,20,SHIELD_IO9,"iCE40 3.3 V LVCMOS, 33 ohm series, ESD"
+J_SHIELD_IO,21,GND,
+J_SHIELD_IO,22,SHIELD_IO10,"iCE40 3.3 V LVCMOS, 33 ohm series, ESD"
+J_SHIELD_IO,23,GND,
+J_SHIELD_IO,24,SHIELD_IO11,"iCE40 3.3 V LVCMOS, 33 ohm series, ESD"
+J_SHIELD_IO,25,GND,
+J_SHIELD_IO,26,SHIELD_IO12,"iCE40 3.3 V LVCMOS, 33 ohm series, ESD"
+J_SHIELD_IO,27,GND,
+J_SHIELD_IO,28,SHIELD_IO13,"iCE40 3.3 V LVCMOS, 33 ohm series, ESD"
+J_SHIELD_IO,29,GND,
+J_SHIELD_IO,30,SHIELD_IO14,"iCE40 3.3 V LVCMOS, 33 ohm series, ESD"
+J_SHIELD_IO,31,GND,
+J_SHIELD_IO,32,SHIELD_IO15,"iCE40 3.3 V LVCMOS, 33 ohm series, ESD"
+J_SHIELD_IO,33,GND,"Bornier VIN_BUS pins: a crossed ribbon shorts VIN_BUS to ground, eFuse-limited"
+J_SHIELD_IO,34,GND,"Bornier VIN_BUS pins: a crossed ribbon shorts VIN_BUS to ground, eFuse-limited"
+J_SHIELD_SVC,1,GND,
+J_SHIELD_SVC,2,SYNC_IN,"iCE40, cross-triggering input"
+J_SHIELD_SVC,3,GND,
+J_SHIELD_SVC,4,SYNC_OUT,"iCE40, cross-triggering output"
+J_SHIELD_SVC,5,GND,
+J_SHIELD_SVC,6,SHIELD_OE_N,"iCE40, pulled up on the probe: shield drivers off until the probe enables them"
+J_SHIELD_SVC,7,GND,
+J_SHIELD_SVC,8,SHIELD_SCL,"I2C4, 2.2k pull-ups on the probe; ID EEPROM + shield registers"
+J_SHIELD_SVC,9,GND,
+J_SHIELD_SVC,10,SHIELD_SDA,I2C4
+J_SHIELD_SVC,11,GND,
+J_SHIELD_SVC,12,SHIELD_SWCLK,secondary SWD to the shield MCU
+J_SHIELD_SVC,13,GND,
+J_SHIELD_SVC,14,SHIELD_SWDIO,
+J_SHIELD_SVC,15,GND,
+J_SHIELD_SVC,16,SHIELD_UART_TX,"UART5 TX, probe to shield (shield MCU console)"
+J_SHIELD_SVC,17,GND,
+J_SHIELD_SVC,18,SHIELD_UART_RX,"UART5 RX, shield to probe"
+J_SHIELD_SVC,19,GND,
+J_SHIELD_SVC,20,SHIELD_RESET_N,"open drain, pulled up on the probe"
+J_SHIELD_SVC,21,GND,
+J_SHIELD_SVC,22,SHIELD_PRESENT_N,"pulled up on the probe, tied to GND on the shield"
+J_SHIELD_SVC,23,+3V3_OUT,"1 A eFuse ceiling, 0.5 A per pin"
+J_SHIELD_SVC,24,+3V3_OUT,"1 A eFuse ceiling, 0.5 A per pin"
+J_SHIELD_SVC,25,GND,
+J_SHIELD_SVC,26,GND,
+J_SHIELD_SVC,27,+5V_OUT,"2 A eFuse ceiling, 0.5 A per pin"
+J_SHIELD_SVC,28,+5V_OUT,"2 A eFuse ceiling, 0.5 A per pin"
+J_SHIELD_SVC,29,+5V_OUT,"2 A eFuse ceiling, 0.5 A per pin"
+J_SHIELD_SVC,30,+5V_OUT,"2 A eFuse ceiling, 0.5 A per pin"
+J_SHIELD_SVC,31,GND,
+J_SHIELD_SVC,32,GND,
+J_SHIELD_SVC,33,VIN_EXT,"10.8-24 V input from the shield supply, through the probe ideal diode; ~1.3 A max"
+J_SHIELD_SVC,34,VIN_EXT,"10.8-24 V input from the shield supply, through the probe ideal diode; ~1.3 A max"
