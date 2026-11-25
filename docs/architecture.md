@@ -171,13 +171,24 @@ Adaptation to the probe:
 
 ### Sources
 
-Three sources, ORed by ideal diodes or a power mux *(priority to be validated)*, then **a single wide-input buck (5–30 V)**:
+Three sources ORed by ideal diodes into VSYS (4.5–30 V), then a single wide-input buck to +5V, from which everything else is derived:
 
 ```
-USB-C (5–20 V)          ──┐
-PoE+ (module → 12 V)    ──┼── ideal diodes / mux ── 5–30 V buck ── probe rails
-VIN_EXT (10.8–30 V)     ──┘                     └── limited 24 V boost ── VIN_BUS (if no VIN_EXT)
+USB-C VBUS (5–20 V)    ── LM74700 ──┐
+PoE module (12 V)      ── LM74700 ──┼── VSYS ── TPS54360B ── +5V ──┬── TLV62569 ── +3V3      (probe)
+VIN_EXT (10.8–30 V)    ┬─ LM74700 ──┘   SMBJ33A    (60 V, 3 A)     ├── TLV62569 ── +3V3_AUX ─┬─ eFuse ── 3V3_OUT (shield)
+                       │                                           │                         └─ TPS22918 ── target supply
+                       │                                           ├── eFuse ── 5V_OUT (shield, if VSYS ≥ 6 V)
+                       │                                           └── MT3608B ── 24 V ──┐  (disabled in hardware
+                       └── Schottky ─────────────────────────────────────────────────────┴── VIN_BUS switches     when VIN_EXT is present)
 ```
+
+- **Priority: highest voltage wins**, with no control logic: VIN_EXT 24 V > PD 15–20 V > PoE 12 V > USB 5 V in the usual cases. A forced priority would need back-to-back FETs per source (an ideal diode with EN low still conducts through the body diode of its FET); none of the cases below justifies it. The firmware identifies the active source from the ADC inputs (VIN_EXT, VBUS, PoE 12 V, VSYS) and derives the budget from it.
+- **Three ideal diodes**, USB included: the PD sink P-MOS alone would back-feed the host VBUS through its body diode as soon as VSYS exceeds 5 V.
+- **TPS54360B rather than TPS5430**: the TPS5430 needs 5.5 V and would not run on a 5 V USB port. No basic or preferred buck accepts 30 V (TPS54331: 28 V max). 60 V leaves margin above the SMBJ33A input TVS (53 V clamp). On 5 V USB it runs in dropout: +5V ≈ 4.6 V, enough for the TLV62569 (2.5–5.5 V); 5V_OUT stays off.
+- **+3V3_AUX separate from +3V3**: a shield or target short never pulls the probe rail down.
+- **VIN_BUS**: VIN_EXT through a Schottky (0.5 W at 1 A; an ideal diode if that heat is too much), or the boost when VIN_EXT is absent. The boost enable is gated in hardware by VIN_EXT presence: with a 12 V VIN_EXT, the 24 V boost would otherwise take over.
+- **Switchover**: losing the active source falls back to the next one with no interruption, but the budget may collapse (VIN_EXT unplugged with a 10 W shield, fallback on a 500 mA USB port). The firmware watches the active source on the ADC and cuts 5V_OUT, 3V3_OUT and VIN_BUS within milliseconds; the host port's own protection covers the rest.
 
 1. **VIN_EXT** (10.8 to 30 V, as on Bornier), through the shield or a power terminal block: also powers the probe, including on Ethernet without PoE, and goes straight to VIN_BUS;
 2. **PoE+** 802.3at class 4 (25.5 W at the PD), through an **integrated isolated SDAPO PD module**: DP5700-12V2A (24 W, documented 802.3at compliance); the DP9700 "at" is out of stock at JLCPCB (2026-11-25). To check:
@@ -187,16 +198,45 @@ VIN_EXT (10.8–30 V)     ──┘                     └── limited 24 V b
    - current advertised on CC without PD: 0.5 A on a USB-A port, 1.5 or 3 A on a USB-C port (up to 15 W);
    - **USB PD** (independent of the USB 2.0 data rate, goes through CC): up to 20 V on a charger, hence the "PD charger + Ethernet without PoE" case;
    - v1: standalone PD controller (STUSB4500 preferred, in stock; AP33772 low stock; CH224K out of stock), negotiating before the MCU boots; the H723 has no UCPD: the PD controller remains sole master of CC, driven over I²C;
-   - on a 500 mA USB-A port, the probe runs without powering the target or the shield.
+   - on a 500 mA USB-A port, the probe runs without powering the target or the shield;
+   - PDOs programmed in the STUSB4500 NVM: 5 V, 15 V ≥ 1.5 A, 20 V ≥ 1.25 A. Beyond ~20 W the +5V rail is the limit (see the power budget), asking for more brings nothing.
 
 ### Output to the shield
 
 - **5V_OUT** and **3V3_OUT**, separate from VIN_EXT: no bidirectional rail.
-- eFuse with programmable limit + current measurement: the probe **enforces** the budget, it does not merely document it.
-- Available budget = active source − probe consumption − target supply. It is exposed to the shield through an I2C register and to the host.
+- Two levels of limit: an eFuse per rail with a **fixed hardware ceiling** (5V_OUT 2 A, 3V3_OUT 1 A, set by resistor), and the **budget enforced by firmware** below it, from **three INA226**: VSYS (total drawn from the source, VIN_BUS and target included), 5V_OUT, 3V3_OUT. On overrun the firmware disables the rail through the eFuse EN. The probe enforces the budget, it does not merely document it.
+- Available budget = active source − measured VSYS power, capped by the +5V rail. It is exposed to the shield through an I2C register and to the host.
 - A shield exceeding the probe budget **must** use its own supply and provide VIN_EXT. In that case, 5V_OUT is switched off.
 
-Order of magnitude *(to be quantified)*: probe ~3 W, target supply ~1 W. On PoE+ (24 W), nearly 18 W remain for the shield and VIN_BUS; on an af switch (13 W), about 7 W. This budget is to be published in the shield documentation.
+### Power budget
+
+Probe +3V3 rail, estimates to be confirmed against datasheets and on the prototype:
+
+| Consumer | Typ. (mA) | Max (mA) |
+|---|---|---|
+| STM32H723, 550 MHz, Ethernet + USB HS + OCTOSPI active | 150 | 250 |
+| USB3320C, HS active | 50 | 70 |
+| LAN8742A, 100BASE-TX, line drivers included | 80 | 100 |
+| iCE40UP5K through its 1.2 V LDO, banks included | 30 | 60 |
+| LEDs (2 status, 2 RJ45) | 20 | 20 |
+| Crystals, INA226, EEPROM, translators (MCU side), pull-ups | 10 | 20 |
+| **Total +3V3** | **340 (1.1 W)** | **520 (1.7 W)** |
+
+Efficiencies: TLV62569 ~90 %, TPS54360B ~85 % (non-synchronous), DP5700 ~87 % *(to check)*. **Probe: 1.5 W typical, 2.3 W max at VSYS.** Target supply: 3.3 V 300 mA, 1.3 W at VSYS.
+
+The +5V rail is sized for 3 A (15 W; the TPS54360B limit is 3.5 A). After the probe and the target (~3 W on +5V), **12 W remain on +5V for 5V_OUT, 3V3_OUT and the boost**: this is the cap on every strong source. The MT3608B (4 A switch) delivers ~0.3 A at 24 V from 5 V (7 W, 1.7 A drawn from +5V).
+
+| Source | Available at VSYS | Shield + VIN_BUS (boost) |
+|---|---|---|
+| USB-A 500 mA | 2.5 W | none: probe only, target not powered |
+| USB-C 1.5 A (no PD) | 7.5 W | ~3 W (3V3_OUT and boost; no 5V_OUT, +5V in dropout) |
+| USB-C 3 A (no PD) | 15 W | ~10 W (3V3_OUT and boost) |
+| USB PD 15–20 V | ≥ 22 W | 12 W (+5V cap) |
+| PoE af (12.95 W at the PD) | ~11 W | ~6.5 W |
+| PoE+ at (25.5 W at the PD) | ~22 W | 12 W (+5V cap) |
+| VIN_EXT | supply rating, configured | 12 W (+5V cap); VIN_BUS straight from VIN_EXT, 2 × 480 mA |
+
+Without a "PSE at" signal from the PoE module, the probe assumes af. The 12 W cap leaves ~10 W of PoE+ unused: a boost fed from VSYS would use it, but the MT3608B input is limited to 24 V and VSYS reaches 30 V on VIN_EXT. Not worth a switch on the boost input in v1. This table is to be published in the shield documentation.
 
 ### Safety rules for shield design
 
@@ -287,11 +327,15 @@ Unit price for 1 to 9 parts (first runs of 2 to 5 boards). Type: BASIC and PREF 
 | PoE at module, 12 V | DP5700-12V2A | C22358555 | ext | 66 | $6.85 |
 | PoE RJ45 (magnetics, centre taps) | ARJM11C7-114-BA-EW2 (through-hole) | C6578967 | ext | 79 | $5.97 |
 | PD controller | STUSB4500QTR | C2678061 | ext | 5,587 | $2.84 |
-| 65 V ideal diode (×2) | LM74700QDBVRQ1 | C2941042 | ext | 7,741 | $2.61 |
+| 65 V ideal diode (×3: USB, PoE, VIN_EXT) | LM74700QDBVRQ1 | C2941042 | ext | 7,741 | $2.61 |
+| VSYS → +5V buck (4.5–60 V, 3.5 A) | TPS54360BDDAR | C524806 | ext | 21,745 | $0.61 |
+| +5V → +3V3 and +3V3_AUX bucks (×2) | TLV62569DBVR | C141836 | ext | 486,606 | $0.07 |
+| 24 V boost for VIN_BUS (4 A switch) | MT3608B | C19189893 | ext | 60,518 | $0.10 |
+| VIN_EXT input TVS | SMBJ33A | C78419 | ext | 14,389 | $0.08 |
 | ULPI PHY | USB3320C-EZK-TR | C132156 | ext | 9,766 | $1.52 |
 | VIN_BUS switch (40 V, 4 A) | TPS27S100BRRKR | C1849486 | ext | 3,448 | $1.57 |
 | RMII PHY | LAN8742A-CZ-TR (variant LAN8720A-CP-TR C45223, $0.79) | C621424 | ext | 5,927 | $1.40 |
-| Current measurement (×2) | INA226AIDGSR | C49851 | ext | 40,449 | $0.67 |
+| Current measurement (×3: VSYS, 5V_OUT, 3V3_OUT) | INA226AIDGSR | C49851 | ext | 40,449 | $0.67 |
 | Shield eFuse (×2) | TPS259521DSGR | C882749 | ext | 5,657 | $0.68 |
 | Load switch | TPS22918DBVR | C131941 | ext | 49,792 | $0.34 |
 | Target translators (×~10) | SN74LVC1T45DBVR | C7843 | ext | 256,161 | $0.08 |
@@ -304,11 +348,9 @@ Unit price for 1 to 9 parts (first runs of 2 to 5 boards). Type: BASIC and PREF 
 
 | Function | Part | Code | Type | Price |
 |---|---|---|---|---|
-| 5–30 V buck (36 V, 3 A); a second one for 3.3 V | TPS5430DDAR | C9864 | BASIC | $0.59 |
 | USB ESD (replaces USBLC6-2SC6) | SRV05-4-P-T7 | C85364 | PREF | $0.22 |
 | EEPROM | M24C02-WMN6TP | C7562 | PREF | $0.12 |
 | 25 MHz crystal (RMII PHY / HSE) | X322525MOB4SI | C9006 | BASIC | $0.09 |
-| 24 V boost if VIN_BUS ≤ ~50 mA (400 mA switch); otherwise MT3608 C84817 (ext, $0.06) | TPS61040DBVR | C7722 | PREF | $0.81 |
 
 The basic/preferred library (≈ 1,600 parts, mostly passives) has nothing for: PHY, ULPI, PoE, PD, USB-C, RJ45, variable-voltage translators (only the LVC4245A, with fixed port voltages), ideal diode, eFuse, load switch, current measurement, high-side switch. Discrete substitutes (AO3401A P-MOS rated 30 V with no margin, Schottky dissipating ~1 W at 2 A, LM358 + shunt) cost more in quality than they save.
 
@@ -318,10 +360,10 @@ Out of stock on 2026-11-25: DP9700-AT, DP83825IRMQR, CH224K.
 
 | | 2 boards | 5 boards |
 |---|---|---|
-| Active parts | ~$57 | ~$57 |
+| Active parts | ~$59 | ~$59 |
 | Passives and small connectors | ~$10 | ~$10 |
-| Extended-part fees (~17 parts × $3 = $51 per order) | ~$26 | ~$10 |
-| **Total** | **~$93** | **~$77** |
+| Extended-part fees (~21 parts × $3 = $63 per order) | ~$32 | ~$13 |
+| **Total** | **~$101** | **~$82** |
 
 Fixed costs (PCB, assembly setup, stencil) are also divided by the run size. Consequences:
 
@@ -340,6 +382,6 @@ To check: no fee for preferred parts in Standard assembly (granted in Economic).
 - Shield descriptor format.
 - Future of the earlier Archet harness schematic (HV/LV channels, RS-485, DAC): first generic shield?
 - Shield connector pinout.
-- Priority between power sources.
-- Power budget on PoE+ (24 W) and on fallback PoE af (13 W).
+- SMBJ33A clamp (53 V) against the absolute maximum of the parts on VIN_EXT, the TPS27S100 above all (40 V operating): an SMBJ30A or a lower clamp may be needed.
+- Power budget figures to confirm against datasheets (H723 at 550 MHz, LAN8742A, DP5700 efficiency) and on the prototype; "PSE at" signal on the DP5700.
 - Transport protocol specification (`docs/protocol.md`), aligned with Maestro.
