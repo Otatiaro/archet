@@ -175,8 +175,8 @@ Three sources ORed by ideal diodes into VSYS (4.5–24 V). A single wide-input b
 
 ```
 USB-C VBUS (5–20 V)    ── LM74700 ──┐
-PoE module (12 V)      ── LM74700 ──┼── VSYS ─┬─ TPS54360B ── +5V ──┬── TLV62569 ── +3V3      (probe)
-VIN_EXT (10.8–24 V)    ┬─ LM74700 ──┘ SMBJ24A │  (60 V, 3 A)        ├── TLV62569 ── +3V3_AUX ─┬─ eFuse ── 3V3_OUT (shield)
+PoE module (12 V)      ── LM74700 ──┼── VSYS ─┬─ LMR33630 ── +5V ───┬── TLV62569 ── +3V3      (probe)
+VIN_EXT (10.8–24 V)    ┬─ LM74700 ──┘ SMBJ24A │  (36 V, 3 A)        ├── TLV62569 ── +3V3_AUX ─┬─ eFuse ── 3V3_OUT (shield)
                        │                      │                     │                         └─ TPS22918 ── target supply
                        │                      │                     └── eFuse ── 5V_OUT (shield, if VSYS ≥ 6 V)
                        │                      └─ LM5155 boost ── 24 V ──┐  (disabled in hardware
@@ -187,7 +187,7 @@ VIN_EXT (10.8–24 V)    ┬─ LM74700 ──┘ SMBJ24A │  (60 V, 3 A)      
 
 - **Priority: highest voltage wins**, with no control logic: VIN_EXT 24 V > PD 15–20 V > PoE 12 V > USB 5 V in the usual cases. A forced priority would need back-to-back FETs per source (an ideal diode with EN low still conducts through the body diode of its FET); none of the cases below justifies it. The firmware identifies the active source from the ADC inputs (VIN_EXT, VBUS, PoE 12 V, VSYS) and derives the budget from it.
 - **Three ideal diodes**, USB included: the PD sink P-MOS alone would back-feed the host VBUS through its body diode as soon as VSYS exceeds 5 V.
-- **TPS54360B rather than TPS5430**: the TPS5430 needs 5.5 V and would not run on a 5 V USB port. No basic or preferred buck survives the TVS clamp (TPS54331: 28 V max); 60 V leaves margin above the 38.9 V of the SMBJ24A. On 5 V USB it runs in dropout: +5V ≈ 4.6 V, enough for the TLV62569 (2.5–5.5 V); 5V_OUT stays off.
+- **LMR33630 rather than TPS5430**: the TPS5430 needs 5.5 V and would not run on a 5 V USB port. 36 V, 1.5 × the 24 V maximum: the SMBJ24A only clamps at 38.9 V at its full rated surge current (15.5 A), an EMC test case; on a bench it only conducts on hot-plug ringing, at low current, around 27–30 V. No basic or preferred buck fits (TPS54331: 28 V, too close to the TVS breakdown). Synchronous, it runs up to ~98 % duty: on 5 V USB, +5V ≈ 4.8 V, enough for the TLV62569 (2.5–5.5 V); 5V_OUT stays off.
 - **+3V3_AUX separate from +3V3**: a shield or target short never pulls the probe rail down.
 - **VIN_BUS**: VIN_EXT through a Schottky (0.5 W at 1 A; an ideal diode if that heat is too much), or the boost when VIN_EXT is absent. The boost enable is gated in hardware by VIN_EXT presence: with a 12 V VIN_EXT, the 24 V boost would otherwise take over.
 - **Boost: LM5155 controller** (3.5–45 V input), external 60 V N-MOS, Schottky and sense resistor. Fed from VSYS, it takes the whole source budget: no detour through the +5V rail. Current sense sized for ~4 A peak: ~0.5 A at 24 V from 5 V, ~1 A (the two 480 mA VIN_BUS pins) from 12 V and above. Disabled, it passes VSYS to VIN_BUS through its inductor and diode: with a 20 V PD charger and a 12 V VIN_EXT, VIN_BUS is then fed by the charger, which the VSYS INA226 counts. The integrated MT3608B and SX1308 stop at 24 V input, with no margin; the TPS55340 has too little stock.
@@ -225,20 +225,20 @@ Probe +3V3 rail, estimates to be confirmed against datasheets and on the prototy
 | Crystals, INA226, EEPROM, translators (MCU side), pull-ups | 10 | 20 |
 | **Total +3V3** | **340 (1.1 W)** | **520 (1.7 W)** |
 
-Efficiencies: TLV62569 ~90 %, TPS54360B ~85 % (non-synchronous), DP5700 ~87 % *(to check)*. **Probe: 1.5 W typical, 2.3 W max at VSYS.** Target supply: 3.3 V 300 mA, 1.3 W at VSYS.
+Efficiencies: TLV62569 ~90 %, LMR33630 ~90 %, DP5700 ~87 % *(to check)*. **Probe: 1.4 W typical, 2.1 W max at VSYS.** Target supply: 3.3 V 300 mA, 1.2 W at VSYS.
 
-The +5V rail is sized for 3 A (15 W; the TPS54360B limit is 3.5 A). After the probe and the target (~3 W on +5V), **12 W remain on +5V for 5V_OUT and 3V3_OUT**. VIN_BUS does not go through it: the boost draws on VSYS.
+The +5V rail is sized for 3 A (15 W, the LMR33630 rating: thermal to check at schematic, ESOP-8 with exposed pad). After the probe and the target (~3 W on +5V), **12 W remain on +5V for 5V_OUT and 3V3_OUT**. VIN_BUS does not go through it: the boost draws on VSYS.
 
-Remaining at VSYS after the probe and the target (3.6 W max), shared between the shield (≤ 12 W) and VIN_BUS:
+Remaining at VSYS after the probe and the target (3.3 W max), shared between the shield (≤ 12 W) and VIN_BUS:
 
 | Source | Available at VSYS | Shield + VIN_BUS |
 |---|---|---|
 | USB-A 500 mA | 2.5 W | none: probe only, target not powered |
 | USB-C 1.5 A (no PD) | 7.5 W | ~4 W (no 5V_OUT: +5V in dropout) |
-| USB-C 3 A (no PD) | 15 W | ~11 W (no 5V_OUT) |
-| USB PD 15–20 V | negotiated contract, up to 60 W | contract − 3.6 W |
+| USB-C 3 A (no PD) | 15 W | ~11.5 W (no 5V_OUT) |
+| USB PD 15–20 V | negotiated contract, up to 60 W | contract − 3.3 W |
 | PoE af (12.95 W at the PD) | ~11 W | ~7.5 W |
-| PoE+ at (25.5 W at the PD) | ~22 W | ~18 W |
+| PoE+ at (25.5 W at the PD) | ~22 W | ~18.5 W |
 | VIN_EXT | supply rating, configured | shield ≤ 12 W; VIN_BUS straight from VIN_EXT, 2 × 480 mA |
 
 Without a "PSE at" signal from the PoE module, the probe assumes af. This table is to be published in the shield documentation.
@@ -333,7 +333,7 @@ Unit price for 1 to 9 parts (first runs of 2 to 5 boards). Type: BASIC and PREF 
 | PoE RJ45 (magnetics, centre taps) | ARJM11C7-114-BA-EW2 (through-hole) | C6578967 | ext | 79 | $5.97 |
 | PD controller | STUSB4500QTR | C2678061 | ext | 5,587 | $2.84 |
 | 65 V ideal diode (×3: USB, PoE, VIN_EXT) | LM74700QDBVRQ1 | C2941042 | ext | 7,741 | $2.61 |
-| VSYS → +5V buck (4.5–60 V, 3.5 A) | TPS54360BDDAR | C524806 | ext | 21,745 | $0.61 |
+| VSYS → +5V synchronous buck (3.8–36 V, 3 A) | LMR33630ADDAR | C841384 | ext | 22,086 | $0.52 |
 | +5V → +3V3 and +3V3_AUX bucks (×2) | TLV62569DBVR | C141836 | ext | 486,606 | $0.07 |
 | 24 V boost controller for VIN_BUS (external FET) | LM5155DSSR | C545416 | ext | 11,468 | $1.62 |
 | VIN_EXT input TVS | SMBJ24A | C123819 | ext | 47,634 | $0.06 |
