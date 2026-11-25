@@ -123,7 +123,7 @@ Source of truth: [`hardware/fpga-pins.csv`](../hardware/fpga-pins.csv), checked 
 | Left (2–11) and top (37–48) | Shield raw IOs 0–6 and 7–15 (GBIN 37 and 44 among them: a shield can bring a clock) | 16 |
 | RGB0 (39) | SHIELD_OE_N: open drain, pulled up on the probe, so the shield drivers stay off until the bitstream pulls it low | 1 |
 
-Spare: RGB1 and RGB2 (40, 41), open-drain outputs only (status LED, for instance). No IO left for RTCK, a second GBIN copy of the QSPI clock or nRST readback: 16 raw IOs is the maximum on this package.
+Placement checked with nextpnr ([`fpga/pincheck`](../fpga/pincheck/README.md)), RGB0 used as a plain IO emulating an open drain. Spare: RGB1 and RGB2 (40, 41), outputs pulling low only (status LED, for instance). No IO left for RTCK, a second GBIN copy of the QSPI clock or nRST readback: 16 raw IOs is the maximum on this package.
 
 ## Target connectors
 
@@ -419,8 +419,8 @@ To check: no fee for preferred parts in Standard assembly (granted in Economic).
 
 ## Open items
 
-- iCE40: the QSPI clock arrives on SPI_SCK (pin 15), not a global buffer input, and no IO is left to copy it to a GBIN: check DTR timing at 50 MHz (local clock routing), or sample QSPI from FPGA_REFCLK.
-- iCE40 RGB pins (39–41) used as plain open-drain outputs (SB_IO_OD, without the RGB driver): check with nextpnr and in the datasheet.
+- iCE40 QSPI clock on SPI_SCK (pin 15, not a GBIN): nextpnr gives ~4 ns of fabric and global routing to the DDR registers ([`fpga/pincheck`](../fpga/pincheck/README.md)), a static shift of the 10 ns DTR half-period at 50 MHz. MCU launches data on the edge (DHQC = 0); to be measured on the prototype, fallback 40 MHz.
+- iCE40 SPI configuration pin numbers (SI 17, SO 14, SCK 15, SS 16): from memory, to confirm in the Lattice SG48 pinout.
 - Variant of the TPS27S100 (current-sense output or fault flag): decides whether VIN_BUS currents need ADC inputs (3 ADC3 spares).
 - Module EEPROM choice and descriptor format (shared with Bornier).
 - Shield descriptor format.
