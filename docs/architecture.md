@@ -138,11 +138,11 @@ Two connectors, both industry standards, no in-house adapter. Pinouts in [`hardw
 | ESP-Prog | JTAG 2×5 + PROG 2×3 (EN, IO0, UART, VDD) | on PROG | VDD |
 
 - **J_TARGET: STDC14** (2 × 7, 1.27 mm). SWD/JTAG, SWO, nRST, T_VCC and the UART (T_VCP_RX on pin 13 is a probe output, to the target RX). A 10-pin Cortex target plugs on the centre pins 3–12. Pin 9 (RTCK) is left unconnected: no IO left on the iCE40.
-- **Pins 1–2, reserved by ST, carry what the 20-pin ARM connector has and STDC14 lacks**: **nTRST** on pin 1 (JTAG TAP reset, slow: STM32 GPIO through an open-drain N-MOS) and the **adjustable target supply TGT_VSUP** on pin 2. ST asks targets to leave them unconnected, so a compliant target ignores them; the 10-pin cable does not reach them. *To confirm once the wiring of these pins inside a STLINK-V3 is known.*
+- **Pins 1–2, reserved by ST, used as on the STLINK-V3SET**: there, pin 1 carries USB 5 V when jumper JP2 is fitted (default; UM2448: "provides 5 V power on connectors, required for SWIM usage, B-STLINK-VOLT and B-STLINK-ISOL boards": ST's own add-on boards are powered from it), and pin 2 the SWDIO direction (3.3 V, high when the probe drives; community measurement, not in ST's manual). ST still asks targets to leave them unconnected. Archet: **pin 1 = TGT_VSUP**, **pin 2 = SWDIO_DIR**, the iCE40 signal that already drives our SWDIO translator, copied through a 74LVC1G125 buffer and a series resistor. A board made for a STLINK-V3SET (5 V on pin 1, translator on pin 2) works on Archet. nTRST is not provided (old ARM7/9 only).
 - **J_PROG: ESP-Prog PROG pinout** (2 × 3, 2.54 mm): EN, VDD, TXD, GND, RXD, IO0. An ESP32 board with this header plugs in directly; also takes Dupont wires for any board. EN is the same line as nRST, TXD/RXD the same UART as STDC14: one connector in use at a time.
-- **Target supply: adjustable 1.8–5 V out, the target logic voltage comes back**, as with the J-Link pin 19 (fixed 5 V there): the probe sends **TGT_VSUP** (STDC14 pin 2), set by the firmware to what the target expects (1.8, 3.3 or 5 V, or its regulator input), and the target returns its logic rail on T_VCC. **TGT_VCC** (T_VCC and PROG VDD) is a sense input only (ADC PF11), the reference of the translators.
-  - **TPS63802 buck-boost** fed from +5V: 1.8–5.2 V, 2 A, true 5 V even when +5V is in dropout on a 5 V USB port. Output disconnected in shutdown: no back-feed from a target that has its own supply.
-  - **Set** by DAC1_OUT1 (PA4) injecting into the FB divider: continuous range, clamped by the resistor network to 1.8–5.2 V whatever the DAC does; EN on PC8, off at reset.
+- **Target supply: adjustable 1.6–5 V out, the target logic voltage comes back**, as with the J-Link pin 19 (fixed 5 V there): the probe sends **TGT_VSUP** (STDC14 pin 1), set by the firmware to what the target expects (1.8, 3.3 or 5 V, 5 V for a STLINK-V3SET board, or its regulator input), and the target returns its logic rail on T_VCC. **TGT_VCC** (T_VCC and PROG VDD) is a sense input only (ADC PF11), the reference of the translators.
+  - **TPS63020 buck-boost** fed from +5V: 1.2–5.5 V out, 3 A switch, true 5 V even when +5V is in dropout on a 5 V USB port. Output disconnected in shutdown: no back-feed from a target that has its own supply.
+  - **Set** by DAC1_OUT1 (PA4) injecting into the FB divider: continuous range, clamped by the resistor network to 1.6–5.2 V whatever the DAC does; EN on PC8, off at reset.
   - **Monitored** by a fourth INA226: voltage and current, alert on overcurrent or undervoltage, budget enforced by firmware (default 300 mA). The firmware enables TGT_VSUP only when T_VCC reads zero, and cuts it if T_VCC exceeds the setpoint (target powered from elsewhere).
 
 ## Daughter boards
@@ -213,7 +213,7 @@ Three sources ORed by ideal diodes into VSYS (4.5–24 V). A single wide-input b
 USB-C VBUS (5–20 V)    ── LM74700 ──┐
 PoE module (12 V)      ── LM74700 ──┼── VSYS ─┬─ LMR33630 ── +5V ───┬── TLV62569 ── +3V3      (probe)
 VIN_EXT (10.8–24 V)    ┬─ LM74700 ──┘ SMBJ24A │  (36 V, 3 A)        ├── TLV62569 ── +3V3_AUX ─── eFuse ── 3V3_OUT (shield)
-                       │                      │                     ├── TPS63802 ── TGT_VSUP 1.8–5 V (target, STDC14 pin 2)
+                       │                      │                     ├── TPS63020 ── TGT_VSUP 1.6–5 V (target, STDC14 pin 1)
                        │                      │                     └── eFuse ── 5V_OUT (shield, if VSYS ≥ 6 V)
                        │                      └─ LM5155 boost ── 24 V ──┐  (disabled in hardware
                        └── Schottky ────────────────────────────────────┴── VIN_BUS switches     when VIN_EXT is present)
@@ -327,7 +327,7 @@ Errata (read 2026-11-25): ES0491 rev 9 (H72x/73x) has no entry on `_C` pins or o
 
 ### Pin assignment (114 IO)
 
-Source of truth: [`hardware/mcu-pins.csv`](../hardware/mcu-pins.csv) (pin, signal, net, group), checked against ST's CubeMX XML (pin exists, signal available on it, no duplicate pin, signal or net). **100 assigned, 14 spare.**
+Source of truth: [`hardware/mcu-pins.csv`](../hardware/mcu-pins.csv) (pin, signal, net, group), checked against ST's CubeMX XML (pin exists, signal available on it, no duplicate pin, signal or net). **99 assigned, 15 spare.**
 
 | Group | IO | Pins |
 |---|---|---|
@@ -339,12 +339,11 @@ Source of truth: [`hardware/mcu-pins.csv`](../hardware/mcu-pins.csv) (pin, signa
 | Bornier bus: SPI2, CS0–CS11, I2C1, IRQ, LATCH, OE | 20 | PD3, PB14, PB15, **PE0–PE11**, PB6, PB7, PD11, PA15, PD14 |
 | Bornier power: VIN_BUS1/2 and 3V3_BUS enables and faults, boost | 7 | PD0, PD1, PD4–PD7, PD15 |
 | Shield: I2C4, presence, reset, secondary SWD, UART5 console | 8 | PD12, PD13, PC14, PG10, PE12, PE13, PC12, PD2 |
-| Target: nTRST (STDC14 pin 1) | 1 | PG2 |
 | Power: internal I2C5, PD and INA alerts, eFuses, target supply enable and setpoint (DAC), PoE at | 11 | PC10, PC11, PG0, PG1, PC6–PC8, PA8, PA9, PC15, PA4 |
 | Analog: VTref, VIN_EXT, VBUS, PoE 12 V, VSYS, VIN_BUS, 3V3_BUS | 7 | PF11–PF14, PA6, PF5, PF7 |
 | LEDs (TIM4 PWM), stop button | 3 | PB8, PB9, PC13 |
 
-Spare: PF6, PF8, PF9, PF10 (ADC3), PB2, PF15, PE14, PE15, PA10, PA11, PA12, PG9, PG15, PB4.
+Spare: PF6, PF8, PF9, PF10 (ADC3), PB2, PG2, PF15, PE14, PE15, PA10, PA11, PA12, PG9, PG15, PB4.
 
 Choices made at assignment:
 
@@ -379,7 +378,8 @@ Unit price for 1 to 9 parts (first runs of 2 to 5 boards). Type: BASIC and PREF 
 | RMII PHY | LAN8742A-CZ-TR (variant LAN8720A-CP-TR C45223, $0.79) | C621424 | ext | 5,927 | $1.40 |
 | Current measurement (×4: VSYS, 5V_OUT, 3V3_OUT, TGT_VSUP) | INA226AIDGSR | C49851 | ext | 40,449 | $0.67 |
 | Shield eFuse (×2) | TPS259521DSGR | C882749 | ext | 5,657 | $0.68 |
-| Target supply buck-boost (1.8–5.2 V, 2 A) | TPS63802DLAR | C2845237 | ext | 11,309 | $0.80 |
+| Target supply buck-boost (1.2–5.5 V, 3 A switch) | TPS63020DSJR | C15483 | ext | 19,373 | $0.82 |
+| SWDIO_DIR buffer to STDC14 pin 2 | SN74LVC1G125DBVR | C23654 | ext | 184,728 | $0.07 |
 | Target translators (×~10) | SN74LVC1T45DBVR | C7843 | ext | 256,161 | $0.08 |
 | Dual translator | SN74LVC2T45DCUR | C15741 | ext | 52,973 | $0.21 |
 | Header ESD, flow-through (×14: 26 Bornier + 27 shield lines) | TPD4E05U06DQAR | C138714 | ext | 38,971 | $0.08 |
@@ -405,8 +405,8 @@ Out of stock on 2026-11-25: DP9700-AT, DP83825IRMQR, CH224K.
 |---|---|---|
 | Active parts | ~$63 | ~$63 |
 | Passives and small connectors | ~$10 | ~$10 |
-| Extended-part fees (~22 parts × $3 = $66 per order) | ~$33 | ~$13 |
-| **Total** | **~$106** | **~$86** |
+| Extended-part fees (~23 parts × $3 = $69 per order) | ~$35 | ~$14 |
+| **Total** | **~$108** | **~$87** |
 
 Fixed costs (PCB, assembly setup, stencil) are also divided by the run size. Consequences:
 
@@ -425,8 +425,8 @@ To check: no fee for preferred parts in Standard assembly (granted in Economic).
 - Shield descriptor format.
 - Future of the earlier Archet harness schematic (HV/LV channels, RS-485, DAC): first generic shield?
 - Boost MOSFET (60 V, logic level, ~5 A) and inductor: choose at schematic, basic library first.
-- TGT_VSUP: FB injection network (range, DAC resolution), TPS63802 behaviour when the target back-drives its output, inductor.
-- STDC14 pins 1–2: check what a STLINK-V3 puts there before using them for nTRST and TGT_VSUP.
+- TGT_VSUP: FB injection network (range, DAC resolution), TPS63020 behaviour when the target back-drives its output (load disconnect in shutdown to check), inductor.
+- STDC14 pins 1–2: confirm on a STLINK-V3SET (5 V on pin 1 with JP2, SWDIO direction and polarity on pin 2).
 - ESP-Prog PROG pinout to confirm against the Espressif documentation.
 - Power budget figures to confirm against datasheets (H723 at 550 MHz, LAN8742A, DP5700 efficiency) and on the prototype; "PSE at" signal on the DP5700.
 - Transport protocol specification (`docs/protocol.md`), aligned with Maestro.
