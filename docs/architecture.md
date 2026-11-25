@@ -112,18 +112,18 @@ Conditions:
 
 **Buffers: no external RAM.** The iCE40UP5K has 128 KB of SPRAM (4 independent 32 KB blocks, 16-bit) and 15 KB of EBR. Indicative split: SWO 64 KB (~8 ms at 8 MB/s), events 32 KB, SWD 32 KB; small clock-domain FIFOs in EBR. These buffers cover the MCU service latency (a few tens of µs), not storage: the 64 k events live in STM32 RAM. Sustained throughput is capped by the QSPI, not by memory; external RAM would also cost IOs the iCE40 does not have. Delta-encoded events (≈ 4 bytes) double the depth.
 
-### iCE40UP5K-SG48 IO budget *(to be confirmed at pin assignment)*
+### iCE40UP5K-SG48 pin assignment
 
-| Function | IO |
-|---|---|
-| MCU link (QSPI: CLK, CS, 4 data) + IRQ | 7 (QSPI on the configuration SPI pins: the MCU loads the bitstream through them) |
-| Reference clock (PTP-disciplined by the MCU) | 1 |
-| Target: TCK/SWCLK, TMS/SWDIO, SWDIO direction, TDI, TDO/SWO, nRST, IO0/BOOT, UART TX/RX | ~10 |
-| Shield raw IOs | 16 |
-| SYNC_IN, SYNC_OUT, global raw IO OE | 3 |
-| **Total** | **~37 / 39** |
+Source of truth: [`hardware/fpga-pins.csv`](../hardware/fpga-pins.csv), checked against the icestorm pin database (IO pins, global buffer inputs, RGB pins). **37 of 39 IO assigned**, one group per package side:
 
-The budget is tight: 16 raw IOs is the maximum on this package.
+| Side (pins) | Function | IO |
+|---|---|---|
+| Bottom (12–23) | MCU: QSPI on the configuration SPI pins (SI 17 = IO0, SO 14 = IO1, SCK 15, SS 16), IO2–3 on 12–13, IRQ, PPS, reference clock on GBIN 20; SYNC_OUT 21, SYNC_IN on GBIN 23 | 11 |
+| Right (25–36) | Target, 3.3 V side of the translators: UART RX/TX, IO0, nRST, SWO/TDO, TDI, SWDIO direction, SWCLK/TCK, SWDIO/TMS | 9 |
+| Left (2–11) and top (37–48) | Shield raw IOs 0–6 and 7–15 (GBIN 37 and 44 among them: a shield can bring a clock) | 16 |
+| RGB0 (39) | SHIELD_OE_N: open drain, pulled up on the probe, so the shield drivers stay off until the bitstream pulls it low | 1 |
+
+Spare: RGB1 and RGB2 (40, 41), open-drain outputs only (status LED, for instance). No IO left for RTCK, a second GBIN copy of the QSPI clock or nRST readback: 16 raw IOs is the maximum on this package.
 
 ## Target connectors
 
@@ -419,7 +419,8 @@ To check: no fee for preferred parts in Standard assembly (granted in Economic).
 
 ## Open items
 
-- iCE40 pin assignment: the QSPI clock arrives on SPI_SCK, which is not a global buffer input; check DTR timing at 50 MHz or also wire it to a GBIN pin (one IO out of a budget of 37 / 39).
+- iCE40: the QSPI clock arrives on SPI_SCK (pin 15), not a global buffer input, and no IO is left to copy it to a GBIN: check DTR timing at 50 MHz (local clock routing), or sample QSPI from FPGA_REFCLK.
+- iCE40 RGB pins (39–41) used as plain open-drain outputs (SB_IO_OD, without the RGB driver): check with nextpnr and in the datasheet.
 - Variant of the TPS27S100 (current-sense output or fault flag): decides whether VIN_BUS currents need ADC inputs (3 ADC3 spares).
 - Module EEPROM choice and descriptor format (shared with Bornier).
 - Shield descriptor format.
