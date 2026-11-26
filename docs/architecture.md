@@ -193,12 +193,14 @@ Taken from `hardware/base/gen/bus.py` in [Bornier](https://github.com/bornier-de
 Adaptation to the probe:
 
 - **driven by the STM32**, as on Bornier; **LATCH** on an STM32 timer slaved to the synchronised clock (IEEE 1588);
-- **VIN_BUS**: with a 24 V input (VIN_EXT, 10.8–24 V), straight through the limited switches, 480 mA per pin as on Bornier. On USB or PoE, a **24 V boost converter** takes over, current-limited to the remaining budget. The boost is turned off as soon as a real 24 V input is present;
+- **VIN_BUS**: with a 24 V input (VIN_EXT, 10.8–24 V), straight through the limited switches. On USB or PoE, a **24 V boost converter** takes over, current-limited to the remaining budget. The boost is turned off as soon as a real 24 V input is present;
+- **+VIN_BUS1, +VIN_BUS2**: one **TPS27S100B** per ribbon pin (40 V, 80 mΩ, enable from the MCU, auto-retry). Limit **525 mA** (R_ILIM 4.7 kΩ, ±28 %) rather than Bornier's 480 mA: TI recommends a limit of 0.5 A or more. DIAG_EN tied high: protections and IMON always on. The two IMON current outputs (I/500) join on one 2 kΩ load, 3.84 V at 0.96 A, under the 4 V linear limit; half of it goes to PF7 (1.92 V full load). A fault pulls IMON to 4.3–4.9 V, read 2.15–2.45 V: total current and fault on one ADC input;
+- **+3V3_BUS**: TPS2553 from +3V3, 505–616 mA limit (R_ILIM 47 kΩ), enable from the MCU (PD4, pulled low), open-drain FAULT on PD7 with a red LED;
 - **module identification**: one I²C EEPROM per module, with one address pin (A0) tied to the module CS (its local CS0, after shifting). Only the selected module answers the read address. The probe scans CS0 to CS11 and reads each EEPROM: it gets the number of modules, their position and their descriptor. Constraints:
   - addresses 0x50 and 0x51 reserved on the whole bus (all unselected modules answer on the other one);
   - 8-pin EEPROM whose address pins are sampled at every start condition (to be checked per part);
   - pulling a CS low without SPI clock must not trigger anything on the module (beware of ADCs starting a conversion on the CS edge);
-- the Bornier schematic block (`bus.py`, `kicadgen` generator) is reused as is.
+- the Bornier schematic block (`bus.py`, `kicadgen` generator) is reused: same pinout, terminations, pulls and ESD grouping (sheet "Local bus", block of the same name in `hardware/gen/circuit.py`).
 
 ### Shield connectors
 
@@ -222,7 +224,7 @@ Signals on even pins 2–22, a ground on each odd pin; rail groups separated by 
 
 **Crossed ribbon** (a shield cable on the Bornier header or the reverse), all three headers being identical:
 
-- J_SHIELD_IO pins 33–34 are grounds: they meet VIN_BUS, which the 480 mA switches limit;
+- J_SHIELD_IO pins 33–34 are grounds: they meet VIN_BUS, which the 525 mA switches limit;
 - 3V3_OUT comes on when SHIELD_PRESENT_N goes low, budgeted by the firmware to a few mA until a valid descriptor is read on I2C4: it powers the ID EEPROM. 5V_OUT stays off until then. On the Bornier header, the shield I²C pins face CS lines: no descriptor, no 5V_OUT; 3V3_OUT pin 23 meets a ground there, and the eFuse trips and flags it;
 - VIN_BUS and +3V3_BUS faults are limited by their switches; the other lines are 3.3 V logic on both sides, behind series resistors;
 - silkscreen names each header; a second key would need a different part.
@@ -250,7 +252,7 @@ VIN_EXT (10.8–24 V)    ┬─ LM74700 ──┘ SMBJ24CA│  (36 V, 3 A)      
 - **LMR33630 rather than TPS5430**: the TPS5430 needs 5.5 V and would not run on a 5 V USB port. 36 V, 1.5 × the 24 V maximum: the SMBJ24CA only clamps at 38.9 V at its full rated surge current (15.5 A), an EMC test case; on a bench it only conducts on hot-plug ringing, at low current, around 27–30 V. No basic or preferred buck fits (TPS54331: 28 V, too close to the TVS breakdown). Synchronous, it runs up to ~98 % duty: on 5 V USB, +5V ≈ 4.8 V, enough for the TLV62569 (2.5–5.5 V); 5V_OUT stays off.
 - **+3V3_AUX separate from +3V3**: a shield or target short never pulls the probe rail down.
 - **VIN_BUS**: VIN_EXT through a Schottky (0.5 W at 1 A; an ideal diode if that heat is too much), or the boost when VIN_EXT is absent. The boost enable is gated in hardware by VIN_EXT presence: with a 12 V VIN_EXT, the 24 V boost would otherwise take over.
-- **Boost: LM5155 controller** (3.5–45 V input), external 60 V N-MOS, Schottky and sense resistor. Fed from VSYS, it takes the whole source budget: no detour through the +5V rail. Current sense sized for ~4 A peak: ~0.5 A at 24 V from 5 V, ~1 A (the two 480 mA VIN_BUS pins) from 12 V and above. Disabled, it passes VSYS to VIN_BUS through its inductor and diode: with a 20 V PD charger and a 12 V VIN_EXT, VIN_BUS is then fed by the charger, which the VSYS INA226 counts. The integrated MT3608B and SX1308 stop at 24 V input, with no margin; the TPS55340 has too little stock.
+- **Boost: LM5155 controller** (3.5–45 V input), external 60 V N-MOS, Schottky and sense resistor. Fed from VSYS, it takes the whole source budget: no detour through the +5V rail. Current sense sized for ~4 A peak: ~0.5 A at 24 V from 5 V, ~1 A (the two VIN_BUS pins) from 12 V and above. 10 µH inductor FXL1040-100-M (Isat 8.5 A), 15 mΩ sense, 24.5 V out, ~430 kHz; loop and switching simulated by `hardware/sim/boost.py`. Disabled, it passes VSYS to VIN_BUS through its inductor and diode: with a 20 V PD charger and a 12 V VIN_EXT, VIN_BUS is then fed by the charger, which the VSYS INA226 counts. The integrated MT3608B and SX1308 stop at 24 V input, with no margin; the TPS55340 has too little stock.
 - **Switchover**: losing the active source falls back to the next one with no interruption, but the budget may collapse (VIN_EXT unplugged with a 10 W shield, fallback on a 500 mA USB port). The firmware watches the active source on the ADC and cuts 5V_OUT, 3V3_OUT and VIN_BUS within milliseconds; the host port's own protection covers the rest.
 
 1. **VIN_EXT** (10.8 to 24 V), through the shield or a power terminal block: also powers the probe, including on Ethernet without PoE, and goes straight to VIN_BUS;
@@ -451,7 +453,7 @@ Unit price for 1 to 9 parts (first runs of 2 to 5 boards). Type: BASIC and PREF 
 | Target translators: SWDIO, UART TX (×2) | SN74LVC1T45DBVR | C7843 | ext | 256,161 | $0.08 |
 | Target translators: SWCLK + TDI, SWO + UART RX (×2) | SN74LVC2T45DCUR | C15741 | ext | 52,973 | $0.21 |
 | Target nRST and IO0, open drain (×2) | 2N7002 | C8545 | basic | 5,963,357 | $0.02 |
-| Header ESD, flow-through (×16: 26 Bornier + 27 shield + 8 target lines) | TPD4E05U06DQAR | C138714 | ext | 38,971 | $0.08 |
+| Header ESD, flow-through (×14: 20 Bornier + 27 shield + 8 target lines) | TPD4E05U06DQAR | C138714 | ext | 38,971 | $0.08 |
 | J_TARGET STDC14, 2 × 7 1.27 mm SMD | Samtec FTSH-107-01-L-DV-K | C5307809 | ext | 2,383 | $3.24 |
 | J_PROG ESP-Prog, 2 × 3 2.54 mm | PZ254V-12-6P | C492420 | ext | 77,009 | $0.04 |
 | USB-C 16-pin | TYPE-C-31-M-12 | C165948 | ext | 437,460 | $0.19 |
@@ -512,11 +514,9 @@ To check: no fee for preferred parts in Standard assembly (granted in Economic).
 ## Open items
 
 - iCE40 QSPI clock on SPI_SCK (pin 15, not a GBIN): nextpnr gives ~4 ns of fabric and global routing to the DDR registers ([`fpga/pincheck`](../fpga/pincheck/README.md)), a static shift of the 10 ns DTR half-period at 50 MHz. MCU launches data on the edge (DHQC = 0); to be measured on the prototype, fallback 40 MHz.
-- Variant of the TPS27S100 (current-sense output or fault flag): decides whether VIN_BUS currents need ADC inputs (3 ADC3 spares).
 - Module EEPROM choice and descriptor format (shared with Bornier).
 - Shield descriptor format.
 - Future of the earlier Archet harness schematic (HV/LV channels, RS-485, DAC): first generic shield?
-- Boost inductor: choose at schematic (MOSFET: the CSD18543Q3A of the ideal diodes; the basic library only has a 90 mΩ SOT-23).
 - TGT_VSUP: TPS63020 behaviour when a target back-drives its output, to measure on the prototype (load disconnect in shutdown, §7.3.3; no sinking in power save).
 - STDC14 pins 1–2: confirm on a STLINK-V3SET (5 V on pin 1 with JP2, SWDIO direction and polarity on pin 2).
 - ESP-Prog PROG pinout to confirm against the Espressif documentation.

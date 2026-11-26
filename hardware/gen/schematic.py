@@ -54,8 +54,8 @@ def ideal_diode(s, n, src, q, u, cap, cin, fx, yr, xbus, x0):
     xa, ya = s.P(u, 6)
     s.w(src, (xa, ya), (xa, yr))
     xk, yk = s.P(u, 4)
-    s.w("VSYS", (xk, yk), (xk, yr))
-    s.w("VSYS", s.P(q, 5), (xbus, yr))
+    s.w("VSYS_OR", (xk, yk), (xk, yr))
+    s.w("VSYS_OR", s.P(q, 5), (xbus, yr))
     s.rail("GND", *s.P(u, 2))
     # charge pump capacitor VCAP-ANODE, EN to ANODE (always on)
     xv, yv = s.P(u, 1)
@@ -120,19 +120,26 @@ def oring(prj):
     s.text("From the USB-C sheet\n(STUSB4500 sink switch)", 66.04, rows[1] - 10.16)
     s.text("From the PoE module\n(DP5700, isolated 12 V)", 66.04, rows[2] - 10.16)
 
-    # --- VSYS bus ---
-    s.w("VSYS", (xbus, rows[0]), (xbus, rows[2]))
+    # --- VSYS_OR bus, shunt, VSYS ---
+    s.w("VSYS_OR", (xbus, rows[0]), (xbus, rows[2]))
     y = rows[1] - 20.32
-    s.w("VSYS", (xbus, y), (xbus + 66.04, y))
-    s.glabel("VSYS", xbus + 66.04, y, 0, "output")
+    xs, xB = xbus + 48.26, xbus + 58.42
+    s.w("VSYS_OR", (xbus, y), (xs - 3.81, y))
     s.power("PWR_FLAG", xbus + 7.62, y, 0)
     for i, ref in enumerate(("C7", "C8")):
-        x = xbus + 17.78 + 15.24 * i
-        s.w("VSYS", (x, y), (x, y + 2.54))
+        x = xbus + 15.24 + 15.24 * i
+        s.w("VSYS_OR", (x, y), (x, y + 2.54))
         vpart(s, ref, x, y + 2.54)
         s.rail("GND", *s.P(ref, 2))
-    sense(s, "R7", "R8", "C12", "VSYS", "VSYS_SENSE", xbus + 50.8, y)
-    s.text("VSYS: 4.5-24 V, to the +5V buck (LMR33630) and the VIN_BUS boost (LM5155).", xbus + 2.54, y - 12.7)
+    s.place("R126", xs, y, rot=90, ref_at=(xs - 2.54, y - 3.81), val_at=(xs + 2.54, y - 3.81))
+    s.w("VSYS", s.P("R126", 2), (xbus + 93.98, y))
+    s.glabel("VSYS", xbus + 93.98, y, 0, "output")
+    s.power("PWR_FLAG", xbus + 63.5, y, 0)
+    sense(s, "R7", "R8", "C12", "VSYS", "VSYS_SENSE", xbus + 71.12, y)
+    ina_monitor(s, "U43", "C126", "VSYS_OR", "VSYS", xB + 20.32, y + 63.5, xB, y,
+                "Address 0x41 (A1 = GND, A0 = VS)")
+    s.text("VSYS: 4.5-24 V, to the +5V buck (LMR33630) and the VIN_BUS boost (LM5155).\n"
+           "U43 reads everything drawn from the active source.", xbus + 2.54, y - 15.24)
     s.text("ADC dividers 100k / 10k: 24 V -> 2.18 V; the TVS clamp (38.9 V) gives 3.54 V\n"
            "through 100 kΩ, 35 µA into the pin protection. Inputs: PF12, PF13, PF14, PA6.",
            xbus + 2.54, rows[2] + 25.4)
@@ -417,6 +424,146 @@ def buck5(prj):
         vpart(s, ref, x, yo + 2.54)
         s.rail("GND", *s.P(ref, 2))
     s.text("To the TLV62569 bucks, the 5V_OUT eFuse,\nthe ULPI PHY and the target supply", xe - 25.4, yo - 15.24)
+
+
+def boost(prj):
+    s = prj.sheet("VIN_BUS", "boost.kicad_sch", "VIN_BUS: LM5155 24.5 V boost from VSYS, or VIN_EXT")
+    s.text("VIN_BUS BOOST", 20.32, 17.78, 2.54, True)
+    s.text("VIN_BUS = the higher of the boost (24.5 V) and VIN_EXT through D18. With VIN_EXT present, Q9 holds UVLO\n"
+           "low: a 12 V VIN_EXT is passed through, never boosted. On USB or PoE the firmware enables the boost\n"
+           "(BOOST_EN) within the source budget. Values simulated in hardware/sim/boost.py.\n"
+           "Layout: C119/C120, Q8, R116 and D17 in one tight loop on the PGND side; CS and FB tracks away from SW.",
+           20.32, 25.4)
+    yp = 63.5                                  # power row
+    ux, uy = 147.32, 127.0                     # LM5155
+    s.place("U42", ux, uy, ref_at=(ux + 5.08, uy - 17.78), val_at=(ux + 5.08, uy - 15.24))
+
+    # --- VSYS input row: ceramics, BIAS, inductor ---
+    s.glabel("VSYS", 30.48, yp, 180, "input")
+    s.text("From the Sources sheet", 17.78, yp - 7.62)
+    xl = ux + 30.48
+    s.place("L5", xl, yp, rot=90, ref_at=(xl, yp - 5.08), val_at=(xl, yp - 2.54))
+    s.w("VSYS", (30.48, yp), s.P("L5", 1))
+    for ref, x in (("C119", 45.72), ("C120", 58.42), ("C118", ux - 25.4)):
+        s.w("VSYS", (x, yp), (x, yp + 2.54))
+        vpart(s, ref, x, yp + 2.54)
+        s.rail("GND", *s.P(ref, 2))
+    bx, by = s.P("U42", 1)
+    s.w("VSYS", (bx, by), (ux - 15.24, by), (ux - 15.24, yp))
+
+    # --- switch node: Q8 drain, D17 anode ---
+    xq = ux + 66.04
+    cx, cy = s.P("U42", 5)
+    s.place("Q8", xq, cy - 15.24, ref_at=(xq + 5.08, cy - 17.78), val_at=(xq + 5.08, cy - 15.24))
+    dx, dy = s.P("Q8", 5)
+    xd = dx + 15.24
+    s.place("D17", xd, yp, rot=180, ref_at=(xd, yp - 5.08), val_at=(xd, yp - 2.54))
+    s.w("BOOST_SW", s.P("L5", 2), (dx, yp), s.P("D17", 2))
+    s.w("BOOST_SW", (dx, yp), (dx, dy))
+    s.label("BOOST_SW", dx - 10.16, yp, 0)
+    gx, gy = s.P("U42", 3)
+    qx, qy = s.P("Q8", 4)
+    xm = ux + 25.4
+    s.w("BOOST_GATE", (gx, gy), (xm, gy), (xm, qy), (qx, qy))
+    s.label("BOOST_GATE", gx + 2.54, gy, 0)
+
+    # --- current sense: R116 under the source, slope resistor and filter back to CS ---
+    sx, sy = s.P("Q8", 1)
+    s.w("BOOST_ISNS", (sx, sy), (sx, cy))
+    vpart(s, "R116", sx, cy)
+    s.rail("GND", *s.P("R116", 2))
+    s.place("R117", sx - 10.16, cy, rot=270, ref_at=(sx - 10.16, cy - 5.08), val_at=(sx - 10.16, cy - 2.54))
+    s.place("R118", sx - 30.48, cy, rot=270, ref_at=(sx - 30.48, cy - 5.08), val_at=(sx - 30.48, cy - 2.54))
+    s.w("BOOST_ISNS", (sx, cy), s.P("R117", 1))
+    s.w("BOOST_CSF", s.P("R117", 2), s.P("R118", 1))
+    s.w("BOOST_CS", s.P("R118", 2), (cx, cy))
+    vpart(s, "C113", cx + 12.7, cy)
+    s.rail("GND", *s.P("C113", 2))
+    fx, fy = s.P("U42", 8)
+    s.w("BOOST_FB", (fx, fy), (fx + 5.08, fy), (fx + 5.08, uy + 20.32))
+    s.label("BOOST_FB", fx + 5.08, uy + 20.32, 0)
+    s.rail("GND", *s.P("U42", 4))
+    s.rail("GND", *s.P("U42", 7))
+    s.rail("GND", *s.P("U42", 13))
+
+    # --- VCC regulator capacitor, on top ---
+    vx, vy = s.P("U42", 2)
+    yv = uy - 27.94
+    s.w("BOOST_VCC", (vx, vy), (vx, yv), (ux - 7.62, yv))
+    vpart(s, "C117", ux - 7.62, yv)
+    s.rail("GND", *s.P("C117", 2))
+    s.label("BOOST_VCC", vx, yv, 0)
+
+    # --- left pins: the lowest pin takes the nearest column, so no wire crosses a hanging part ---
+    px, py = s.P("U42", 6)
+    s.w("BOOST_COMP", (px, py), (ux - 33.02, py))
+    vpart(s, "C115", ux - 20.32, py)
+    s.rail("GND", *s.P("C115", 2))
+    vpart(s, "R119", ux - 33.02, py)
+    s.w("BOOST_CZ", s.P("R119", 2), (ux - 33.02, py + 10.16))
+    vpart(s, "C114", ux - 33.02, py + 10.16)
+    s.rail("GND", *s.P("C114", 2))
+    for pin, net, ref, x in ((10, "BOOST_RT", "R113", ux - 45.72), (9, "BOOST_SS", "C116", ux - 58.42)):
+        px, py = s.P("U42", pin)
+        s.w(net, (px, py), (x, py))
+        vpart(s, ref, x, py)
+        s.rail("GND", *s.P(ref, 2))
+
+    # --- enable: BOOST_EN divider, overridden by Q9 when VIN_EXT is present ---
+    px, py = s.P("U42", 12)
+    xu = ux - 71.12
+    s.w("BOOST_UVLO", (px, py), (xu - 21.59, py))
+    s.label("BOOST_UVLO", xu + 2.54, py, 0)
+    vpart(s, "R121", xu, py)
+    s.rail("GND", *s.P("R121", 2))
+    xr = xu - 25.4
+    s.place("R120", xr, py, rot=90, ref_at=(xr, py - 5.08), val_at=(xr, py - 2.54))
+    s.w("BOOST_EN", s.P("R120", 1), (xr - 12.7, py))
+    s.glabel("BOOST_EN", xr - 12.7, py, 180, "input")
+    s.text("From PD15", xr - 22.86, py - 5.08)
+    yq9 = py + 22.86
+    s.place("Q9", xu - 12.7, yq9, ref_at=(xu - 8.89, yq9 + 6.35), val_at=(xu - 8.89, yq9 + 8.89))
+    ddx, ddy = s.P("Q9", 3)
+    s.w("BOOST_UVLO", (ddx, ddy), (ddx, py))
+    s.rail("GND", *s.P("Q9", 2))
+    ggx, ggy = s.P("Q9", 1)
+    xg = ggx - 12.7
+    s.w("BOOST_INH", (ggx, ggy), (xg, ggy), (xg, ggy + 2.54))
+    vpart(s, "R123", xg, ggy + 2.54)
+    s.rail("GND", *s.P("R123", 2))
+    s.place("R122", xg - 10.16, ggy, rot=90, ref_at=(xg - 10.16, ggy - 5.08), val_at=(xg - 10.16, ggy - 2.54))
+    s.w("BOOST_INH", s.P("R122", 2), (xg, ggy))
+    s.w("VIN_EXT_P", s.P("R122", 1), (xg - 22.86, ggy))
+    s.glabel("VIN_EXT_P", xg - 22.86, ggy, 180, "input")
+    s.text("BOOST_EN low or high-Z: off.\nVIN_EXT >= 10.8 V: gate >= 3.4 V, off.", xr - 22.86, yq9 + 17.78)
+
+    # --- VIN_BUS row: output ceramics, VIN_EXT path, feedback, ADC divider ---
+    kx, ky = s.P("D17", 1)
+    xe = kx + 149.86
+    s.w("VIN_BUS", (kx, yp), (xe, yp))
+    s.glabel("VIN_BUS", xe, yp, 0, "output")
+    s.text("To the local bus switches\n(TPS27S100B x 2)", xe - 20.32, yp - 12.7)
+    s.power("PWR_FLAG", kx + 5.08, yp, 0)
+    for i, ref in enumerate(("C121", "C122", "C123", "C124")):
+        x = kx + 12.7 + 12.7 * i
+        s.w("VIN_BUS", (x, yp), (x, yp + 2.54))
+        vpart(s, ref, x, yp + 2.54)
+        s.rail("GND", *s.P(ref, 2))
+    x18 = kx + 66.04
+    s.place("D18", x18, yp - 3.81, rot=90, ref_at=(x18 + 5.08, yp - 6.35), val_at=(x18 + 5.08, yp - 3.81))
+    ax, ay = s.P("D18", 2)
+    s.w("VIN_EXT_P", (ax, ay), (ax, ay - 5.08))
+    s.glabel("VIN_EXT_P", ax, ay - 5.08, 90, "input")
+    xf = kx + 81.28
+    s.w("VIN_BUS", (xf, yp), (xf, yp + 2.54))
+    vpart(s, "R114", xf, yp + 2.54)
+    vpart(s, "R115", xf, yp + 15.24)
+    s.rail("GND", *s.P("R115", 2))
+    s.w("BOOST_FB", s.P("R114", 2), s.P("R115", 1))
+    s.w("BOOST_FB", (xf, yp + 12.7), (xf + 7.62, yp + 12.7))
+    s.label("BOOST_FB", xf + 7.62, yp + 12.7, 0)
+    sense(s, "R124", "R125", "C125", "VIN_BUS", "VIN_BUS_SENSE", kx + 109.22, yp)
+    s.text("VIN_BUS_SENSE to PF5.", kx + 109.22, yp + 33.02)
 
 
 def buck3v3(prj):
@@ -1552,7 +1699,7 @@ def shield(prj):
            xg - 20.32, 259.08)
 
     # --- ESD, flow-through at the headers ---
-    esds = sorted((u for u in parts if parts[u]["value"] == "TPD4E05U06DQAR" and int(u[1:]) >= 31),
+    esds = sorted((u for u in parts if parts[u]["value"] == "TPD4E05U06DQAR" and 31 <= int(u[1:]) < 47),
                   key=lambda u: int(u[1:]))
     for k, u in enumerate(esds):
         ex, ey = (152.4, 63.5 + 38.1 * k) if k < 4 else (241.3, 63.5 + 38.1 * (k - 4))
@@ -1676,40 +1823,223 @@ def shield_supply(prj):
         s.w(out, (xc, yo), (xc, yo + 2.54))
         vpart(s, cout, xc, yo + 2.54)
         s.rail("GND", *s.P(cout, 2))
-        # --- INA226: Vbus on the output row, Kelvin sense across the shunt ---
-        xi, yi = ux + 96.52, uy + 20.32
-        s.place(ina, xi, yi, ref_at=(xi + 5.08, yi + 15.24), val_at=(xi + 5.08, yi + 17.78))
-        bx, by = s.P(ina, 8)
-        s.w(out, (bx, by), (xB, by), (xB, yo))
-        for pin, net in (("10", raw), ("9", out)):
-            px, py = s.P(ina, pin)
-            s.w(net, (px, py), (px - 7.62, py))
-            if net == out:
-                s.glabel(net, px - 7.62, py, 180, "output", ina)
-            else:
-                s.label(net, px - 7.62, py, 180, ina)
-        vx, vy = s.P(ina, 6)
-        yv = vy - 7.62
-        s.w("+3V3", (vx, vy), (vx, yv), (vx + 22.86, yv), (vx + 22.86, yv + 2.54))
-        s.rail("+3V3", vx, yv)
-        vpart(s, cina, vx + 22.86, yv + 2.54)
-        s.rail("GND", *s.P(cina, 2))
-        s.rail("GND", *s.P(ina, 7))
-        (a1x, a1y), (a0x, a0y) = s.P(ina, 1), s.P(ina, 2)
-        if prj.parts[ina]["pins"]["1"] == "+3V3":
-            s.w("+3V3", (a1x, a1y), (a1x + 2.54, a1y))
-            s.rail("+3V3", a1x + 2.54, a1y)
+        ina_monitor(s, ina, cina, raw, out, ux + 96.52, uy + 20.32, xB, yo, addr)
+
+
+def ina_monitor(s, ina, cina, raw, out, xi, yi, xB, yo, addr):
+    """INA226 at (xi, yi): Vbus tapped on the output row at xB, Kelvin sense across the shunt, I2C5 out."""
+    s.place(ina, xi, yi, ref_at=(xi + 5.08, yi + 15.24), val_at=(xi + 5.08, yi + 17.78))
+    bx, by = s.P(ina, 8)
+    s.w(out, (bx, by), (xB, by), (xB, yo))
+    for pin, net in (("10", raw), ("9", out)):
+        px, py = s.P(ina, pin)
+        s.w(net, (px, py), (px - 7.62, py))
+        if net == out:
+            s.glabel(net, px - 7.62, py, 180, "output", ina)
         else:
-            s.w("GND", (a1x, a1y), (a1x + 2.54, a1y), (a1x + 2.54, a0y))
+            s.label(net, px - 7.62, py, 180, ina)
+    a1, a0 = s.prj.parts[ina]["pins"]["1"], s.prj.parts[ina]["pins"]["2"]
+    vx, vy = s.P(ina, 6)
+    yv = vy - 7.62
+    xc = vx + (33.02 if a0 == "+3V3" else 22.86)   # clear of the A0 supply arrow
+    s.w("+3V3", (vx, vy), (vx, yv), (xc, yv), (xc, yv + 2.54))
+    s.rail("+3V3", vx, yv)
+    vpart(s, cina, xc, yv + 2.54)
+    s.rail("GND", *s.P(cina, 2))
+    s.rail("GND", *s.P(ina, 7))
+    (a1x, a1y), (a0x, a0y) = s.P(ina, 1), s.P(ina, 2)
+    if a1 == "+3V3":
+        s.w("+3V3", (a1x, a1y), (a1x + 2.54, a1y))
+        s.rail("+3V3", a1x + 2.54, a1y)
+    elif a0 == "GND":
+        s.w("GND", (a1x, a1y), (a1x + 2.54, a1y), (a1x + 2.54, a0y))
+    else:
+        s.w("GND", (a1x, a1y), (a1x + 5.08, a1y))
+        s.power("GND", a1x + 5.08, a1y, 90, show=False)
+    if a0 == "+3V3":
+        s.w("+3V3", (a0x, a0y), (a0x + 12.7, a0y))
+        s.power("+3V3", a0x + 12.7, a0y, 270)
+    else:
         s.w("GND", (a0x, a0y), (a0x + 5.08, a0y))
         s.power("GND", a0x + 5.08, a0y, 90, show=False)
-        xg = xi + 35.56
-        for pin, net, shape in (("4", "SYS_SDA", "bidirectional"), ("5", "SYS_SCL", "input"),
-                                ("3", "INA_ALERT", "output")):
-            px, py = s.P(ina, pin)
-            s.w(net, (px, py), (xg, py))
-            s.glabel(net, xg, py, 0, shape, ina)
-        s.text(addr, xi - 7.62, yi + 22.86)
+    xg = xi + 35.56
+    for pin, net, shape in (("4", "SYS_SDA", "bidirectional"), ("5", "SYS_SCL", "input"),
+                            ("3", "INA_ALERT", "output")):
+        px, py = s.P(ina, pin)
+        s.w(net, (px, py), (xg, py))
+        s.glabel(net, xg, py, 0, shape, ina)
+    s.text(addr, xi - 7.62, yi + 22.86)
+
+
+def local_bus(prj):
+    s = prj.sheet("Local bus", "local_bus.kicad_sch",
+                  "Local bus: IDC 2 x 17 ribbon to the Bornier modules, +3V3_BUS and VIN_BUS switches")
+    s.text("LOCAL BUS", 20.32, 17.78, 2.54, True)
+    s.text("Ribbon to the Bornier extension modules, pinout and terminations identical to Bornier. SPI2 at 8 MHz, "
+           "mode 0; CS0-CS11 shifted by each module;\nLATCH on TIM2_CH1; OE active low. Series 49.9 Ω at the source "
+           "(RB_: ribbon side); pulls keep every line defined while the MCU pins are not configured.",
+           20.32, 25.4)
+    parts = prj.parts
+
+    def on(net, prefix, value=None):
+        return sorted((r for r in parts if r.startswith(prefix) and net in parts[r]["pins"].values()
+                       and (value is None or parts[r]["value"] == value)), key=lambda r: int(r[1:]))
+
+    # --- signal rows: global label, pull, series 49.9 Ω, ribbon-side label ---
+    series = [f"CS{i}" for i in range(12)] + ["LATCH", "OE", "SCK", "MOSI"]
+    rows = series + ["IRQ", "SDA", "SCL", "MISO"]
+    y0, pitch = 50.8, 5.08
+    for k, sig in enumerate(rows):
+        y = y0 + pitch * k
+        net = f"BUS_{sig}"
+        shape = "output" if sig in ("MISO", "IRQ") else "bidirectional" if sig == "SDA" else "input"
+        end = 76.2 if sig in series else 50.8
+        s.w(net, (40.64, y), (end, y))
+        s.glabel(net, 40.64, y, 180, shape)
+        pull = next(r for r in on(net, "R") if parts[r]["value"] != "49.9")
+        kind = "GND" if "GND" in parts[pull]["pins"].values() else "+3V3"
+        s.place(pull, 57.15, y + 2.54, rot=90, show_ref=False, show_value=False)
+        s.w(net, (50.8, y), (50.8, y + 2.54), s.P(pull, 1))
+        s.power(kind, *s.P(pull, 2), 270 if kind == "+3V3" else 90, show=False)
+        if sig in series:
+            r1, *r2 = on(net, "R", "49.9")
+            s.place(r1, 80.01, y, rot=90, show_ref=False, show_value=False)
+            s.w(f"RB_{sig}", s.P(r1, 2), (93.98, y))
+            if r2:                                              # SCK, MOSI, LATCH: 2 x 49.9 in parallel
+                s.place(r2[0], 80.01, y + 2.54, rot=90, show_ref=False, show_value=False)
+                s.w(net, (76.2, y), s.P(r2[0], 1))
+                s.w(f"RB_{sig}", s.P(r1, 2), s.P(r2[0], 2))
+            s.label(f"RB_{sig}", 93.98, y)
+    s.text("Pull-ups 10 kΩ to +3V3 on CS0-CS11, LATCH, OE, IRQ (R135-R148, R168);\n"
+           "2.2 kΩ on SDA, SCL (R172-R173). Pull-downs 100 kΩ on SCK, MOSI, MISO\n"
+           "(R169-R171): SPI mode 0 idle; MISO tri-stated with no module selected.\n"
+           "Series 49.9 Ω R149-R164; SCK, MOSI, LATCH: second 49.9 Ω in parallel\n"
+           "(R165-R167), 25 Ω for the multipoint edges.", 20.32, y0 + pitch * len(rows) + 2.54)
+
+    # --- ESD, flow-through at the header ---
+    esds = sorted((u for u in parts if parts[u]["value"] == "TPD4E05U06DQAR" and int(u[1:]) >= 47),
+                  key=lambda u: int(u[1:]))
+    s.text("ESD of every ribbon line\nat the header (TPD4E05U06).", 134.62, 48.26)
+    for k, u in enumerate(esds):
+        ex, ey = 147.32, 66.04 + 30.48 * k
+        s.place(u, ex, ey, ref_at=(ex + 6.35, ey + 12.7), val_at=(ex + 6.35, ey + 15.24))
+        for pin in ("1", "2", "4", "5"):
+            px, py = s.P(u, pin)
+            net = parts[u]["pins"][pin]
+            qx = px - 5.08 if px < ex else px + 5.08
+            s.w(net, (px, py), (qx, py))
+            rot = 180 if qx < px else 0
+            if net.startswith("BUS_"):
+                s.glabel(net, qx, py, rot, "bidirectional", u)
+            else:
+                s.label(net, qx, py, rot, u)
+        s.rail("GND", *s.P(u, "3"))
+
+    # --- header ---
+    j, jx, jy = "J12", 218.44, 109.22
+    s.place(j, jx, jy, ref_at=(jx - 2.54, jy - 29.21), val_at=(jx - 2.54, jy - 26.67))
+    for p, net in parts[j]["pins"].items():
+        px, py = s.P(j, p)
+        left = px < jx
+        d = -7.62 if left else 7.62
+        if net == "GND":
+            s.w(net, (px, py), (px + d / 3, py))
+            s.power("GND", px + d / 3, py, 270 if left else 90, show=False)
+        elif net.startswith("BUS_"):
+            s.w(net, (px, py), (px + d, py))
+            s.glabel(net, px + d, py, 180 if left else 0, "bidirectional", j)
+        else:
+            s.w(net, (px, py), (px + d, py))
+            s.label(net, px + d, py, 180 if left else 0, j)
+    s.text("Ribbon conductor n = pin n. CS0-CS11 on pins 1-12; every other\nline on an even pin facing a ground; "
+           "+VIN_BUS1/2 on pins 33-34,\ntheir only neighbour a ground (pin 32).", jx - 20.32, jy + 27.94)
+
+    # --- +3V3_BUS: TPS2553 ---
+    ux, uy, x0 = 294.64, 71.12, 251.46
+    s.text("+3V3_BUS: TPS2553, 505-616 mA limit; FAULT low (LED on) while in current limit.\n"
+           "EN pulled low: off in reset and bootloader. A short leaves the probe +3V3 up.", x0, 40.64)
+    s.place("U44", ux, uy, ref_at=(ux - 10.16, uy - 8.89), val_at=(ux - 10.16, uy + 10.16))
+    ix, iy = s.P("U44", 1)
+    yr = iy - 10.16
+    s.w("+3V3", (ix, iy), (ix - 5.08, iy), (ix - 5.08, yr), (x0 + 12.7, yr))
+    s.rail("+3V3", x0 + 12.7, yr)
+    s.w("+3V3", (ix - 15.24, yr), (ix - 15.24, yr + 2.54))
+    vpart(s, "C127", ix - 15.24, yr + 2.54)
+    s.rail("GND", *s.P("C127", 2))
+    ex, ey = s.P("U44", 3)
+    s.glabel("BUS_3V3_EN", x0, ey, 180, "input")
+    s.w("BUS_3V3_EN", (x0, ey), (ex, ey))
+    s.w("BUS_3V3_EN", (x0 + 10.16, ey), (x0 + 10.16, ey + 2.54))
+    vpart(s, "R128", x0 + 10.16, ey + 2.54)
+    s.rail("GND", *s.P("R128", 2))
+    s.rail("GND", *s.P("U44", 2))
+    lx, ly = s.P("U44", 5)
+    s.w("U44_ILIM", (lx, ly), (lx + 5.08, ly), (lx + 5.08, ly + 2.54))
+    vpart(s, "R127", lx + 5.08, ly + 2.54)
+    s.rail("GND", *s.P("R127", 2))
+    fx, fy = s.P("U44", 4)
+    s.w("BUS_3V3_FLT", (fx, fy), (fx + 48.26, fy))
+    s.glabel("BUS_3V3_FLT", fx + 48.26, fy, 0, "output")
+    vpart(s, "R133", fx + 12.7, fy - 7.62)
+    s.rail("+3V3", *s.P("R133", 1))
+    xl = fx + 30.48
+    s.place("D19", xl, fy - 3.81, rot=90, ref_at=(xl + 12.7, fy - 6.35), val_at=(xl + 12.7, fy - 3.81))
+    vpart(s, "R134", xl, fy - 17.78)
+    s.w("U44_LED", s.P("R134", 2), s.P("D19", 2))
+    s.rail("+3V3", *s.P("R134", 1))
+    ox, oy = s.P("U44", 6)
+    yo = fy - 27.94
+    s.w("+3V3_BUS", (ox, oy), (ox + 2.54, oy), (ox + 2.54, yo), (ox + 63.5, yo))
+    s.label("+3V3_BUS", ox + 63.5, yo)
+    s.w("+3V3_BUS", (ox + 50.8, yo), (ox + 50.8, yo + 2.54))
+    vpart(s, "C128", ox + 50.8, yo + 2.54)
+    s.rail("GND", *s.P("C128", 2))
+
+    # --- +VIN_BUS1, +VIN_BUS2: TPS27S100B ---
+    s.text("+VIN_BUS1, +VIN_BUS2: VIN_BUS on ribbon pins 33 and 34, one TPS27S100B per pin, 525 mA limit\n"
+           "(4.7 kΩ, TI minimum 0.5 A), auto-retry. DIAG_EN high: IMON and protections always on.\n"
+           "IMON = I/500 from each switch, joined on one 2 kΩ load; half to PF7: 0.96 A -> 1.92 V, fault 2.15-2.45 V.",
+           x0, 106.68)
+    for u, out, en, rl, cin, cout, uy in (("U45", "+VIN_BUS1", "VIN_BUS1_EN", "R129", "C129", "C130", 142.24),
+                                          ("U46", "+VIN_BUS2", "VIN_BUS2_EN", "R130", "C131", "C132", 205.74)):
+        s.place(u, ux, uy, ref_at=(ux + 2.54, uy + 15.24), val_at=(ux + 2.54, uy + 17.78))
+        yt = uy - 15.24
+        xb = s.P(u, 9)[0] - 5.08
+        for p in (9, 10, 11, 12):
+            s.w("VIN_BUS", s.P(u, p), (xb, s.P(u, p)[1]))
+        s.w("VIN_BUS", (xb, s.P(u, 12)[1]), (xb, yt), (x0, yt))
+        s.glabel("VIN_BUS", x0, yt, 180, "input", u)
+        s.w("VIN_BUS", (xb - 12.7, yt), (xb - 12.7, yt + 2.54))
+        vpart(s, cin, xb - 12.7, yt + 2.54)
+        s.rail("GND", *s.P(cin, 2))
+        ex, ey = s.P(u, 3)
+        s.glabel(en, x0, ey, 180, "input")
+        s.w(en, (x0, ey), (ex, ey))
+        dx, dy = s.P(u, 14)
+        s.w("+3V3", (dx, dy), (dx - 7.62, dy))
+        s.power("+3V3", dx - 7.62, dy, 90)
+        s.rail("GND", *s.P(u, 2))
+        s.rail("GND", *s.P(u, 17))
+        xo = s.P(u, 5)[0] + 5.08
+        for p in (5, 6, 7, 8):
+            s.w(out, s.P(u, p), (xo, s.P(u, p)[1]))
+        s.w(out, (xo, s.P(u, 8)[1]), (xo, yt), (xo + 45.72, yt))
+        s.label(out, xo + 45.72, yt)
+        s.w(out, (xo + 15.24, yt), (xo + 15.24, yt + 2.54))
+        vpart(s, cout, xo + 15.24, yt + 2.54)
+        s.rail("GND", *s.P(cout, 2))
+        lx, ly = s.P(u, 15)
+        s.w(f"{u}_ILIM", (lx, ly), (lx + 7.62, ly), (lx + 7.62, ly + 2.54))
+        vpart(s, rl, lx + 7.62, ly + 2.54)
+        s.rail("GND", *s.P(rl, 2))
+        mx, my = s.P(u, 16)
+        if u == "U45":
+            s.w("VIN_BUS_IMON_RAW", (mx, my), (mx + 20.32, my))
+            s.label("VIN_BUS_IMON_RAW", mx + 20.32, my, 0)
+        else:
+            s.w("VIN_BUS_IMON_RAW", (mx, my), (mx + 55.88, my))
+            s.label("VIN_BUS_IMON_RAW", mx + 20.32, my, 0, u)
+            sense(s, "R131", "R132", "C133", "VIN_BUS_IMON_RAW", "VIN_BUS_IMON", mx + 55.88, my)
 
 
 def main():
@@ -1723,6 +2053,7 @@ def main():
     usbc(prj)
     poe(prj)
     buck5(prj)
+    boost(prj)
     buck3v3(prj)
     mcu(prj)
     fpga(prj)
@@ -1733,6 +2064,7 @@ def main():
     ui_field(prj)
     shield(prj)
     shield_supply(prj)
+    local_bus(prj)
     footprints.write()
     sch, ok = prj.write(KICAD)
     print(f"{len(c.parts)} parts -> {sch}")

@@ -58,6 +58,14 @@ PALETTE = {
     ("R", "120", R0402): "C25079",         # field bus termination (~33 mW with a 2 V differential)
     ("R", "2k", R0402): "C4109",           # TPS2595 ILM: 1.04 A
     ("R", "20m", R1206): "C844895",        # ext, Vishay WSL1206R0200FEA 75 ppm/°C: 5V_OUT shunt (2 A)
+    ("R", "15m", R1206): "C844483",        # ext, Vishay WSL1206R0150FEA: boost sense, VSYS shunt
+    ("R", "51k", R0402): "C25794",         # LM5155 RT: 425 kHz
+    ("R", "47k", R0402): "C25792",
+    ("R", "470", R0402): "C25117",         # LM5155 slope resistor
+    ("R", "3.3k", R0402): "C25890",        # LM5155 compensation
+    ("C", "22nF", C0402): "C1532",         # 50 V X7R: LM5155 soft start
+    ("C", "100pF", C0402): "C1546",        # 50 V C0G: LM5155 CS filter
+    ("R", "4.7k", R0402): "C25900",        # TPS27S100 ILIM: 525 mA
 }
 
 c = Circuit(PALETTE, r_fp=R0402, c_fp=C0402)
@@ -70,10 +78,10 @@ IDEAL = ("Power_Management:LM74700", "LM74700QDBVRQ1", "Package_TO_SOT_SMD:SOT-2
 def ideal_diode(n, src, ctl, fet, cap, cin, note):
     """LM74700 + N-MOS from `src` to VSYS: source = anode (input), drain = cathode (VSYS).
     EN tied to the anode (always on); charge pump capacitor between VCAP and ANODE (datasheet §9.2)."""
-    c.part(fet, NMOS[0], NMOS[1], NMOS[2], NMOS[3], {1: src, 2: src, 3: src, 4: f"GATE{n}", 5: "VSYS"},
+    c.part(fet, NMOS[0], NMOS[1], NMOS[2], NMOS[3], {1: src, 2: src, 3: src, 4: f"GATE{n}", 5: "VSYS_OR"},
            f"Ideal diode {n} switch; 60 V, 8.1 mΩ at 10 V: 73 mW at 3 A")
     c.part(ctl, IDEAL[0], IDEAL[1], IDEAL[2], IDEAL[3],
-           {1: f"VCAP{n}", 2: "GND", 3: src, 4: "VSYS", 5: f"GATE{n}", 6: src}, note)
+           {1: f"VCAP{n}", 2: "GND", 3: src, 4: "VSYS_OR", 5: f"GATE{n}", 6: src}, note)
     c.C(cap, "100nF", src, f"VCAP{n}", note="Charge pump, 0.1 µF minimum between VCAP and ANODE")
     c.C(cin, "1µF 50V", src, "GND", note="Local decoupling of the source cable")
 
@@ -100,12 +108,20 @@ ideal_diode(1, "VIN_EXT_P", "U1", "Q1", "C1", "C2", "Ideal diode, VIN_EXT")
 ideal_diode(2, "VBUS_USB", "U2", "Q2", "C3", "C4", "Ideal diode, USB-C VBUS after the PD sink switch")
 ideal_diode(3, "POE_12V", "U3", "Q3", "C5", "C6", "Ideal diode, PoE module 12 V output")
 c.part("C7", "Device:C_Polarized", "47µF 63V", "Capacitor_SMD:CP_Elec_6.3x7.7", "C46550423",
-       {1: "VSYS", 2: "GND"}, "Damps the hot-plug ringing of the cables and the ceramics")
-c.C("C8", "1µF 50V", "VSYS", "GND")
+       {1: "VSYS_OR", 2: "GND"}, "Damps the hot-plug ringing of the cables and the ceramics")
+c.C("C8", "1µF 50V", "VSYS_OR", "GND")
 sense("R1", "R2", "C9", "VIN_EXT_P", "VIN_EXT_SENSE")
 sense("R3", "R4", "C10", "VBUS_USB", "VBUS_USB_SENSE")
 sense("R5", "R6", "C11", "POE_12V", "POE_12V_SENSE")
 sense("R7", "R8", "C12", "VSYS", "VSYS_SENSE")
+c.R("R126", "15m", "VSYS_OR", "VSYS", fp=R1206,
+    note="VSYS shunt: 81.9 mV full scale = 5.46 A; 135 mW at 3 A")
+c.part("U43", "Sensor_Energy:INA226", "INA226AIDGSR", "Package_SO:TSSOP-10_3x3mm_P0.5mm", "C49851",
+       {10: "VSYS_OR", 9: "VSYS", 8: "VSYS", 6: "+3V3", 7: "GND", 4: "SYS_SDA", 5: "SYS_SCL",
+        3: "INA_ALERT", 1: "GND", 2: "+3V3"},
+       "VSYS monitor: everything drawn from the active source (probe, target, shield, boost), I2C5 address "
+       "0x41. VIN_BUS fed from VIN_EXT through D18 bypasses it: the TPS27S100 IMON reads that current")
+c.C("C126", "100nF", "+3V3", "GND", note="U43")
 
 # --------------------------------------------------------------------------------------------
 c.block("USB-C sink: STUSB4500 PD controller, VBUS switch, ESD")
@@ -194,6 +210,50 @@ for ref in ("C24", "C25", "C26"):
     c.C(ref, "22µF 25V", "+5V", "GND", fp=C1206, note="Output, X5R: ~13 µF each at 5 V DC bias")
 c.R("R15", "100k", "+5V", "BUCK5_FB", note="Feedback top, datasheet 100 kΩ")
 c.R("R16", "24.9k", "BUCK5_FB", "GND", note="Feedback bottom: 1.0 V x (1 + 100/24.9) = 5.02 V")
+
+# --------------------------------------------------------------------------------------------
+c.block("VIN_BUS: LM5155 24.5 V boost from VSYS, or VIN_EXT through a Schottky")
+# Datasheet SNVSB75E; values simulated in hardware/sim/boost.py (loop and cycle by cycle, VSYS 4.5-20 V).
+# VIN_BUS = the higher of the boost (24.5 V) and VIN_EXT - 0.45 V. VIN_EXT present: the boost is held off.
+c.part("U42", "Archet:LM5155", "LM5155DSSR", "Package_SON:WSON-12-1EP_3x2mm_P0.5mm_EP1x2.65", "C545416",
+       {1: "VSYS", 2: "BOOST_VCC", 3: "BOOST_GATE", 4: "GND", 5: "BOOST_CS", 6: "BOOST_COMP", 7: "GND",
+        8: "BOOST_FB", 9: "BOOST_SS", 10: "BOOST_RT", 12: "BOOST_UVLO", 13: "GND"},
+       "Peak current mode, 425 kHz. BIAS on VSYS (>= 3.5 V). PGOOD unused: VIN_BUS_SENSE reads the output")
+c.part("Q8", NMOS[0], NMOS[1], NMOS[2], NMOS[3],
+       {1: "BOOST_ISNS", 2: "BOOST_ISNS", 3: "BOOST_ISNS", 4: "BOOST_GATE", 5: "BOOST_SW"},
+       "Boost switch; QG 7.2 nC: 3.1 mA from VCC")
+c.part("L5", "Device:L", "10µH", "Inductor_SMD:L_Changjiang_FXL1040", "C475915", {1: "VSYS", 2: "BOOST_SW"},
+       "FXL1040-100-M: Isat 8.5 A, 30 mΩ. Peak 3.5 A at 4.5 V / 0.5 A, under the 5.27 A minimum limit")
+c.part("D17", "Device:D_Schottky", "SS54", "Diode_SMD:D_SMA", "C22452", {1: "VIN_BUS", 2: "BOOST_SW"},
+       "Boost diode, 40 V 5 A")
+c.part("D18", "Device:D_Schottky", "SS54", "Diode_SMD:D_SMA", "C22452", {1: "VIN_BUS", 2: "VIN_EXT_P"},
+       "VIN_EXT straight to VIN_BUS: 0.5 W at 1 A")
+c.R("R116", "15m", "BOOST_ISNS", "GND", fp=R1206, note="Current sense: 100 mV limit -> 5.3-6.9 A over VSYS")
+c.R("R117", "470", "BOOST_ISNS", "BOOST_CSF", note="Slope compensation, with R118: 79 % at 4.5 V")
+c.R("R118", "100", "BOOST_CSF", "BOOST_CS", note="CS filter")
+c.C("C113", "100pF", "BOOST_CS", "GND", note="CS filter, against the pin")
+c.R("R113", "51k", "BOOST_RT", "GND", note="fsw = 2.21e10 / (RT + 955) = 425 kHz")
+c.C("C116", "22nF", "BOOST_SS", "GND", note="Soft start 2.2 ms (10 µA)")
+c.R("R119", "3.3k", "BOOST_COMP", "BOOST_CZ", note="Compensation: crossover 6-25 kHz, phase margin >= 53°")
+c.C("C114", "100nF", "BOOST_CZ", "GND", note="Compensation zero")
+c.C("C115", "470pF", "BOOST_COMP", "GND", note="Compensation high-frequency pole")
+c.R("R114", "47k", "VIN_BUS", "BOOST_FB", note="1.0 V x (1 + 47/2) = 24.5 V; OVP 27 V")
+c.R("R115", "2k", "BOOST_FB", "GND")
+c.C("C117", "1µF", "BOOST_VCC", "GND", note="VCC regulator, 1 µF minimum")
+c.C("C118", "100nF", "VSYS", "GND", note="BIAS")
+for ref in ("C119", "C120"):
+    c.C(ref, "10µF 50V", "VSYS", "GND", fp=C1206, note="Boost input, against L5 and R116")
+for ref in ("C121", "C122", "C123", "C124"):
+    c.C(ref, "10µF 50V", "VIN_BUS", "GND", fp=C1206, note="Boost output: ~3 µF each at 24 V DC bias")
+c.R("R120", "10k", "BOOST_EN", "BOOST_UVLO", note="3.3 V x 22/32 = 2.27 V, above the 1.5 V threshold")
+c.R("R121", "22k", "BOOST_UVLO", "GND", note="Boost off while the MCU pin is high-Z")
+c.part("Q9", "Transistor_FET:2N7002", "2N7002", "Package_TO_SOT_SMD:SOT-23", "C8545",
+       {1: "BOOST_INH", 2: "GND", 3: "BOOST_UVLO"},
+       "VIN_EXT present: UVLO held low in hardware, whatever BOOST_EN says (a 12 V VIN_EXT must not be "
+       "boosted to 24 V)")
+c.R("R122", "100k", "VIN_EXT_P", "BOOST_INH", note="Gate 3.45 V at 10.8 V, 12.4 V at the 38.9 V TVS clamp")
+c.R("R123", "47k", "BOOST_INH", "GND")
+sense("R124", "R125", "C125", "VIN_BUS", "VIN_BUS_SENSE")
 
 # --------------------------------------------------------------------------------------------
 c.block("+3V3 and +3V3_AUX: two TLV62569 2 A bucks from +5V, 1.5 MHz")
@@ -639,3 +699,67 @@ for (u, ina, src, raw, out, tag, rilm, ilim, shunt, fs, rs, cdv, ren, rflt, cin,
                        3: "INA_ALERT", 1: a1, 2: a0},
            f"{out} monitor, I2C5 address {addr}. Alert on the wired-OR INA_ALERT line")
     c.C(cina, "100nF", "+3V3", "GND", note=ina)
+
+# --------------------------------------------------------------------------------------------
+c.block("Local bus: IDC 2 x 17 ribbon to the Bornier extension modules, +3V3_BUS and VIN_BUS switches")
+# Taken from Bornier hardware/base/gen/circuit.py (same pinout, terminations, pulls and ESD). MCU-side nets carry
+# the mcu-pins.csv names (BUS_*), ribbon-side nets the prefix RB_ behind the 49.9 Ω source terminations.
+BUS_PINOUT = {k + 1: f"RB_CS{k}" for k in range(12)} | {
+    13: "GND", 14: "+3V3_BUS", 15: "GND", 16: "BUS_SDA", 17: "GND", 18: "BUS_SCL", 19: "GND", 20: "RB_SCK",
+    21: "GND", 22: "RB_MOSI", 23: "GND", 24: "BUS_MISO", 25: "GND", 26: "RB_LATCH", 27: "GND", 28: "RB_OE",
+    29: "GND", 30: "BUS_IRQ", 31: "+3V3_BUS", 32: "GND", 33: "+VIN_BUS1", 34: "+VIN_BUS2"}
+c.part("J12", IDC34[0], "LOCAL BUS", IDC34[1], IDC34[2], BUS_PINOUT,
+       "Shrouded, keyed IDC 2 x 17, pinout identical to Bornier. VIN_BUS last, its only neighbour a ground")
+# VIN_BUS switches. TPS27S100 datasheet SLVSE42B: R(ILIM) = 1.233 x 2000 / I (eq. 4), limit >= 0.5 A
+# recommended: 4.7 k -> 525 mA (±28 %). IMON = I(OUT) / 500 (K(IMON)), linear to 4 V, pulled to 4.3-4.9 V on a
+# fault. The two IMON join on one 2 k load: 0.96 A total -> 3.84 V; tap at half -> 1.92 V on PF7, a fault
+# 2.15-2.45 V. DIAG_EN high: diagnostics and protections always on. EN: internal 500 k pull-down (off in reset).
+SWITCH = ("Archet:TPS27S100B", "TPS27S100BRRKR",
+          "Archet:Texas_RRK0016A_WQFN-16-1EP_3.5x4mm_P0.5mm_EP2.05x2.55mm", "C1849486")
+for u, out, en, rl, cin, cout in (("U45", "+VIN_BUS1", "VIN_BUS1_EN", "R129", "C129", "C130"),
+                                  ("U46", "+VIN_BUS2", "VIN_BUS2_EN", "R130", "C131", "C132")):
+    pins = {p: "VIN_BUS" for p in (9, 10, 11, 12)} | {p: out for p in (5, 6, 7, 8)}
+    pins.update({3: en, 14: "+3V3", 16: "VIN_BUS_IMON_RAW", 15: f"{u}_ILIM", 2: "GND", 17: "GND"})
+    c.part(u, *SWITCH, pins, f"{out}: ribbon pin {33 if out.endswith('1') else 34}, 525 mA limit, MCU enable")
+    c.R(rl, "4.7k", f"{u}_ILIM", "GND", note="Current limit 525 mA (eq. 4)")
+    c.C(cin, "100nF", "VIN_BUS", "GND", note="Input, at the switch (datasheet table 3)")
+    c.C(cout, "22nF", out, "GND", note="Output, ESD immunity (datasheet table 3)")
+c.R("R131", "1k", "VIN_BUS_IMON_RAW", "VIN_BUS_IMON", note="IMON load, top half: 2 k in all keeps 0.96 A under 4 V")
+c.R("R132", "1k", "VIN_BUS_IMON", "GND")
+c.C("C133", "22nF", "VIN_BUS_IMON", "GND", note="ADC filter and sample reservoir: 500 Ω x 22 nF = 11 µs")
+# +3V3_BUS. TPS2553 datasheet: I(OS) = 23950 / R(kΩ)^0.977: 47 k -> 556 mA (505-616 mA).
+c.part("U44", "Archet:TPS2553", "TPS2553DBVR", "Package_TO_SOT_SMD:SOT-23-6", "C55266",
+       {1: "+3V3", 3: "BUS_3V3_EN", 5: "U44_ILIM", 6: "+3V3_BUS", 4: "BUS_3V3_FLT", 2: "GND"},
+       "+3V3_BUS: 3.3 V of the ribbon, 505-616 mA limit, MCU enable; a short leaves the probe +3V3 up")
+c.R("R127", "47k", "U44_ILIM", "GND", note="I(OS) = 556 mA")
+c.R("R128", "100k", "BUS_3V3_EN", "GND", note="Off while the MCU pin is high-Z (reset, bootloader)")
+c.R("R133", "10k", "+3V3", "BUS_3V3_FLT", note="Open-drain fault, active low (PD7)")
+c.R("R134", "1k", "+3V3", "U44_LED")
+c.part("D19", *LED_R, {2: "U44_LED", 1: "BUS_3V3_FLT"}, "FAULT: on while +3V3_BUS is in current limit")
+c.C("C127", "100nF", "+3V3", "GND", note="U44 input")
+c.C("C128", "10µF 25V", "+3V3_BUS", "GND", fp=C0805, note="U44 output (datasheet: 120 µF max)")
+r = 135
+for sig in [f"CS{i}" for i in range(12)] + ["LATCH", "OE"]:
+    c.R(f"R{r}", "10k", f"BUS_{sig}", "+3V3", note="Inactive (high) while the MCU pin is not configured"
+        if sig == "CS0" else "")
+    r += 1
+for sig in [f"CS{i}" for i in range(12)] + ["SCK", "MOSI", "LATCH", "OE"]:
+    c.R(f"R{r}", "49.9", f"BUS_{sig}", f"RB_{sig}", note="Series termination at the source" if sig == "CS0" else "")
+    r += 1
+for sig in ("SCK", "MOSI", "LATCH"):     # multipoint edges: 2 x 49.9 in parallel = 25 Ω
+    c.R(f"R{r}", "49.9", f"BUS_{sig}", f"RB_{sig}", note="In parallel with the first: 25 Ω, first step above 2 V")
+    r += 1
+c.R(f"R{r}", "10k", "BUS_IRQ", "+3V3", note="IRQ: wired-OR of open-drain outputs")
+c.R(f"R{r + 1}", "100k", "BUS_MISO", "GND", note="MISO is tri-stated when no module is selected")
+c.R(f"R{r + 2}", "100k", "BUS_SCK", "GND", note="SCK low while the MCU pin is not configured: mode 0 idle")
+c.R(f"R{r + 3}", "100k", "BUS_MOSI", "GND", note="MOSI defined while the MCU pin is not configured")
+c.R(f"R{r + 4}", "2.2k", "BUS_SDA", "+3V3", note="I2C1 at 100 kHz, ribbon and 12 modules: rise < 1 µs")
+c.R(f"R{r + 5}", "2.2k", "BUS_SCL", "+3V3")
+assert r + 5 == 173, r
+# ESD of every ribbon signal, at the header (order of the lines on the channels as on Bornier)
+for k, group in enumerate((("RB_CS2", "RB_CS1", "RB_CS3", "RB_CS0"), ("RB_CS7", "RB_CS5", "RB_CS4", "RB_CS6"),
+                           ("RB_CS9", "RB_CS8", "RB_CS11", "RB_CS10"), ("BUS_SDA", "BUS_SCL", "RB_SCK", "RB_MOSI"),
+                           ("BUS_MISO", "RB_LATCH", "RB_OE", "BUS_IRQ"))):
+    pins = {p: n for p, n in zip((1, 2, 4, 5), group)}
+    pins.update({3: "GND", 8: "GND"})
+    c.part(f"U{47 + k}", *ESD, pins, "ESD of the ribbon lines at the header, flow-through" if k == 0 else "")

@@ -13,7 +13,49 @@
 	)
 	(lib_symbols)
 	(sheet
-		(at 152.4 241.3)
+		(at 25.4 292.1)
+		(size 63.5 25.4)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "abf657c3-085f-5a19-8843-645cd7576022")
+		(property "Sheetname" "Local bus"
+			(at 25.4 291.4 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "local_bus.kicad_sch"
+			(at 25.4 318.1 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project "archet"
+				(path "/5766cc04-c63c-534e-8282-048b5d7ae377"
+					(page "17")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 279.4 241.3)
 		(size 63.5 25.4)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -29,7 +71,7 @@
 		)
 		(uuid "55452332-a74d-5847-a241-755f59a33b9f")
 		(property "Sheetname" "Shield supply"
-			(at 152.4 240.6 0)
+			(at 279.4 240.6 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -38,6 +80,48 @@
 			)
 		)
 		(property "Sheetfile" "shield_supply.kicad_sch"
+			(at 279.4 267.3 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+			)
+		)
+		(instances
+			(project "archet"
+				(path "/5766cc04-c63c-534e-8282-048b5d7ae377"
+					(page "16")
+				)
+			)
+		)
+	)
+	(sheet
+		(at 152.4 241.3)
+		(size 63.5 25.4)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(stroke
+			(width 0.1524)
+			(type solid)
+		)
+		(fill
+			(color 0 0 0 0)
+		)
+		(uuid "a50de6e4-a674-5212-922a-b242457c6848")
+		(property "Sheetname" "Shield"
+			(at 152.4 240.6 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left bottom)
+			)
+		)
+		(property "Sheetfile" "shield.kicad_sch"
 			(at 152.4 267.3 0)
 			(effects
 				(font
@@ -69,8 +153,8 @@
 		(fill
 			(color 0 0 0 0)
 		)
-		(uuid "a50de6e4-a674-5212-922a-b242457c6848")
-		(property "Sheetname" "Shield"
+		(uuid "dbf50f16-3a49-5f04-9cb3-b00ebfef5df0")
+		(property "Sheetname" "UI and field bus"
 			(at 25.4 240.6 0)
 			(effects
 				(font
@@ -79,7 +163,7 @@
 				(justify left bottom)
 			)
 		)
-		(property "Sheetfile" "shield.kicad_sch"
+		(property "Sheetfile" "ui_field.kicad_sch"
 			(at 25.4 267.3 0)
 			(effects
 				(font
@@ -111,8 +195,8 @@
 		(fill
 			(color 0 0 0 0)
 		)
-		(uuid "dbf50f16-3a49-5f04-9cb3-b00ebfef5df0")
-		(property "Sheetname" "UI and field bus"
+		(uuid "c6ed6be0-ec73-5e48-9bbb-b55da59c07c6")
+		(property "Sheetname" "Target supply"
 			(at 279.4 189.8 0)
 			(effects
 				(font
@@ -121,7 +205,7 @@
 				(justify left bottom)
 			)
 		)
-		(property "Sheetfile" "ui_field.kicad_sch"
+		(property "Sheetfile" "tgt_supply.kicad_sch"
 			(at 279.4 216.5 0)
 			(effects
 				(font
@@ -153,8 +237,8 @@
 		(fill
 			(color 0 0 0 0)
 		)
-		(uuid "c6ed6be0-ec73-5e48-9bbb-b55da59c07c6")
-		(property "Sheetname" "Target supply"
+		(uuid "73480f51-3b59-522d-a0bf-81f2ec177fba")
+		(property "Sheetname" "Target"
 			(at 152.4 189.8 0)
 			(effects
 				(font
@@ -163,7 +247,7 @@
 				(justify left bottom)
 			)
 		)
-		(property "Sheetfile" "tgt_supply.kicad_sch"
+		(property "Sheetfile" "target.kicad_sch"
 			(at 152.4 216.5 0)
 			(effects
 				(font
@@ -195,8 +279,8 @@
 		(fill
 			(color 0 0 0 0)
 		)
-		(uuid "73480f51-3b59-522d-a0bf-81f2ec177fba")
-		(property "Sheetname" "Target"
+		(uuid "2cfffacd-908b-505d-9f15-9b4035a92679")
+		(property "Sheetname" "Ethernet"
 			(at 25.4 189.8 0)
 			(effects
 				(font
@@ -205,7 +289,7 @@
 				(justify left bottom)
 			)
 		)
-		(property "Sheetfile" "target.kicad_sch"
+		(property "Sheetfile" "rmii.kicad_sch"
 			(at 25.4 216.5 0)
 			(effects
 				(font
@@ -237,8 +321,8 @@
 		(fill
 			(color 0 0 0 0)
 		)
-		(uuid "2cfffacd-908b-505d-9f15-9b4035a92679")
-		(property "Sheetname" "Ethernet"
+		(uuid "be6a2f87-3f7c-5c26-8949-6690191db628")
+		(property "Sheetname" "USB HS"
 			(at 279.4 139 0)
 			(effects
 				(font
@@ -247,7 +331,7 @@
 				(justify left bottom)
 			)
 		)
-		(property "Sheetfile" "rmii.kicad_sch"
+		(property "Sheetfile" "ulpi.kicad_sch"
 			(at 279.4 165.7 0)
 			(effects
 				(font
@@ -279,8 +363,8 @@
 		(fill
 			(color 0 0 0 0)
 		)
-		(uuid "be6a2f87-3f7c-5c26-8949-6690191db628")
-		(property "Sheetname" "USB HS"
+		(uuid "83b58830-c5a8-5b0f-967b-fc6b6f5a6688")
+		(property "Sheetname" "FPGA"
 			(at 152.4 139 0)
 			(effects
 				(font
@@ -289,7 +373,7 @@
 				(justify left bottom)
 			)
 		)
-		(property "Sheetfile" "ulpi.kicad_sch"
+		(property "Sheetfile" "fpga.kicad_sch"
 			(at 152.4 165.7 0)
 			(effects
 				(font
@@ -321,8 +405,8 @@
 		(fill
 			(color 0 0 0 0)
 		)
-		(uuid "83b58830-c5a8-5b0f-967b-fc6b6f5a6688")
-		(property "Sheetname" "FPGA"
+		(uuid "39edc9fc-3dfd-56a0-a3cc-73de24f6514a")
+		(property "Sheetname" "MCU"
 			(at 25.4 139 0)
 			(effects
 				(font
@@ -331,7 +415,7 @@
 				(justify left bottom)
 			)
 		)
-		(property "Sheetfile" "fpga.kicad_sch"
+		(property "Sheetfile" "mcu.kicad_sch"
 			(at 25.4 165.7 0)
 			(effects
 				(font
@@ -363,8 +447,8 @@
 		(fill
 			(color 0 0 0 0)
 		)
-		(uuid "39edc9fc-3dfd-56a0-a3cc-73de24f6514a")
-		(property "Sheetname" "MCU"
+		(uuid "6a44e552-4c7d-57df-b6ec-daafd7ea8b81")
+		(property "Sheetname" "+3V3"
 			(at 279.4 88.2 0)
 			(effects
 				(font
@@ -373,7 +457,7 @@
 				(justify left bottom)
 			)
 		)
-		(property "Sheetfile" "mcu.kicad_sch"
+		(property "Sheetfile" "buck3v3.kicad_sch"
 			(at 279.4 114.9 0)
 			(effects
 				(font
@@ -405,8 +489,8 @@
 		(fill
 			(color 0 0 0 0)
 		)
-		(uuid "6a44e552-4c7d-57df-b6ec-daafd7ea8b81")
-		(property "Sheetname" "+3V3"
+		(uuid "8ed5b44f-eea6-5fd2-b940-4d701ef890ef")
+		(property "Sheetname" "VIN_BUS"
 			(at 152.4 88.2 0)
 			(effects
 				(font
@@ -415,7 +499,7 @@
 				(justify left bottom)
 			)
 		)
-		(property "Sheetfile" "buck3v3.kicad_sch"
+		(property "Sheetfile" "boost.kicad_sch"
 			(at 152.4 114.9 0)
 			(effects
 				(font

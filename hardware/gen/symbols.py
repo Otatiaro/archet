@@ -89,6 +89,38 @@ SYMBOLS = [
         datasheet="https://www.ti.com/lit/ds/symlink/tps2595.pdf",
         description="eFuse 2.7-18 V, 34 mΩ, 0.5-4 A limit set by ILM resistor, auto-retry; output clamp "
                     "3.8 V (TPS259521), 5.7 V (TPS259531), 13.7 V (TPS259541)"),
+    # TI LM5155 datasheet SNVSB75E, 6 (DSS, WSON-12). 13 = exposed pad, tied to AGND.
+    symbol("LM5155", [
+        ("1", "BIAS", "power_in", "L", 0), ("12", "UVLO/EN/SYNC", "input", "L", 2),
+        ("9", "SS", "passive", "L", 4), ("10", "RT", "passive", "L", 6), ("6", "COMP", "passive", "L", 8),
+        ("3", "GATE", "output", "R", 0), ("5", "CS", "input", "R", 2), ("11", "PGOOD", "open_collector", "R", 4),
+        ("8", "FB", "input", "R", 6),
+        ("2", "VCC", "power_out", "T", 4),
+        ("4", "PGND", "power_in", "B", 2), ("7", "AGND", "power_in", "B", 4), ("13", "EP", "passive", "B", 6),
+    ], 8, 10, ref="U", footprint="Package_SON:WSON-12-1EP_3x2mm_P0.5mm_EP1x2.65",
+        datasheet="https://www.ti.com/lit/ds/symlink/lm5155.pdf",
+        description="Non-synchronous boost controller, 2.2-45 V input, peak current mode, 100 kHz-2.2 MHz"),
+    # TI TPS2553 datasheet SLVS841, DBV pinout: 1 IN, 2 GND, 3 EN (active high), 4 FAULT, 5 ILIM, 6 OUT.
+    symbol("TPS2553", [
+        ("1", "IN", "power_in", "L", 0), ("3", "EN", "input", "L", 2),
+        ("6", "OUT", "power_out", "R", 0), ("4", "~{FAULT}", "open_collector", "R", 2),
+        ("5", "ILIM", "passive", "R", 3),
+        ("2", "GND", "power_in", "B", 2),
+    ], 8, 5, ref="U", footprint="Package_TO_SOT_SMD:SOT-23-6",
+        datasheet="https://www.ti.com/lit/ds/symlink/tps2553.pdf",
+        description="Power distribution switch, 2.5-6.5 V, 85 mΩ, 75 mA-1.7 A limit set by resistor, active-high EN"),
+    # TI TPS27S100 datasheet SLVSE42B, pin functions (B variant, RRK): 2 GND, 3 EN, 5-8 OUT, 9-12 IN,
+    # 14 DIAG_EN, 15 ILIM, 16 IMON; 1, 4, 13 not connected; 17 = thermal pad (GND or floating).
+    symbol("TPS27S100B", [
+        ("9", "IN", "power_in", "L", 0), ("10", "IN", "passive", "L", 1), ("11", "IN", "passive", "L", 2),
+        ("12", "IN", "passive", "L", 3), ("3", "EN", "input", "L", 5), ("14", "DIAG_EN", "input", "L", 6),
+        ("5", "OUT", "power_out", "R", 0), ("6", "OUT", "passive", "R", 1), ("7", "OUT", "passive", "R", 2),
+        ("8", "OUT", "passive", "R", 3), ("16", "IMON", "passive", "R", 5), ("15", "ILIM", "passive", "R", 6),
+        ("2", "GND", "power_in", "B", 1), ("17", "PAD", "passive", "B", 3),
+        ("1", "NC", "no_connect", "T", 1), ("4", "NC", "no_connect", "T", 2), ("13", "NC", "no_connect", "T", 3),
+    ], 8, 8, ref="U", footprint="Archet:Texas_RRK0016A_WQFN-16-1EP_3.5x4mm_P0.5mm_EP2.05x2.55mm",
+        datasheet="https://www.ti.com/lit/ds/symlink/tps27s100.pdf",
+        description="High-side switch 3.5-40 V, 80 mΩ, adjustable current limit, current monitor IMON (1/500)"),
 ]
 
 

@@ -89,7 +89,64 @@ def dsj14_3d():
     return boxes
 
 
-MLT_PAD = 2.3 / 2 + 4.8 / 2           # pad centres: 2.3 mm pads, 4.8 mm apart (soldering pattern §5.2)
+RRK_NAME = "Texas_RRK0016A_WQFN-16-1EP_3.5x4mm_P0.5mm_EP2.05x2.55mm"
+
+
+def _rrk_pins():
+    """Pin centres of the RRK0016A in the footprint frame (pin 1 top left): 2-7 down the left side, 8-9 on the
+    bottom edge, 10-15 up the right side, 16 and 1 on the top edge. Drawing 4424663/B: 10 x 0.5 pitch on the long
+    sides (2.5 overall), 1.5 between the two pins of each short side; land pattern 4424663/B: rows 3.3 and 3.8
+    apart (pad centres), lands 0.6 x 0.24."""
+    pins = {}
+    for i in range(6):
+        pins[str(2 + i)] = (-1.65, -1.25 + 0.5 * i, "h")
+        pins[str(15 - i)] = (1.65, -1.25 + 0.5 * i, "h")
+    pins.update({"1": (-0.75, -1.9, "v"), "16": (0.75, -1.9, "v"), "8": (-0.75, 1.9, "v"), "9": (0.75, 1.9, "v")})
+    return pins
+
+
+def rrk16():
+    """TI RRK0016A WQFN-16, TPS27S100 (SLVSE42B package drawings 4424663/B): body 3.5 x 4.0, exposed pad
+    2.05 x 2.55, lands 0.6 x 0.24. Paste on the pad: 2 x 2 windows 0.92 x 1.13 (stencil example, 80 %)."""
+    items = []
+    for num, (x, y, o) in _rrk_pins().items():
+        items.append(pad(num, x, y, 0.6, 0.24) if o == "h" else pad(num, x, y, 0.24, 0.6))
+    items.append(pad("17", 0, 0, 2.05, 2.55, shape="rect", paste=False))
+    for sx in (-0.51, 0.51):
+        for sy in (-0.635, 0.635):
+            items.append(f'  (pad "" smd rect (at {_f(sx)} {_f(sy)}) (size 0.92 1.13) (layers "F.Paste"))')
+    items.append(rect("F.Fab", -1.75, -2.0, 1.75, 2.0, 0.1))
+    items.append(line("F.Fab", -1.75, -1.5, -1.25, -2.0, 0.1))
+    items.append(rect("F.CrtYd", -2.2, -2.45, 2.2, 2.45, 0.05))
+    for sx in (-1, 1):                                    # silk at the corners, clear of the lands
+        for sy in (-1, 1):
+            items.append(line("F.SilkS", sx * 1.86, sy * 1.65, sx * 1.86, sy * 2.11))
+            items.append(line("F.SilkS", sx * 1.86, sy * 2.11, sx * 1.15, sy * 2.11))
+    items.append('  (fp_circle (center -2.15 -2.2) (end -2.05 -2.2) (stroke (width 0.2) (type solid)) (fill yes) (layer "F.SilkS"))')
+    return footprint(RRK_NAME, "TI RRK0016A WQFN-16 3.5x4 mm pitch 0.5 mm, exposed pad 2.05x2.55 mm "
+                     "(SLVSE42B package drawings 4424663/B)", (3.5, 4.0), items,
+                     model=f"${{KIPRJMOD}}/archet.3dshapes/{RRK_NAME}.step")
+
+
+def rrk16_3d():
+    """Same drawing: body 3.35-3.65 x 3.85-4.15, height 0.7-0.8, standoff 0-0.05, terminals 0.19-0.29 wide x
+    0.3-0.5 long, exposed pad 2.05 x 2.55. Nominal values; 3D frame Y up (footprint y negated)."""
+    body, metal, mark = (0.15, 0.15, 0.15), (0.80, 0.80, 0.82), (0.85, 0.85, 0.85)
+    boxes = [((-1.75, -2.0, 0.02, 1.75, 2.0, 0.75), body),
+             ((-1.025, -1.275, 0.0, 1.025, 1.275, 0.02), metal)]
+    for x, y, o in _rrk_pins().values():
+        y = -y
+        if o == "h":
+            x0, x1 = (-1.76, -1.36) if x < 0 else (1.36, 1.76)
+            boxes.append(((x0, y - 0.12, 0.0, x1, y + 0.12, 0.2), metal))
+        else:
+            y0, y1 = (1.61, 2.01) if y > 0 else (-2.01, -1.61)
+            boxes.append(((x - 0.12, y0, 0.0, x + 0.12, y1, 0.2), metal))
+    boxes.append(((-1.45, 1.45, 0.75, -1.15, 1.75, 0.76), mark))      # pin 1 dot (top left)
+    return boxes
+
+
+MLT_PAD = 2.3 / 2 + 4.8 / 2          # pad centres: 2.3 mm pads, 4.8 mm apart (soldering pattern §5.2)
 
 
 def mlt8530():
@@ -189,7 +246,8 @@ def msk12c02_3d():
     return boxes
 
 
-FOOTPRINTS = [(dsj14, dsj14_3d), (mlt8530, mlt8530_3d), (ts1187a, ts1187a_3d), (msk12c02, msk12c02_3d), (dsg8, None)]
+FOOTPRINTS = [(dsj14, dsj14_3d), (mlt8530, mlt8530_3d), (ts1187a, ts1187a_3d), (msk12c02, msk12c02_3d), (dsg8, None),
+              (rrk16, rrk16_3d)]
 
 
 def write():
