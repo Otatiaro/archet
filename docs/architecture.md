@@ -212,18 +212,18 @@ Three sources ORed by ideal diodes into VSYS (4.5–24 V). A single wide-input b
 ```
 USB-C VBUS (5–20 V)    ── LM74700 ──┐
 PoE module (12 V)      ── LM74700 ──┼── VSYS ─┬─ LMR33630 ── +5V ───┬── TLV62569 ── +3V3      (probe)
-VIN_EXT (10.8–24 V)    ┬─ LM74700 ──┘ SMBJ24A │  (36 V, 3 A)        ├── TLV62569 ── +3V3_AUX ─── eFuse ── 3V3_OUT (shield)
+VIN_EXT (10.8–24 V)    ┬─ LM74700 ──┘ SMBJ24CA│  (36 V, 3 A)        ├── TLV62569 ── +3V3_AUX ─── eFuse ── 3V3_OUT (shield)
                        │                      │                     ├── TPS63020 ── TGT_VSUP 1.6–5 V (target, STDC14 pin 1)
                        │                      │                     └── eFuse ── 5V_OUT (shield, if VSYS ≥ 6 V)
                        │                      └─ LM5155 boost ── 24 V ──┐  (disabled in hardware
                        └── Schottky ────────────────────────────────────┴── VIN_BUS switches     when VIN_EXT is present)
 ```
 
-**VIN_EXT is limited to 24 V** (Archet runs on a bench, from a stable supply; 12 or 24 V nominal as on Bornier). The SMBJ24A starts conducting at 26.7 V and clamps at 38.9 V: below the 40 V of the TPS27S100 and the 45 V of the LM5155.
+**VIN_EXT is limited to 24 V** (Archet runs on a bench, from a stable supply; 12 or 24 V nominal as on Bornier). A 5 A fuse (12H1500C) then the SMBJ24CA TVS protect it. The TVS is bidirectional: a reversed supply only meets the LM74700 (−65 V) instead of conducting through the TVS. It starts conducting at 26.7 V and clamps at 38.9 V: below the 40 V of the TPS27S100 and the 45 V of the LM5155.
 
 - **Priority: highest voltage wins**, with no control logic: VIN_EXT 24 V > PD 15–20 V > PoE 12 V > USB 5 V in the usual cases. A forced priority would need back-to-back FETs per source (an ideal diode with EN low still conducts through the body diode of its FET); none of the cases below justifies it. The firmware identifies the active source from the ADC inputs (VIN_EXT, VBUS, PoE 12 V, VSYS) and derives the budget from it.
 - **Three ideal diodes**, USB included: the PD sink P-MOS alone would back-feed the host VBUS through its body diode as soon as VSYS exceeds 5 V.
-- **LMR33630 rather than TPS5430**: the TPS5430 needs 5.5 V and would not run on a 5 V USB port. 36 V, 1.5 × the 24 V maximum: the SMBJ24A only clamps at 38.9 V at its full rated surge current (15.5 A), an EMC test case; on a bench it only conducts on hot-plug ringing, at low current, around 27–30 V. No basic or preferred buck fits (TPS54331: 28 V, too close to the TVS breakdown). Synchronous, it runs up to ~98 % duty: on 5 V USB, +5V ≈ 4.8 V, enough for the TLV62569 (2.5–5.5 V); 5V_OUT stays off.
+- **LMR33630 rather than TPS5430**: the TPS5430 needs 5.5 V and would not run on a 5 V USB port. 36 V, 1.5 × the 24 V maximum: the SMBJ24CA only clamps at 38.9 V at its full rated surge current (15.5 A), an EMC test case; on a bench it only conducts on hot-plug ringing, at low current, around 27–30 V. No basic or preferred buck fits (TPS54331: 28 V, too close to the TVS breakdown). Synchronous, it runs up to ~98 % duty: on 5 V USB, +5V ≈ 4.8 V, enough for the TLV62569 (2.5–5.5 V); 5V_OUT stays off.
 - **+3V3_AUX separate from +3V3**: a shield or target short never pulls the probe rail down.
 - **VIN_BUS**: VIN_EXT through a Schottky (0.5 W at 1 A; an ideal diode if that heat is too much), or the boost when VIN_EXT is absent. The boost enable is gated in hardware by VIN_EXT presence: with a 12 V VIN_EXT, the 24 V boost would otherwise take over.
 - **Boost: LM5155 controller** (3.5–45 V input), external 60 V N-MOS, Schottky and sense resistor. Fed from VSYS, it takes the whole source budget: no detour through the +5V rail. Current sense sized for ~4 A peak: ~0.5 A at 24 V from 5 V, ~1 A (the two 480 mA VIN_BUS pins) from 12 V and above. Disabled, it passes VSYS to VIN_BUS through its inductor and diode: with a 20 V PD charger and a 12 V VIN_EXT, VIN_BUS is then fed by the charger, which the VSYS INA226 counts. The integrated MT3608B and SX1308 stop at 24 V input, with no margin; the TPS55340 has too little stock.
@@ -372,7 +372,9 @@ Unit price for 1 to 9 parts (first runs of 2 to 5 boards). Type: BASIC and PREF 
 | VSYS → +5V synchronous buck (3.8–36 V, 3 A) | LMR33630ADDAR | C841384 | ext | 22,086 | $0.52 |
 | +5V → +3V3 and +3V3_AUX bucks (×2) | TLV62569DBVR | C141836 | ext | 486,606 | $0.07 |
 | 24 V boost controller for VIN_BUS (external FET) | LM5155DSSR | C545416 | ext | 11,468 | $1.62 |
-| VIN_EXT input TVS | SMBJ24A | C123819 | ext | 47,634 | $0.06 |
+| VIN_EXT input TVS, bidirectional | SMBJ24CA | C78416 | ext | 50,587 | $0.06 |
+| 60 V N-MOS (×4: three ideal diodes, VIN_BUS boost), 8.1 mΩ | CSD18543Q3A | C840100 | ext | 2,253 | $1.03 |
+| VIN_EXT terminal block, pluggable 3.81 mm, 8 A (plug C440858) | KF2EDGR-3.81-2P | C441182 | ext | 36,336 | $0.05 |
 | ULPI PHY | USB3320C-EZK-TR | C132156 | ext | 9,766 | $1.52 |
 | VIN_BUS switch (40 V, 4 A) | TPS27S100BRRKR | C1849486 | ext | 3,448 | $1.57 |
 | RMII PHY | LAN8742A-CZ-TR (variant LAN8720A-CP-TR C45223, $0.79) | C621424 | ext | 5,927 | $1.40 |
@@ -425,7 +427,7 @@ To check: no fee for preferred parts in Standard assembly (granted in Economic).
 - Module EEPROM choice and descriptor format (shared with Bornier).
 - Shield descriptor format.
 - Future of the earlier Archet harness schematic (HV/LV channels, RS-485, DAC): first generic shield?
-- Boost MOSFET (60 V, logic level, ~5 A) and inductor: choose at schematic, basic library first.
+- Boost inductor: choose at schematic (MOSFET: the CSD18543Q3A of the ideal diodes; the basic library only has a 90 mΩ SOT-23).
 - TGT_VSUP: FB injection network (range, DAC resolution), TPS63020 behaviour when the target back-drives its output (load disconnect in shutdown to check), inductor.
 - STDC14 pins 1–2: confirm on a STLINK-V3SET (5 V on pin 1 with JP2, SWDIO direction and polarity on pin 2).
 - ESP-Prog PROG pinout to confirm against the Espressif documentation.
