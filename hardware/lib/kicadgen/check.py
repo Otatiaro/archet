@@ -10,7 +10,8 @@ import re
 import subprocess
 import tempfile
 
-from .kicad import cli
+from .kicad import cli, footprint_dir
+from .circuit import bare
 from .sexpr import parse, find, first
 
 
@@ -41,7 +42,35 @@ def erc(sch):
     return text, [(re.match(r"\[(\w+)\]", b).group(1), b) for b in blocks if re.match(r"\[\w+\]:", b)]
 
 
-def check(circuit, sch, allowed_erc=(), waived=()):
+def models(circuit, fp_libs=None):
+    """Footprints and 3D models: returns one line per footprint that is missing or has no model file.
+
+    fp_libs: project footprint libraries {nickname: path to the .pretty folder}.
+    """
+    fp_dir = footprint_dir()
+    mod_dir = os.path.join(os.path.dirname(fp_dir), "3dmodels").replace("\\", "/")
+    by_fp = {}
+    for p in circuit.parts:
+        if bare(p):
+            continue
+        by_fp.setdefault(p["fp"], []).append(p["ref"])
+    out = []
+    for fp, refs in sorted(by_fp.items()):
+        lib, name = fp.split(":", 1)
+        pretty = (fp_libs or {}).get(lib) or os.path.join(fp_dir, lib + ".pretty")
+        path = os.path.join(pretty, name + ".kicad_mod")
+        if not os.path.exists(path):
+            out.append(f"no footprint {fp} ({', '.join(refs)})")
+            continue
+        found = re.findall(r'\(model\s+"?([^"\s)]+)', open(path, encoding="utf-8").read())
+        files = [re.sub(r"\$\{KICAD\d*_3DMODEL_DIR\}", mod_dir, m).replace("${KIPRJMOD}", os.path.dirname(pretty))
+                 for m in found]
+        if not any(os.path.exists(f) for f in files):
+            out.append(f"no 3D model {fp} ({', '.join(refs)})" + (f": {found[0]} absent" if found else ""))
+    return out
+
+
+def check(circuit, sch, allowed_erc=(), waived=(), fp_libs=None):
     """Print the report; return 0 when ERC (minus allowed kinds) and netlist are clean.
 
     allowed_erc: violation kinds tolerated while sheets are missing.
@@ -77,6 +106,10 @@ def check(circuit, sch, allowed_erc=(), waived=()):
         print("".join(b for k, b in found if k not in allowed_erc))
     print(f"netlist: {len(errors)} differences")
     for e in errors:
+        print("  x", e)
+    gaps = models(circuit, fp_libs)
+    print(f"footprints and 3D models: {len(gaps)} missing")
+    for e in gaps:
         print("  x", e)
     if missing:
         print(f"not drawn yet ({len(missing)}):", " ".join(missing))

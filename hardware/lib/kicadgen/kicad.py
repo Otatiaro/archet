@@ -80,7 +80,8 @@ class Libraries:
             out = [Sym("symbol"), name]
             for c in base[2:]:
                 if isinstance(c, list) and c[0] == "property" and c[1] in props:
-                    out.append(props[c[1]])
+                    # an empty field in the derived symbol inherits the parent's (KiCad's Flatten does the same)
+                    out.append(props[c[1]] if props[c[1]][2] != "" else c)
                 elif isinstance(c, list) and c[0] == "symbol":
                     c = copy.deepcopy(c)
                     c[1] = c[1].replace(base_name, name, 1)
@@ -109,6 +110,19 @@ def pin_geometry(sym, unit=1):
                 raise ValueError(f"malformed pin in {sym[1]}")
             pins.append((number[1], float(at[1]), float(at[2]), int(float(at[3])) if len(at) > 3 else 0))
     return pins
+
+
+def pin_names(sym, unit=1):
+    """Pins of one unit as {number: name}; unit 0 pins are common."""
+    names = {}
+    for node in find(sym, "symbol"):
+        tag = node[1].rsplit("_", 2)
+        u, style = int(tag[-2]), int(tag[-1])
+        if u not in (0, unit) or style not in (0, 1):
+            continue
+        for p in find(node, "pin"):
+            names[first(p, "number")[1]] = first(p, "name")[1]
+    return names
 
 
 def prop_value(sym, key):

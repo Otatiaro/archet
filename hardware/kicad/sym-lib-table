@@ -1,0 +1,4 @@
+(sym_lib_table
+  (version 7)
+  (lib (name "Archet")(type "KiCad")(uri "${KIPRJMOD}/archet.kicad_sym")(options "")(descr "Archet project symbols"))
+)

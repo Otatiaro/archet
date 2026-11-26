@@ -13,6 +13,12 @@ C0603 = "Capacitor_SMD:C_0603_1608Metric"
 C0805 = "Capacitor_SMD:C_0805_2012Metric"
 
 
+def bare(part):
+    """True for a footprint with nothing fitted (test pad, Tag-Connect pattern): no BOM line, no 3D body."""
+    return (part.get("bare") or part["sym"].startswith("Connector:TestPoint")
+            or "Tag-Connect" in (part["fp"] or ""))
+
+
 class Circuit:
     def __init__(self, palette=None, r_fp=R0603, c_fp=C0603):
         """palette: {(kind 'R'|'C', value, footprint): LCSC code}. When given, every resistor and
@@ -35,13 +41,14 @@ class Circuit:
         """References of a group, in creation order: the n-th part of two instances match."""
         return [p["ref"] for p in self.parts if group in (p["group"], p["also"])]
 
-    def part(self, ref, sym, value, fp=None, lcsc="", pins=None, note="", dnp=False, also=None):
-        """also: a second repeated-sheet group, for a multi-unit part whose units sit on two sheets."""
+    def part(self, ref, sym, value, fp=None, lcsc="", pins=None, note="", dnp=False, also=None, bare=False):
+        """also: a second repeated-sheet group, for a multi-unit part whose units sit on two sheets.
+        bare: footprint only, nothing fitted (pads to solder a wire or a header to)."""
         if any(p["ref"] == ref for p in self.parts):
             raise ValueError(f"duplicate reference {ref}")
         self.parts.append(dict(ref=ref, sym=sym, value=value, fp=fp, lcsc=lcsc,
                                pins={str(k): v for k, v in (pins or {}).items()},
-                               block=self._block, group=self._group, also=also, note=note, dnp=dnp))
+                               block=self._block, group=self._group, also=also, note=note, dnp=dnp, bare=bare))
 
     def _passive(self, kind, value, fp, lcsc):
         if fp is None and self.palette is not None:

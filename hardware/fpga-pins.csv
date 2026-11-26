@@ -10,15 +10,15 @@ pin,net,group,dir,to,note
 20,FPGA_REFCLK,MCU,in,PC9,"GBIN: MCO2, common time base"
 21,SYNC_OUT,SHIELD,out,J_SHIELD_SVC,"cross-triggering"
 23,SYNC_IN,SHIELD,in,J_SHIELD_SVC,"GBIN: external trigger or clock"
-25,TGT_UART_RX_3V3,TARGET,in,J_TARGET 14 / J_PROG 3,"via SN74LVC1T45"
-26,TGT_UART_TX_3V3,TARGET,out,J_TARGET 13 / J_PROG 5,"via SN74LVC1T45"
-27,TGT_IO0_3V3,TARGET,out,J_PROG 6,"via SN74LVC1T45; ESP32 boot strap"
-28,TGT_NRST_3V3,TARGET,out,J_TARGET 12 / J_PROG 1,"via translator, open drain on the target side"
-31,TGT_SWO_3V3,TARGET,in,J_TARGET 8,"SWO / TDO, via SN74LVC1T45"
-32,TGT_TDI_3V3,TARGET,out,J_TARGET 10,"via SN74LVC1T45"
+25,TGT_UART_RX_3V3,TARGET,in,J_TARGET 14 / J_PROG 3,"via SN74LVC2T45 (U20, B to A, with SWO)"
+26,TGT_UART_TX_3V3,TARGET,out,J_TARGET 13 / J_PROG 5,"via SN74LVC1T45, 33 ohm series"
+27,TGT_IO0_3V3,TARGET,out,J_PROG 6,"2N7002 open drain (high: IO0 low); ESP32 boot strap; 10k pull-down keeps it released while unconfigured"
+28,TGT_NRST_3V3,TARGET,out,J_TARGET 12 / J_PROG 1,"2N7002 open drain (high: nRST low); 10k pull-down keeps it released while unconfigured"
+31,TGT_SWO_3V3,TARGET,in,J_TARGET 8,"SWO / TDO, via SN74LVC2T45 (U20, B to A)"
+32,TGT_TDI_3V3,TARGET,out,J_TARGET 10,"via SN74LVC2T45 (U19, with SWCLK), 33 ohm series"
 34,TGT_SWDIO_DIR,TARGET,out,J_TARGET 2,"DIR of the SWDIO translator, copied to STDC14 pin 2 through 74LVC1G125"
-35,TGT_SWCLK_3V3,TARGET,out,J_TARGET 6,"SWCLK / TCK, via SN74LVC1T45; GBIN pin, unused as such"
-36,TGT_SWDIO_3V3,TARGET,io,J_TARGET 4,"SWDIO / TMS, via SN74LVC1T45 (DIR = pin 34)"
+35,TGT_SWCLK_3V3,TARGET,out,J_TARGET 6,"SWCLK / TCK, via SN74LVC2T45 (U19), 33 ohm series; GBIN pin, unused as such"
+36,TGT_SWDIO_3V3,TARGET,io,J_TARGET 4,"SWDIO / TMS, via SN74LVC1T45 (DIR = pin 34, 10k pull-down: input while unconfigured), 33 ohm series"
 2,SHIELD_IO0,SHIELD,io,J_SHIELD_IO 2,"33 ohm series at the header"
 3,SHIELD_IO1,SHIELD,io,J_SHIELD_IO 4,
 4,SHIELD_IO2,SHIELD,io,J_SHIELD_IO 6,
@@ -36,3 +36,5 @@ pin,net,group,dir,to,note
 47,SHIELD_IO14,SHIELD,io,J_SHIELD_IO 30,
 48,SHIELD_IO15,SHIELD,io,J_SHIELD_IO 32,
 39,SHIELD_OE_N,SHIELD,out,J_SHIELD_SVC,"RGB0 pin, open drain, pull-up on the probe: drivers off until the bitstream pulls it low"
+40,LED_LINK,UI,out,front panel,"RGB1 current sink (SB_RGBA_DRV), host link state written by the MCU"
+41,LED_SPARE,UI,out,front panel,"RGB2 current sink, spare LED"

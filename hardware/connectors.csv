@@ -112,7 +112,7 @@ J_TARGET,8,TGT_SWO,T_JTDO/T_SWO
 J_TARGET,9,NC,"T_JRCLK (RTCK), not used"
 J_TARGET,10,TGT_TDI,T_JTDI
 J_TARGET,11,GND,GNDDetect
-J_TARGET,12,TGT_NRST,open drain
+J_TARGET,12,TGT_NRST,"open drain, 2N7002"
 J_TARGET,13,TGT_UART_TX,"T_VCP_RX: probe output, to the target RX"
 J_TARGET,14,TGT_UART_RX,"T_VCP_TX: probe input, from the target TX"
 J_PROG,1,TGT_NRST,"ESP_EN, same line as STDC14 pin 12"
@@ -120,4 +120,7 @@ J_PROG,2,TGT_VCC,"VDD, same net as STDC14 pin 3"
 J_PROG,3,TGT_UART_RX,"ESP_TXD: target TX, probe input"
 J_PROG,4,GND,
 J_PROG,5,TGT_UART_TX,"ESP_RXD: target RX, probe output"
-J_PROG,6,TGT_IO0,ESP_IO0 / BOOT
+J_PROG,6,TGT_IO0,"ESP_IO0 / BOOT, open drain, 2N7002"
+J_FIELD,1,FIELD_H,"CAN_H / RS-485 A, NUP2105L ESD, 120 ohm termination by switch"
+J_FIELD,2,FIELD_L,"CAN_L / RS-485 B"
+J_FIELD,3,GND,"signal ground, pluggable 3.81 mm"

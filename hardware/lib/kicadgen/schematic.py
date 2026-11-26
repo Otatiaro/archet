@@ -14,11 +14,12 @@ import uuid
 
 from .sexpr import Sym, dump
 from .kicad import Libraries, pin_geometry, prop_value
+from .circuit import bare
 
-POWER_KINDS = ("GND", "GNDISO", "+3V3", "+5V", "+VIN", "PWR_FLAG")
+POWER_KINDS = ("GND", "GNDISO", "+3V3", "+3V3_AUX", "+5V", "+VIN", "PWR_FLAG")
 GROUNDS = ("GND", "GNDISO")
 # Power symbols drawn from another library symbol; the net takes the name in the Value field.
-POWER_LIB = {"GNDISO": "power:GNDS", "+VIN": "power:VCC"}
+POWER_LIB = {"GNDISO": "power:GNDS", "+VIN": "power:VCC", "+3V3_AUX": "power:+3.3VA"}
 
 
 def g(v):
@@ -221,7 +222,7 @@ class Sheet:
         node = [Sym("symbol"), [Sym("lib_id"), part["sym"]], [Sym("at"), x, y, rot]]
         if mirror:
             node.append([Sym("mirror"), Sym(mirror)])
-        in_bom = "no" if part["sym"].startswith("Connector:TestPoint") else "yes"   # a pad, nothing to buy
+        in_bom = "no" if bare(part) else "yes"   # a pad, nothing to buy
         node += [[Sym("unit"), unit], [Sym("exclude_from_sim"), Sym("no")], [Sym("in_bom"), Sym(in_bom)],
                  [Sym("on_board"), Sym("yes")], [Sym("dnp"), Sym("yes" if part["dnp"] else "no")],
                  [Sym("uuid"), self.prj.U(f"sym/{ref}" if unit == 1 else f"sym/{ref}/{unit}")]]
