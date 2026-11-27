@@ -300,7 +300,7 @@ Probe +3V3 rail, estimates to be confirmed against datasheets and on the prototy
 
 On +5V directly: buzzer (~95 mA during a beep), negligible against the 3 A rail.
 
-Efficiencies: TLV62569 ~90 %, LMR33630 ~90 %, DP5700 ~87 % *(to check)*. **Probe: 1.4 W typical, 2.1 W max at VSYS.** Target supply: 1 A max (5.6 W at VSYS at 5 V); 300 mA (1.7 W) reserved by default, anything above is taken from the shield and VIN_BUS share by the firmware.
+Efficiencies: TLV62569 ~90 %, LMR33630 ~90 %, DP5700 91 % peak (DP5712 datasheet, typical). **Probe: 1.4 W typical, 2.1 W max at VSYS.** Target supply: 1 A max (5.6 W at VSYS at 5 V); 300 mA (1.7 W) reserved by default, anything above is taken from the shield and VIN_BUS share by the firmware.
 
 The +5V rail is sized for 3 A (15 W, the LMR33630 rating; ~1.25 W of losses at 3 A at maximum RDS(on), +54 °C on the JEDEC 42.9 °C/W, ESOP-8 with exposed pad). After the probe and the target (~3.5 W on +5V), **11.5 W remain on +5V for 5V_OUT and 3V3_OUT**. VIN_BUS does not go through it: the boost draws on VSYS.
 
