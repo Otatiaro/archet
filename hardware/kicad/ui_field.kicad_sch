@@ -18537,7 +18537,7 @@
 			)
 			(embedded_fonts no)
 		)
-		(symbol "Memory_Flash:W25Q128JVS"
+		(symbol "Memory_Flash:W25Q128JVE"
 			(exclude_from_sim no)
 			(in_bom yes)
 			(on_board yes)
@@ -18553,7 +18553,7 @@
 					)
 				)
 			)
-			(property "Value" "W25Q128JVS"
+			(property "Value" "W25Q128JVE"
 				(at 7.62 11.43 0)
 				(show_name no)
 				(do_not_autoplace no)
@@ -18563,7 +18563,7 @@
 					)
 				)
 			)
-			(property "Footprint" "Package_SO:SOIC-8_5.3x5.3mm_P1.27mm"
+			(property "Footprint" "Package_SON:WSON-8-1EP_8x6mm_P1.27mm_EP3.4x4.3mm"
 				(at 0 22.86 0)
 				(show_name no)
 				(do_not_autoplace no)
@@ -18585,7 +18585,7 @@
 					)
 				)
 			)
-			(property "Description" "128Mbit / 16MiB Serial Flash Memory, Standard/Dual/Quad SPI, 2.7-3.6V, SOIC-8"
+			(property "Description" "128Mbit / 16MiB Serial Flash Memory, Standard/Dual/Quad SPI, 2.7-3.6V, WSON-8"
 				(at 0 27.94 0)
 				(show_name no)
 				(do_not_autoplace no)
@@ -18607,7 +18607,7 @@
 					)
 				)
 			)
-			(property "ki_fp_filters" "*SOIC*5.3x5.3mm*P1.27mm*"
+			(property "ki_fp_filters" "WSON*1EP*8x6mm*P1.27mm*"
 				(at 0 0 0)
 				(show_name no)
 				(do_not_autoplace no)
@@ -18618,7 +18618,7 @@
 					)
 				)
 			)
-			(symbol "W25Q128JVS_0_1"
+			(symbol "W25Q128JVE_0_1"
 				(rectangle
 					(start -7.62 10.16)
 					(end 10.16 -10.16)
@@ -18631,7 +18631,7 @@
 					)
 				)
 			)
-			(symbol "W25Q128JVS_1_1"
+			(symbol "W25Q128JVE_1_1"
 				(pin input line
 					(at -10.16 7.62 0)
 					(length 2.54)
@@ -18769,6 +18769,24 @@
 						)
 					)
 					(number "8"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at 2.54 -12.7 90)
+					(length 2.54)
+					(name "EP"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "9"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -22885,7 +22903,7 @@
 		)
 		(uuid "055f9cb8-a19f-5747-84f2-37ac6d28d778")
 	)
-	(text "Standalone programming: image in U27, GO starts it, PASS / FAIL / buzzer report it, STOP cuts the target.\nField bus on J9: CAN FD (U28) or RS-485 (U29), picked by FIELD_SEL_485 (low = CAN, also the reset state)."
+	(text "Standalone programming: image in U27 (SPI NAND, also records traces), GO starts it, PASS / FAIL / buzzer report it, STOP cuts the target.\nField bus on J9: CAN FD (U28) or RS-485 (U29), picked by FIELD_SEL_485 (low = CAN, also the reset state)."
 		(exclude_from_sim no)
 		(at 20.32 25.4 0)
 		(effects
@@ -22910,7 +22928,7 @@
 		(uuid "cbce4771-cf02-5af1-b583-9c7f9993ceb8")
 	)
 	(symbol
-		(lib_id "Memory_Flash:W25Q128JVS")
+		(lib_id "Memory_Flash:W25Q128JVE")
 		(at 106.68 78.74 0)
 		(unit 1)
 		(exclude_from_sim no)
@@ -22927,7 +22945,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "W25Q128JVSIQ"
+		(property "Value" "W25N02KVZEIR"
 			(at 110.49 93.98 0)
 			(effects
 				(font
@@ -22936,7 +22954,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Package_SO:SOIC-8_5.3x5.3mm_P1.27mm"
+		(property "Footprint" "Archet:WSON-8-1EP_8x6mm_P1.27mm_EP3.4x4.3mm"
 			(at 106.68 78.74 0)
 			(effects
 				(font
@@ -22956,7 +22974,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" "Winbond W25Q128JV, SOIC-8 208 mil, 133 MHz"
+		(property "Description" "Winbond W25N02KV, 2 Gbit SPI NAND, WSON-8 8 x 6, 104 MHz"
 			(at 106.68 78.74 0)
 			(effects
 				(font
@@ -22966,7 +22984,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C97521"
+		(property "LCSC" "C17626844"
 			(at 106.68 78.74 0)
 			(effects
 				(font
@@ -22999,6 +23017,9 @@
 		)
 		(pin "8"
 			(uuid "c7848e92-3c63-50a1-8f95-d45f0f09c71f")
+		)
+		(pin "9"
+			(uuid "2646cb03-14c2-52c8-9b43-ababd5e81fbe")
 		)
 		(instances
 			(project "archet"
@@ -23745,6 +23766,53 @@
 			)
 		)
 	)
+	(symbol
+		(lib_id "power:GND")
+		(at 109.22 93.98 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "562b3b41-c667-5da7-ab4e-b2fde2340d1b")
+		(property "Reference" "#PWRUI 07"
+			(at 109.22 93.98 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "GND"
+			(at 109.22 97.79 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 109.22 93.98 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "be7c885c-c72b-54e4-b1e5-a3de4d99b3aa")
+		)
+		(instances
+			(project "archet"
+				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/dbf50f16-3a49-5f04-9cb3-b00ebfef5df0"
+					(reference "#PWRUI 07")
+					(unit 1)
+				)
+			)
+		)
+	)
 	(text "R65: deselected until OCTOSPI1 runs.\nR66 / R67: /WP and /HOLD off in SPI mode."
 		(exclude_from_sim no)
 		(at 40.64 124.46 0)
@@ -23859,8 +23927,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "562b3b41-c667-5da7-ab4e-b2fde2340d1b")
-		(property "Reference" "#PWRUI 07"
+		(uuid "ff6e0ba9-6bff-5b5a-a688-de9a726fb029")
+		(property "Reference" "#PWRUI 08"
 			(at 55.88 160.02 0)
 			(effects
 				(font
@@ -23887,12 +23955,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "be7c885c-c72b-54e4-b1e5-a3de4d99b3aa")
+			(uuid "f31c0462-e43e-5943-a0ca-8d542dfae02d")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/dbf50f16-3a49-5f04-9cb3-b00ebfef5df0"
-					(reference "#PWRUI 07")
+					(reference "#PWRUI 08")
 					(unit 1)
 				)
 			)
@@ -24009,8 +24077,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "ff6e0ba9-6bff-5b5a-a688-de9a726fb029")
-		(property "Reference" "#PWRUI 08"
+		(uuid "9e6838be-d534-528e-9fa1-dc71796d4d3f")
+		(property "Reference" "#PWRUI 09"
 			(at 71.12 137.16 0)
 			(effects
 				(font
@@ -24037,12 +24105,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "f31c0462-e43e-5943-a0ca-8d542dfae02d")
+			(uuid "91b8e301-a4c6-56b6-b8da-83c3f2a4a46c")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/dbf50f16-3a49-5f04-9cb3-b00ebfef5df0"
-					(reference "#PWRUI 08")
+					(reference "#PWRUI 09")
 					(unit 1)
 				)
 			)
@@ -24138,8 +24206,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "9e6838be-d534-528e-9fa1-dc71796d4d3f")
-		(property "Reference" "#PWRUI 09"
+		(uuid "e226535b-7985-582a-8614-57a04ef3ca94")
+		(property "Reference" "#PWRUI 10"
 			(at 86.36 157.48 0)
 			(effects
 				(font
@@ -24166,12 +24234,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "91b8e301-a4c6-56b6-b8da-83c3f2a4a46c")
+			(uuid "16a28519-ee03-5cc9-a0ad-6dba7a7d853b")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/dbf50f16-3a49-5f04-9cb3-b00ebfef5df0"
-					(reference "#PWRUI 09")
+					(reference "#PWRUI 10")
 					(unit 1)
 				)
 			)
@@ -24267,8 +24335,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "e226535b-7985-582a-8614-57a04ef3ca94")
-		(property "Reference" "#PWRUI 10"
+		(uuid "9df89cab-fb32-5311-84b2-f2f22e4cb52c")
+		(property "Reference" "#PWRUI 11"
 			(at 55.88 187.96 0)
 			(effects
 				(font
@@ -24295,12 +24363,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "16a28519-ee03-5cc9-a0ad-6dba7a7d853b")
+			(uuid "f3e8054c-c7df-5989-93e1-202e48f4313e")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/dbf50f16-3a49-5f04-9cb3-b00ebfef5df0"
-					(reference "#PWRUI 10")
+					(reference "#PWRUI 11")
 					(unit 1)
 				)
 			)
@@ -24417,8 +24485,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "9df89cab-fb32-5311-84b2-f2f22e4cb52c")
-		(property "Reference" "#PWRUI 11"
+		(uuid "1c936b73-054a-57db-aa12-5b64951968b7")
+		(property "Reference" "#PWRUI 12"
 			(at 71.12 165.1 0)
 			(effects
 				(font
@@ -24445,12 +24513,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "f3e8054c-c7df-5989-93e1-202e48f4313e")
+			(uuid "2397ec1b-9c70-52d1-bc42-b712c6714d4c")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/dbf50f16-3a49-5f04-9cb3-b00ebfef5df0"
-					(reference "#PWRUI 11")
+					(reference "#PWRUI 12")
 					(unit 1)
 				)
 			)
@@ -24546,8 +24614,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "1c936b73-054a-57db-aa12-5b64951968b7")
-		(property "Reference" "#PWRUI 12"
+		(uuid "7fb972e9-745f-5469-8920-e0e02106c266")
+		(property "Reference" "#PWRUI 13"
 			(at 86.36 185.42 0)
 			(effects
 				(font
@@ -24574,12 +24642,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "2397ec1b-9c70-52d1-bc42-b712c6714d4c")
+			(uuid "c8857a0b-b202-5a1d-a5d9-2463f0a9d712")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/dbf50f16-3a49-5f04-9cb3-b00ebfef5df0"
-					(reference "#PWRUI 12")
+					(reference "#PWRUI 13")
 					(unit 1)
 				)
 			)
@@ -25366,8 +25434,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "7fb972e9-745f-5469-8920-e0e02106c266")
-		(property "Reference" "#PWRUI 13"
+		(uuid "ccaf9df1-c75d-5b92-8ef4-560949661ae8")
+		(property "Reference" "#PWRUI 14"
 			(at 106.68 208.28 0)
 			(effects
 				(font
@@ -25394,12 +25462,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "c8857a0b-b202-5a1d-a5d9-2463f0a9d712")
+			(uuid "48853c6d-f929-50e3-8963-ac21918df356")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/dbf50f16-3a49-5f04-9cb3-b00ebfef5df0"
-					(reference "#PWRUI 13")
+					(reference "#PWRUI 14")
 					(unit 1)
 				)
 			)
@@ -25519,8 +25587,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "ccaf9df1-c75d-5b92-8ef4-560949661ae8")
-		(property "Reference" "#PWRUI 14"
+		(uuid "6c4f7cec-5036-5c93-bca6-fae89e63aa9f")
+		(property "Reference" "#PWRUI 15"
 			(at 190.5 48.26 0)
 			(effects
 				(font
@@ -25547,12 +25615,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "48853c6d-f929-50e3-8963-ac21918df356")
+			(uuid "e0663c97-395d-5204-b9b6-6ae1c0d276be")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/dbf50f16-3a49-5f04-9cb3-b00ebfef5df0"
-					(reference "#PWRUI 14")
+					(reference "#PWRUI 15")
 					(unit 1)
 				)
 			)
@@ -25815,8 +25883,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "6c4f7cec-5036-5c93-bca6-fae89e63aa9f")
-		(property "Reference" "#PWRUI 15"
+		(uuid "e509f80b-b5f1-552d-b60e-43cb3a945835")
+		(property "Reference" "#PWRUI 16"
 			(at 190.5 88.9 0)
 			(effects
 				(font
@@ -25843,12 +25911,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "e0663c97-395d-5204-b9b6-6ae1c0d276be")
+			(uuid "1164b9d2-d1b3-5421-a850-357d4e077be4")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/dbf50f16-3a49-5f04-9cb3-b00ebfef5df0"
-					(reference "#PWRUI 15")
+					(reference "#PWRUI 16")
 					(unit 1)
 				)
 			)
@@ -25965,8 +26033,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "e509f80b-b5f1-552d-b60e-43cb3a945835")
-		(property "Reference" "#PWRUI 16"
+		(uuid "add13795-f15d-5f3a-a1db-d431165d8a1d")
+		(property "Reference" "#PWRUI 17"
 			(at 170.18 91.44 0)
 			(effects
 				(font
@@ -25993,12 +26061,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "1164b9d2-d1b3-5421-a850-357d4e077be4")
+			(uuid "131f4eb3-448a-52a7-92ce-d1e84c6a736a")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/dbf50f16-3a49-5f04-9cb3-b00ebfef5df0"
-					(reference "#PWRUI 16")
+					(reference "#PWRUI 17")
 					(unit 1)
 				)
 			)
@@ -26167,8 +26235,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "add13795-f15d-5f3a-a1db-d431165d8a1d")
-		(property "Reference" "#PWRUI 17"
+		(uuid "ceae66b7-58d3-57d7-91ec-4f0688e40877")
+		(property "Reference" "#PWRUI 18"
 			(at 271.78 78.74 0)
 			(effects
 				(font
@@ -26195,12 +26263,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "131f4eb3-448a-52a7-92ce-d1e84c6a736a")
+			(uuid "71b19e53-6ee6-508b-b508-3e0358eb0f74")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/dbf50f16-3a49-5f04-9cb3-b00ebfef5df0"
-					(reference "#PWRUI 17")
+					(reference "#PWRUI 18")
 					(unit 1)
 				)
 			)
@@ -26317,8 +26385,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "ceae66b7-58d3-57d7-91ec-4f0688e40877")
-		(property "Reference" "#PWRUI 18"
+		(uuid "30f6e267-e3d9-5c6f-bc27-2cc79295f869")
+		(property "Reference" "#PWRUI 19"
 			(at 271.78 91.44 0)
 			(effects
 				(font
@@ -26345,12 +26413,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "71b19e53-6ee6-508b-b508-3e0358eb0f74")
+			(uuid "830afe1f-7970-5e33-a352-89f700f13556")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/dbf50f16-3a49-5f04-9cb3-b00ebfef5df0"
-					(reference "#PWRUI 18")
+					(reference "#PWRUI 19")
 					(unit 1)
 				)
 			)
@@ -26364,8 +26432,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "30f6e267-e3d9-5c6f-bc27-2cc79295f869")
-		(property "Reference" "#PWRUI 19"
+		(uuid "6700176a-5fe5-535d-9f7c-9b3c7c836076")
+		(property "Reference" "#PWRUI 20"
 			(at 299.72 50.8 0)
 			(effects
 				(font
@@ -26392,12 +26460,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "830afe1f-7970-5e33-a352-89f700f13556")
+			(uuid "2bb00c70-200e-5d29-bb11-9b7136510a8a")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/dbf50f16-3a49-5f04-9cb3-b00ebfef5df0"
-					(reference "#PWRUI 19")
+					(reference "#PWRUI 20")
 					(unit 1)
 				)
 			)
@@ -26493,8 +26561,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "6700176a-5fe5-535d-9f7c-9b3c7c836076")
-		(property "Reference" "#PWRUI 20"
+		(uuid "98ad44df-19e3-56ec-8062-65d1b2f345c7")
+		(property "Reference" "#PWRUI 21"
 			(at 309.88 63.5 0)
 			(effects
 				(font
@@ -26521,12 +26589,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "2bb00c70-200e-5d29-bb11-9b7136510a8a")
+			(uuid "e9622837-e70c-517f-8de4-f0800e867234")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/dbf50f16-3a49-5f04-9cb3-b00ebfef5df0"
-					(reference "#PWRUI 20")
+					(reference "#PWRUI 21")
 					(unit 1)
 				)
 			)
@@ -26622,8 +26690,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "98ad44df-19e3-56ec-8062-65d1b2f345c7")
-		(property "Reference" "#PWRUI 21"
+		(uuid "7e0d98f2-d161-5dfc-9122-da0d355c8a28")
+		(property "Reference" "#PWRUI 22"
 			(at 289.56 50.8 0)
 			(effects
 				(font
@@ -26650,12 +26718,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "e9622837-e70c-517f-8de4-f0800e867234")
+			(uuid "a96588fd-b2ac-500e-a5f9-ea65ab102988")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/dbf50f16-3a49-5f04-9cb3-b00ebfef5df0"
-					(reference "#PWRUI 21")
+					(reference "#PWRUI 22")
 					(unit 1)
 				)
 			)
@@ -26669,8 +26737,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "7e0d98f2-d161-5dfc-9122-da0d355c8a28")
-		(property "Reference" "#PWRUI 22"
+		(uuid "fb516038-aa0f-59e1-8a2a-fb8df8c40606")
+		(property "Reference" "#PWRUI 23"
 			(at 289.56 63.5 0)
 			(effects
 				(font
@@ -26697,12 +26765,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "a96588fd-b2ac-500e-a5f9-ea65ab102988")
+			(uuid "4e8c5088-3a40-57dd-8481-a908a30bf147")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/dbf50f16-3a49-5f04-9cb3-b00ebfef5df0"
-					(reference "#PWRUI 22")
+					(reference "#PWRUI 23")
 					(unit 1)
 				)
 			)
@@ -26716,8 +26784,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "fb516038-aa0f-59e1-8a2a-fb8df8c40606")
-		(property "Reference" "#PWRUI 23"
+		(uuid "25eb16aa-a74b-52c7-9c16-34a5a46a62fa")
+		(property "Reference" "#PWRUI 24"
 			(at 299.72 88.9 0)
 			(effects
 				(font
@@ -26744,12 +26812,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "4e8c5088-3a40-57dd-8481-a908a30bf147")
+			(uuid "49a670c6-a7a1-506c-bf82-3f51de18d971")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/dbf50f16-3a49-5f04-9cb3-b00ebfef5df0"
-					(reference "#PWRUI 23")
+					(reference "#PWRUI 24")
 					(unit 1)
 				)
 			)
@@ -27035,8 +27103,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "25eb16aa-a74b-52c7-9c16-34a5a46a62fa")
-		(property "Reference" "#PWRUI 24"
+		(uuid "29d5c2b7-4347-5b84-8fc7-3961a1d9523d")
+		(property "Reference" "#PWRUI 25"
 			(at 355.6 71.12 0)
 			(effects
 				(font
@@ -27063,12 +27131,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "49a670c6-a7a1-506c-bf82-3f51de18d971")
+			(uuid "8e9526a5-5846-5151-878e-280c2ce6d65e")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/dbf50f16-3a49-5f04-9cb3-b00ebfef5df0"
-					(reference "#PWRUI 24")
+					(reference "#PWRUI 25")
 					(unit 1)
 				)
 			)
@@ -27167,8 +27235,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "29d5c2b7-4347-5b84-8fc7-3961a1d9523d")
-		(property "Reference" "#PWRUI 25"
+		(uuid "c5140070-93ce-5e0b-9442-c0df7db22d7b")
+		(property "Reference" "#PWRUI 26"
 			(at 383.54 63.5 0)
 			(effects
 				(font
@@ -27195,12 +27263,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "8e9526a5-5846-5151-878e-280c2ce6d65e")
+			(uuid "c4ccc100-ee24-53d3-813a-b9f3d9a12ab1")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/dbf50f16-3a49-5f04-9cb3-b00ebfef5df0"
-					(reference "#PWRUI 25")
+					(reference "#PWRUI 26")
 					(unit 1)
 				)
 			)
@@ -27348,8 +27416,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "c5140070-93ce-5e0b-9442-c0df7db22d7b")
-		(property "Reference" "#PWRUI 26"
+		(uuid "6fb9be22-efef-5f7a-b62e-d613a61d9db3")
+		(property "Reference" "#PWRUI 27"
 			(at 287.02 127 0)
 			(effects
 				(font
@@ -27377,12 +27445,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "c4ccc100-ee24-53d3-813a-b9f3d9a12ab1")
+			(uuid "33eddae2-8ba0-568d-af58-ae0bf3f602cb")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/dbf50f16-3a49-5f04-9cb3-b00ebfef5df0"
-					(reference "#PWRUI 26")
+					(reference "#PWRUI 27")
 					(unit 1)
 				)
 			)
@@ -27499,8 +27567,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "6fb9be22-efef-5f7a-b62e-d613a61d9db3")
-		(property "Reference" "#PWRUI 27"
+		(uuid "88b83d28-f0e3-519b-85b7-3a57b0864263")
+		(property "Reference" "#PWRUI 28"
 			(at 241.3 139.7 0)
 			(effects
 				(font
@@ -27527,12 +27595,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "33eddae2-8ba0-568d-af58-ae0bf3f602cb")
+			(uuid "dc260110-375e-53ea-9c88-4b83b71d6672")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/dbf50f16-3a49-5f04-9cb3-b00ebfef5df0"
-					(reference "#PWRUI 27")
+					(reference "#PWRUI 28")
 					(unit 1)
 				)
 			)
@@ -27587,8 +27655,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "88b83d28-f0e3-519b-85b7-3a57b0864263")
-		(property "Reference" "#PWRUI 28"
+		(uuid "746cbbb8-7537-549c-a838-5d554ab275a6")
+		(property "Reference" "#PWRUI 29"
 			(at 299.72 104.14 0)
 			(effects
 				(font
@@ -27615,12 +27683,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "dc260110-375e-53ea-9c88-4b83b71d6672")
+			(uuid "f380fed3-fcd4-57b6-9e09-5d19e05950d4")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/dbf50f16-3a49-5f04-9cb3-b00ebfef5df0"
-					(reference "#PWRUI 28")
+					(reference "#PWRUI 29")
 					(unit 1)
 				)
 			)
@@ -27716,8 +27784,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "746cbbb8-7537-549c-a838-5d554ab275a6")
-		(property "Reference" "#PWRUI 29"
+		(uuid "0a187580-ac9b-5fe2-9778-5b677d0c9c1e")
+		(property "Reference" "#PWRUI 30"
 			(at 289.56 116.84 0)
 			(effects
 				(font
@@ -27744,12 +27812,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "f380fed3-fcd4-57b6-9e09-5d19e05950d4")
+			(uuid "7780735a-caa2-5546-b307-294ee33ff0b4")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/dbf50f16-3a49-5f04-9cb3-b00ebfef5df0"
-					(reference "#PWRUI 29")
+					(reference "#PWRUI 30")
 					(unit 1)
 				)
 			)
@@ -27763,8 +27831,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "0a187580-ac9b-5fe2-9778-5b677d0c9c1e")
-		(property "Reference" "#PWRUI 30"
+		(uuid "4c5b3a29-cbad-5eb0-b778-4342300d080a")
+		(property "Reference" "#PWRUI 31"
 			(at 299.72 147.32 0)
 			(effects
 				(font
@@ -27791,12 +27859,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "7780735a-caa2-5546-b307-294ee33ff0b4")
+			(uuid "cfa23bd1-f2d7-53cd-97a9-6f53cbde52a9")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/dbf50f16-3a49-5f04-9cb3-b00ebfef5df0"
-					(reference "#PWRUI 30")
+					(reference "#PWRUI 31")
 					(unit 1)
 				)
 			)
@@ -27978,8 +28046,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "4c5b3a29-cbad-5eb0-b778-4342300d080a")
-		(property "Reference" "#PWRUI 31"
+		(uuid "fb710585-dc2c-5bb3-9343-b103eb72d8a4")
+		(property "Reference" "#PWRUI 32"
 			(at 246.38 149.86 0)
 			(effects
 				(font
@@ -28006,12 +28074,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "cfa23bd1-f2d7-53cd-97a9-6f53cbde52a9")
+			(uuid "8d6425fa-cb7f-5a49-8f1f-5d3204bf34e7")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/dbf50f16-3a49-5f04-9cb3-b00ebfef5df0"
-					(reference "#PWRUI 31")
+					(reference "#PWRUI 32")
 					(unit 1)
 				)
 			)
@@ -28107,8 +28175,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "fb710585-dc2c-5bb3-9343-b103eb72d8a4")
-		(property "Reference" "#PWRUI 32"
+		(uuid "b1a85a37-f086-5732-bf07-c0d5fa7baab0")
+		(property "Reference" "#PWRUI 33"
 			(at 256.54 162.56 0)
 			(effects
 				(font
@@ -28135,12 +28203,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "8d6425fa-cb7f-5a49-8f1f-5d3204bf34e7")
+			(uuid "e30e101f-a136-5c9e-9fbc-63540bf0379d")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/dbf50f16-3a49-5f04-9cb3-b00ebfef5df0"
-					(reference "#PWRUI 32")
+					(reference "#PWRUI 33")
 					(unit 1)
 				)
 			)
@@ -28154,8 +28222,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "b1a85a37-f086-5732-bf07-c0d5fa7baab0")
-		(property "Reference" "#PWRUI 33"
+		(uuid "a7f35522-1975-53fe-954d-2b72f35cd907")
+		(property "Reference" "#PWRUI 34"
 			(at 246.38 182.88 0)
 			(effects
 				(font
@@ -28182,12 +28250,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "e30e101f-a136-5c9e-9fbc-63540bf0379d")
+			(uuid "44a76f27-8bcb-55ab-bd1a-6264d8fb8fc7")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/dbf50f16-3a49-5f04-9cb3-b00ebfef5df0"
-					(reference "#PWRUI 33")
+					(reference "#PWRUI 34")
 					(unit 1)
 				)
 			)
@@ -28470,6 +28538,17 @@
 			(type default)
 		)
 		(uuid "6af09845-ea16-5b01-8c71-27b8cebfecb5")
+	)
+	(wire
+		(pts
+			(xy 109.22 91.44)
+			(xy 109.22 93.98)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "027d4353-9cc2-5e55-908b-2a814ea3d291")
 	)
 	(wire
 		(pts

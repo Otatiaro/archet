@@ -33,7 +33,7 @@ The probe implements the platform part of the Archet HIL harness specification:
 |---|---|---|
 | MCU | **STM32H723ZGT6** (LQFP-144, M7 550 MHz, 1 MB flash, 564 KB RAM, Ethernet MAC + PTP, 2 OctoSPI) | Only non-BGA part in stock combining Ethernet, USB HS and a spare OctoSPI for the FPGA. See "MCU choice" |
 | USB HS | External ULPI PHY **USB3320C** | The H723 only has an integrated FS PHY |
-| Flash | Internal (1 MB): firmware + iCE40 bitstream; external 16 MB QSPI NOR on OCTOSPI1 for standalone images | Firmware never runs from the external flash; it only stores target images |
+| Flash | Internal (1 MB): firmware + iCE40 bitstream; external 256 MB QSPI NAND on OCTOSPI1 for standalone images and trace recording | Firmware never runs from the external flash; it stores target images and SWD / SWO traces |
 | Standalone programmer | GO button, PASS/FAIL LEDs, passive buzzer | Production flashing with no host, as commercial flashers |
 | Field bus | CAN FD or RS-485 on one 3-point terminal, CAN by default | ROM bootloader reachable over CAN; host control and bus sniffing on a HIL bench |
 | FPGA | Lattice **iCE40UP5K-SG48I** (QFN-48, 39 IO, 5 k LUT, 128 KB SPRAM) | No BGA; in stock at JLCPCB; open toolchain (Yosys, nextpnr) |
@@ -153,7 +153,11 @@ Two connectors, both industry standards, no in-house adapter. Pinouts in [`hardw
 
 Archet also works without a host, as a production flasher: firmware images and their programming recipe (target, algorithm, option bytes, verification) are loaded once over USB or Ethernet, then each press on GO programs the board on the target connector.
 
-- **Storage: W25Q128JV, 16 MB QSPI NOR on OCTOSPI1** (PF10 CLK, PF8/PF9/PE2/PF6 IO0–3, PE11 NCS with pull-up). Memory-mapped reads, so an image streams to the target with no copy. No SD card: no socket, no file system, no card to lose; 16 MB holds several images of a 2 MB MCU.
+- **Storage: W25N02KV, 256 MB QSPI NAND on OCTOSPI1** (PF10 CLK, PF8/PF9/PE2/PF6 IO0–3, PE11 NCS with pull-up). It holds the standalone images and records SWD / SWO traces (Kymo). No SD card: no socket, no file system, no card to lose.
+  - Why NAND rather than NOR: a trace at 1–2 MB/s fills 16 MB in seconds; 256 MB holds about two minutes at 2 MB/s. A single chip serves both uses, so no NOR next to it.
+  - Reads go through the 2 KB page buffer (25 µs page load, 60 µs with ECC; quad reads at 104 MHz), so no memory mapping: the firmware copies page by page into RAM. That is far faster than programming a target.
+  - Writes (datasheet rev. G): page program 250 µs typ / 700 µs max, block erase (128 KB) 2 / 10 ms. Recording into pre-erased blocks, a 2 KB page costs at worst 700 µs + ~80 µs of quad load, ≈ 2.6 MB/s; typically ≈ 6 MB/s.
+  - Firmware duties: internal 8-bit ECC on by default; skip the factory-marked bad blocks (at least 2,008 of 2,048 valid) and retire the ones that fail later (P-FAIL / E-FAIL); program the pages of a block in order, at most 4 partial programs per page; one block per recipe, since erase is per 128 KB.
 - **GO button** (PF15, EXTI), next to the existing stop button (PC13).
 - **PASS and FAIL LEDs** on TIM1_CH4 (PE14) and TIM1_CH3 (PA10): one timer, brightness and blinking in PWM. Active low (cathode on the pin, anode to +3V3 through the resistor): the ROM bootloader pull-up on PA10 (USART1 RX) keeps FAIL off and the RX line idle.
 - **Buzzer: passive magnetic transducer MLT-8530** (2.7 kHz resonance) on TIM17_CH1 (PB9): the timer sets the tone (short high beep for PASS, low beeps for FAIL), the duty cycle the volume. 2N7002 low-side with a gate pull-down (PB9 is I²C1 SDA in the ROM) and a 1N4148WS flyback diode, fed from +5V through a 22 Ω 1206 series resistor (~95 mA bursts kept off the +3V3 logic rail). The coil is 16 Ω, and the datasheet's 95 mA at 5 Vo-p puts its impedance near 53 Ω at resonance; 22 Ω brings it to its 3.6 Vo-p rating. With the gate held high the resistor would take 0.34 W, above its 0.25 W rating: the firmware never leaves PB9 high. TIM17 is independent of TIM4: changing the tone leaves LED_STATUS untouched.
@@ -283,7 +287,7 @@ Probe +3V3 rail, estimates to be confirmed against datasheets and on the prototy
 | USB3320C, HS active | 50 | 70 |
 | LAN8742A, 100BASE-TX, line drivers included | 80 | 100 |
 | iCE40UP5K through its 1.2 V LDO, banks included | 30 | 60 |
-| LEDs (STATUS, PASS, FAIL, LINK, spare, 2 RJ45), W25Q128JV, XL3485 | 25 | 50 |
+| LEDs (STATUS, PASS, FAIL, LINK, spare, 2 RJ45), W25N02KV, XL3485 | 25 | 50 |
 | Crystals, INA226, EEPROM, translators (MCU side), pull-ups | 10 | 20 |
 | **Total +3V3** | **345 (1.1 W)** | **550 (1.8 W)** |
 
@@ -469,6 +473,7 @@ Unit price for 1 to 9 parts (first runs of 2 to 5 boards). Type: BASIC and PREF 
 | Field bus termination switch | MSK12C02 | C431540 | ext | 173,785 | $0.05 |
 | J_FIELD terminal block, pluggable 3.81 mm (plug C440859) | KF2EDGR-3.81-3P | C441183 | ext | 18,736 | $0.07 |
 | Buzzer, passive magnetic, 2.7 kHz | MLT-8530 | C94599 | ext | 100,540 | $0.19 |
+| QSPI NAND flash 256 MB (standalone images, trace recording), WSON-8 8 × 6 (no SOIC for 2 Gbit) | W25N02KVZEIR | C17626844 | ext | 6,151 | $8.73 |
 | USB D+/D− ESD, flow-through (×2: USB-C, J5) | USBLC6-2SC6 (SRV05-4 preferred rejected: four separate lines, a stub on the 480 Mbit/s pair) | C7519 | ext | 34,335 | $0.15 |
 
 **Basic/preferred alternatives selected**
@@ -479,7 +484,6 @@ Unit price for 1 to 9 parts (first runs of 2 to 5 boards). Type: BASIC and PREF 
 | Schottky (×3: J5 and J6 VBUS to VSYS, J6 RTS to NRST) | 1N5819WS | C191023 | BASIC | $0.01 |
 | BOOT0 button | TS-1088-AR02016 | C720477 | BASIC | $0.05 |
 | 25 MHz crystal, ×2 (Y1 HSE, Y3 RMII PHY) | X322525MOB4SI | C9006 | BASIC | $0.09 |
-| QSPI NOR flash 16 MB (standalone images) | W25Q128JVSIQ | C97521 | BASIC | $1.87 |
 | GO and STOP buttons | TS-1187A-B-A-B | C318884 | BASIC | $0.02 |
 | Green LEDs (PASS, LINK) | KT-0805G | C2297 | BASIC | $0.02 |
 | Yellow LEDs (STATUS, spare) | KT-0805Y | C2296 | BASIC | $0.02 |
@@ -497,10 +501,10 @@ Out of stock on 2026-11-25: DP9700-AT, DP83825IRMQR, CH224K.
 
 | | 2 boards | 5 boards |
 |---|---|---|
-| Active parts | ~$63 | ~$63 |
+| Active parts | ~$70 | ~$70 |
 | Passives and small connectors | ~$10 | ~$10 |
-| Extended-part fees (~25 parts × $3 = $75 per order) | ~$38 | ~$15 |
-| **Total** | **~$108** | **~$87** |
+| Extended-part fees (~26 parts × $3 = $78 per order) | ~$39 | ~$16 |
+| **Total** | **~$116** | **~$95** |
 
 Fixed costs (PCB, assembly setup, stencil) are also divided by the run size. Consequences:
 

@@ -574,12 +574,16 @@ c.R("R64", "2.2k", "+3V3", "SYS_SCL", note="I2C5 SCL pull-up")
 c.C("C97", "100nF", "TGT_VSUP", "GND", note="At STDC14 pin 1")
 
 # --------------------------------------------------------------------------------------------
-c.block("User interface, standalone flash, field bus: LEDs, buttons, buzzer, W25Q128JV, CAN FD / RS-485")
-# Standalone images: 16 MB QSPI NOR on OCTOSPI1. NCS pulled up (flash deselected while the MCU is in reset or in
-# the ROM, PE11 being SPI4 NSS there); IO2 / IO3 pulled up too, so /WP and /HOLD stay inactive outside quad mode.
-c.part("U27", "Memory_Flash:W25Q128JVS", "W25Q128JVSIQ", "Package_SO:SOIC-8_5.3x5.3mm_P1.27mm", "C97521",
+c.block("User interface, standalone flash, field bus: LEDs, buttons, buzzer, W25N02KV, CAN FD / RS-485")
+# Standalone images and SWD / SWO trace recording: 256 MB QSPI NAND on OCTOSPI1 (internal ECC, read through the
+# page buffer, no memory mapping). NCS pulled up (flash deselected while the MCU is in reset or in the ROM, PE11
+# being SPI4 NSS there); IO2 / IO3 pulled up too, so /WP and /HOLD stay inactive outside quad mode.
+# Symbol: W25Q128JVE, same WSON-8 8 x 6 pinout (W25N02KV datasheet rev. G fig. 1a); the exposed pad is not
+# connected inside (section 11.1 note 1), tied to GND.
+c.part("U27", "Memory_Flash:W25Q128JVE", "W25N02KVZEIR", "Archet:WSON-8-1EP_8x6mm_P1.27mm_EP3.4x4.3mm",
+       "C17626844",
        {1: "FLASH_NCS", 2: "FLASH_IO1", 3: "FLASH_IO2", 4: "GND", 5: "FLASH_IO0", 6: "FLASH_CLK", 7: "FLASH_IO3",
-        8: "+3V3"}, "Winbond W25Q128JV, SOIC-8 208 mil, 133 MHz")
+        8: "+3V3", 9: "GND"}, "Winbond W25N02KV, 2 Gbit SPI NAND, WSON-8 8 x 6, 104 MHz")
 c.C("C98", "100nF", "+3V3", "GND", note="U27")
 c.R("R65", "10k", "+3V3", "FLASH_NCS", note="Flash deselected until OCTOSPI1 runs")
 c.R("R66", "10k", "+3V3", "FLASH_IO2", note="/WP inactive outside quad mode")

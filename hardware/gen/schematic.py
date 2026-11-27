@@ -1488,7 +1488,7 @@ def ui_field(prj):
     s = prj.sheet("UI and field bus", "ui_field.kicad_sch", "UI, standalone flash, CAN FD / RS-485 field bus")
     s.quiet.update({"LED_STATUS_A", "LED_PASS_A", "LED_FAIL_A", "FIELD_TERM"})
     s.text("USER INTERFACE, STANDALONE FLASH, FIELD BUS", 20.32, 17.78, 2.54, True)
-    s.text("Standalone programming: image in U27, GO starts it, PASS / FAIL / buzzer report it, STOP cuts the target.\n"
+    s.text("Standalone programming: image in U27 (SPI NAND, also records traces), GO starts it, PASS / FAIL / buzzer report it, STOP cuts the target.\n"
            "Field bus on J9: CAN FD (U28) or RS-485 (U29), picked by FIELD_SEL_485 (low = CAN, also the reset state).",
            20.32, 25.4)
 
@@ -1516,6 +1516,7 @@ def ui_field(prj):
     vpart(s, "C98", vx + 15.24, vy - 5.08)
     s.rail("GND", *s.P("C98", 2))
     s.rail("GND", *s.P("U27", 4))
+    s.rail("GND", *s.P("U27", 9))
     s.text("R65: deselected until OCTOSPI1 runs.\nR66 / R67: /WP and /HOLD off in SPI mode.", 40.64, 124.46)
 
     # --- buttons: switch to GND, 10k pull-up, 100 nF debounce, level out to the MCU on the right ---

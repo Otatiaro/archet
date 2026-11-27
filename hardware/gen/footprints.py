@@ -299,7 +299,27 @@ def wson12_3d():
     return boxes
 
 
-ARJ_CX = -5.715                     # centre between pin 1 (x = 0) and pin 10 (x = -11.43)
+def wson8x6():
+    """Winbond ZE package (W25N02KV datasheet rev. G section 11.1): body D 8.00 x E 6.00, e 1.27, L 0.50, b 0.40,
+    exposed pad D2 3.40 x E2 4.30. The KiCad 8 x 6 footprint is that land; KiCad has no model for it."""
+    return _from_kicad("Package_SON", "WSON-8-1EP_8x6mm_P1.27mm_EP3.4x4.3mm")
+
+
+def wson8x6_3d():
+    """Same drawing: A 0.75 high, leads 0.40 wide and 0.50 long at the ends of D, exposed pad 3.40 x 4.30.
+    KiCad frame: pin 1 at (-3.75, -1.905), pins 1-4 down the left side; 3D Y up, so pin 1 sits at +Y."""
+    body, metal = (0.15, 0.15, 0.15), (0.80, 0.80, 0.82)
+    boxes = [((-4.0, -3.0, 0.02, 4.0, 3.0, 0.75), body),
+             ((-1.7, -2.15, 0.0, 1.7, 2.15, 0.02), metal),
+             ((-3.6, 2.1, 0.75, -3.1, 2.6, 0.76), (0.85, 0.85, 0.85))]     # pin 1 mark
+    for i in range(4):
+        y = 1.905 - 1.27 * i
+        for sx in (-1, 1):
+            boxes.append(((min(sx * 4.0, sx * 3.5), y - 0.2, 0.0, max(sx * 4.0, sx * 3.5), y + 0.2, 0.2), metal))
+    return boxes
+
+
+ARJ_CX = -5.715                   # centre between pin 1 (x = 0) and pin 10 (x = -11.43)
 ARJ_POST = 6.35                     # post line, 6.35 in front of the pin 1 row
 
 
@@ -496,7 +516,7 @@ def msk12c02_3d():
 
 FOOTPRINTS = [(dsj14, dsj14_3d), (mlt8530, mlt8530_3d), (ts1187a, ts1187a_3d), (msk12c02, msk12c02_3d), (dsg8, None),
               (rrk16, rrk16_3d), (hsop8, None), (sg48, None), (vqfn24, None), (usbc, usbc_3d), (microb, microb_3d),
-              (wson12, wson12_3d), (arjm11, arjm11_3d), (dp5700, dp5700_3d), (ftsh107, ftsh107_3d)]
+              (wson12, wson12_3d), (wson8x6, wson8x6_3d), (arjm11, arjm11_3d), (dp5700, dp5700_3d), (ftsh107, ftsh107_3d)]
 
 
 def write():
