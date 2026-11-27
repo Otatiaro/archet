@@ -4695,6 +4695,181 @@
 			)
 			(embedded_fonts no)
 		)
+		(symbol "Device:D_Schottky"
+			(pin_numbers
+				(hide yes)
+			)
+			(pin_names
+				(offset 1.016)
+				(hide yes)
+			)
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(in_pos_files yes)
+			(duplicate_pin_numbers_are_jumpers no)
+			(property "Reference" "D"
+				(at 0 2.54 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Value" "D_Schottky"
+				(at 0 -2.54 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Footprint" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Datasheet" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Description" "Schottky diode"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "ki_keywords" "diode Schottky"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "ki_fp_filters" "TO-???* *_Diode_* *SingleDiode* D_*"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(symbol "D_Schottky_0_1"
+				(polyline
+					(pts
+						(xy -1.905 0.635)
+						(xy -1.905 1.27)
+						(xy -1.27 1.27)
+						(xy -1.27 -1.27)
+						(xy -0.635 -1.27)
+						(xy -0.635 -0.635)
+					)
+					(stroke
+						(width 0.254)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 1.27 1.27)
+						(xy 1.27 -1.27)
+						(xy -1.27 0)
+						(xy 1.27 1.27)
+					)
+					(stroke
+						(width 0.254)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 1.27 0)
+						(xy -1.27 0)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+			)
+			(symbol "D_Schottky_1_1"
+				(pin passive line
+					(at -3.81 0 0)
+					(length 2.54)
+					(name "K"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at 3.81 0 180)
+					(length 2.54)
+					(name "A"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+			(embedded_fonts no)
+		)
 		(symbol "Archet:ARJM11D7-104-AB-EW2"
 			(exclude_from_sim no)
 			(in_bom yes)
@@ -6874,181 +7049,6 @@
 						)
 					)
 					(number "13"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-			)
-			(embedded_fonts no)
-		)
-		(symbol "Device:D_Schottky"
-			(pin_numbers
-				(hide yes)
-			)
-			(pin_names
-				(offset 1.016)
-				(hide yes)
-			)
-			(exclude_from_sim no)
-			(in_bom yes)
-			(on_board yes)
-			(in_pos_files yes)
-			(duplicate_pin_numbers_are_jumpers no)
-			(property "Reference" "D"
-				(at 0 2.54 0)
-				(show_name no)
-				(do_not_autoplace no)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-				)
-			)
-			(property "Value" "D_Schottky"
-				(at 0 -2.54 0)
-				(show_name no)
-				(do_not_autoplace no)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-				)
-			)
-			(property "Footprint" ""
-				(at 0 0 0)
-				(show_name no)
-				(do_not_autoplace no)
-				(hide yes)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-				)
-			)
-			(property "Datasheet" ""
-				(at 0 0 0)
-				(show_name no)
-				(do_not_autoplace no)
-				(hide yes)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-				)
-			)
-			(property "Description" "Schottky diode"
-				(at 0 0 0)
-				(show_name no)
-				(do_not_autoplace no)
-				(hide yes)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-				)
-			)
-			(property "ki_keywords" "diode Schottky"
-				(at 0 0 0)
-				(show_name no)
-				(do_not_autoplace no)
-				(hide yes)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-				)
-			)
-			(property "ki_fp_filters" "TO-???* *_Diode_* *SingleDiode* D_*"
-				(at 0 0 0)
-				(show_name no)
-				(do_not_autoplace no)
-				(hide yes)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-				)
-			)
-			(symbol "D_Schottky_0_1"
-				(polyline
-					(pts
-						(xy -1.905 0.635)
-						(xy -1.905 1.27)
-						(xy -1.27 1.27)
-						(xy -1.27 -1.27)
-						(xy -0.635 -1.27)
-						(xy -0.635 -0.635)
-					)
-					(stroke
-						(width 0.254)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(polyline
-					(pts
-						(xy 1.27 1.27)
-						(xy 1.27 -1.27)
-						(xy -1.27 0)
-						(xy 1.27 1.27)
-					)
-					(stroke
-						(width 0.254)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(polyline
-					(pts
-						(xy 1.27 0)
-						(xy -1.27 0)
-					)
-					(stroke
-						(width 0)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-			)
-			(symbol "D_Schottky_1_1"
-				(pin passive line
-					(at -3.81 0 0)
-					(length 2.54)
-					(name "K"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "1"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin passive line
-					(at 3.81 0 180)
-					(length 2.54)
-					(name "A"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "2"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -24357,7 +24357,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" "Shield drivers off until the bitstream pulls OE_N low (RGB0, open drain)"
+		(property "Description" "Shield drivers off until the bitstream pulls OE_N low (RGB0, open drain). On +3V3, not +3V3_OUT: a self-powered shield stays disabled with +3V3_OUT off (0.33 mA into an unpowered shield at most)"
 			(at 350.52 163.83 0)
 			(effects
 				(font
@@ -24392,24 +24392,50 @@
 			)
 		)
 	)
-	(global_label "+3V3_OUT"
-		(shape passive)
-		(at 350.52 157.48 90)
-		(fields_autoplaced yes)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left)
-		)
-		(uuid "eb75abc7-4a1f-5e49-abb2-956ccd146318")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+	(symbol
+		(lib_id "power:+3V3")
+		(at 350.52 157.48 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "84abc1a3-f331-5b51-8eef-a76396764f92")
+		(property "Reference" "#PWRFPG09"
 			(at 350.52 157.48 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
 				(hide yes)
+			)
+		)
+		(property "Value" "+3V3"
+			(at 350.52 153.67 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 350.52 157.48 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "3147bb0a-4c56-5d53-95ae-cf13b7147c13")
+		)
+		(instances
+			(project "archet"
+				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/83b58830-c5a8-5b0f-967b-fc6b6f5a6688"
+					(reference "#PWRFPG09")
+					(unit 1)
+				)
 			)
 		)
 	)
@@ -24566,8 +24592,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "84abc1a3-f331-5b51-8eef-a76396764f92")
-		(property "Reference" "#PWRFPG09"
+		(uuid "bade6756-5557-5845-ad38-7eb3561bafee")
+		(property "Reference" "#PWRFPG10"
 			(at 45.72 50.8 0)
 			(effects
 				(font
@@ -24594,12 +24620,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "3147bb0a-4c56-5d53-95ae-cf13b7147c13")
+			(uuid "517eb7d5-2d2c-5573-80fb-301029bc554a")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/83b58830-c5a8-5b0f-967b-fc6b6f5a6688"
-					(reference "#PWRFPG09")
+					(reference "#PWRFPG10")
 					(unit 1)
 				)
 			)
@@ -24695,8 +24721,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "bade6756-5557-5845-ad38-7eb3561bafee")
-		(property "Reference" "#PWRFPG10"
+		(uuid "9b77a801-393f-51bd-809e-d35e853705aa")
+		(property "Reference" "#PWRFPG11"
 			(at 55.88 60.96 0)
 			(effects
 				(font
@@ -24723,12 +24749,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "517eb7d5-2d2c-5573-80fb-301029bc554a")
+			(uuid "4dfc1c10-1f54-56f2-a7b3-b3166b0556dc")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/83b58830-c5a8-5b0f-967b-fc6b6f5a6688"
-					(reference "#PWRFPG10")
+					(reference "#PWRFPG11")
 					(unit 1)
 				)
 			)
@@ -24754,8 +24780,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "9b77a801-393f-51bd-809e-d35e853705aa")
-		(property "Reference" "#PWRFPG11"
+		(uuid "1da73bf6-9e78-5485-b04b-d8156bdc8393")
+		(property "Reference" "#PWRFPG12"
 			(at 78.74 63.5 0)
 			(effects
 				(font
@@ -24782,12 +24808,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "4dfc1c10-1f54-56f2-a7b3-b3166b0556dc")
+			(uuid "0e0364a1-b857-54a6-9140-b7e8916b9632")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/83b58830-c5a8-5b0f-967b-fc6b6f5a6688"
-					(reference "#PWRFPG11")
+					(reference "#PWRFPG12")
 					(unit 1)
 				)
 			)
@@ -24975,8 +25001,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "1da73bf6-9e78-5485-b04b-d8156bdc8393")
-		(property "Reference" "#PWRFPG12"
+		(uuid "34b1dd60-ef3c-5a94-af2c-3f96f7f6857e")
+		(property "Reference" "#PWRFPG13"
 			(at 96.52 60.96 0)
 			(effects
 				(font
@@ -25003,12 +25029,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "0e0364a1-b857-54a6-9140-b7e8916b9632")
+			(uuid "3f6d4cc7-478f-504b-8758-3a8e41e9c76f")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/83b58830-c5a8-5b0f-967b-fc6b6f5a6688"
-					(reference "#PWRFPG12")
+					(reference "#PWRFPG13")
 					(unit 1)
 				)
 			)
@@ -25104,8 +25130,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "34b1dd60-ef3c-5a94-af2c-3f96f7f6857e")
-		(property "Reference" "#PWRFPG13"
+		(uuid "be201001-27e6-5613-ad22-dfe664ed459c")
+		(property "Reference" "#PWRFPG14"
 			(at 154.94 60.96 0)
 			(effects
 				(font
@@ -25132,12 +25158,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "3f6d4cc7-478f-504b-8758-3a8e41e9c76f")
+			(uuid "5edc4e2b-1f77-5f08-90d0-15804a45d73a")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/83b58830-c5a8-5b0f-967b-fc6b6f5a6688"
-					(reference "#PWRFPG13")
+					(reference "#PWRFPG14")
 					(unit 1)
 				)
 			)
@@ -25233,8 +25259,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "be201001-27e6-5613-ad22-dfe664ed459c")
-		(property "Reference" "#PWRFPG14"
+		(uuid "5b4e8b26-01de-570c-abbb-fa7919b984e0")
+		(property "Reference" "#PWRFPG15"
 			(at 165.1 60.96 0)
 			(effects
 				(font
@@ -25261,12 +25287,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "5edc4e2b-1f77-5f08-90d0-15804a45d73a")
+			(uuid "643c4f2f-7a01-5c5c-b412-71df78f2ecc4")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/83b58830-c5a8-5b0f-967b-fc6b6f5a6688"
-					(reference "#PWRFPG14")
+					(reference "#PWRFPG15")
 					(unit 1)
 				)
 			)
@@ -25292,8 +25318,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "5b4e8b26-01de-570c-abbb-fa7919b984e0")
-		(property "Reference" "#PWRFPG15"
+		(uuid "a0538fee-0dbe-5116-9dba-592002c0c1c5")
+		(property "Reference" "#PWRFPG16"
 			(at 198.12 60.96 0)
 			(effects
 				(font
@@ -25320,12 +25346,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "643c4f2f-7a01-5c5c-b412-71df78f2ecc4")
+			(uuid "c79e76fe-6f6e-52c7-af94-4eb6d61254e8")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/83b58830-c5a8-5b0f-967b-fc6b6f5a6688"
-					(reference "#PWRFPG15")
+					(reference "#PWRFPG16")
 					(unit 1)
 				)
 			)
@@ -25421,8 +25447,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "a0538fee-0dbe-5116-9dba-592002c0c1c5")
-		(property "Reference" "#PWRFPG16"
+		(uuid "947da7f5-80bc-5596-8bd1-d5e605a72b33")
+		(property "Reference" "#PWRFPG17"
 			(at 205.74 71.12 0)
 			(effects
 				(font
@@ -25449,12 +25475,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "c79e76fe-6f6e-52c7-af94-4eb6d61254e8")
+			(uuid "0b389daf-c244-5f49-87a4-79ea936a6b9a")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/83b58830-c5a8-5b0f-967b-fc6b6f5a6688"
-					(reference "#PWRFPG16")
+					(reference "#PWRFPG17")
 					(unit 1)
 				)
 			)
@@ -25632,8 +25658,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "947da7f5-80bc-5596-8bd1-d5e605a72b33")
-		(property "Reference" "#PWRFPG17"
+		(uuid "b39fb91e-012e-5b3b-8427-b6646bdf62e5")
+		(property "Reference" "#PWRFPG18"
 			(at 226.06 73.66 0)
 			(effects
 				(font
@@ -25660,12 +25686,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "0b389daf-c244-5f49-87a4-79ea936a6b9a")
+			(uuid "e5ff02c7-4c25-55b0-871d-2ab409632044")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/83b58830-c5a8-5b0f-967b-fc6b6f5a6688"
-					(reference "#PWRFPG17")
+					(reference "#PWRFPG18")
 					(unit 1)
 				)
 			)
@@ -25761,8 +25787,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "b39fb91e-012e-5b3b-8427-b6646bdf62e5")
-		(property "Reference" "#PWRFPG18"
+		(uuid "a10d09c4-15d0-5470-871c-e845eb17f4af")
+		(property "Reference" "#PWRFPG19"
 			(at 243.84 73.66 0)
 			(effects
 				(font
@@ -25789,12 +25815,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "e5ff02c7-4c25-55b0-871d-2ab409632044")
+			(uuid "0c293298-661c-5e02-a9f7-5a8c7980b6c2")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/83b58830-c5a8-5b0f-967b-fc6b6f5a6688"
-					(reference "#PWRFPG18")
+					(reference "#PWRFPG19")
 					(unit 1)
 				)
 			)
@@ -25808,8 +25834,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "a10d09c4-15d0-5470-871c-e845eb17f4af")
-		(property "Reference" "#PWRFPG19"
+		(uuid "038d0d3e-b929-5117-a836-c9dd787c89c5")
+		(property "Reference" "#PWRFPG20"
 			(at 215.9 91.44 0)
 			(effects
 				(font
@@ -25836,12 +25862,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "0c293298-661c-5e02-a9f7-5a8c7980b6c2")
+			(uuid "9d052eba-2160-52b8-bfff-995a564ad1fb")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/83b58830-c5a8-5b0f-967b-fc6b6f5a6688"
-					(reference "#PWRFPG19")
+					(reference "#PWRFPG20")
 					(unit 1)
 				)
 			)

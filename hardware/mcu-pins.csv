@@ -29,7 +29,7 @@ PF2,OCTOSPIM_P2_IO2,FPGA_QSPI_IO2,FPGA,fixed
 PF3,OCTOSPIM_P2_IO3,FPGA_QSPI_IO3,FPGA,fixed
 PG12,OCTOSPIM_P2_NCS,FPGA_QSPI_NCS,FPGA,"fixed; also iCE40 SPI_SS; switched to GPIO for the 8 pre-configuration clocks"
 PG8,ETH_PPS_OUT,PPS,FPGA,"fixed; to iCE40 and looped back to PA0"
-PA0,TIM2_ETR,PPS_IN,FPGA,"PPS loopback: input capture of the PPS edge (TIM2 phase reset uses ITR4 = ETH PPS, no wire)"
+PA0,TIM5_CH1,PPS_IN,FPGA,"PPS loopback: input capture of the PPS edge on TIM5 (TIM2_CH1 is BUS_LATCH on PA15; TIM2 phase reset uses ITR4 = ETH PPS, no wire)"
 PC9,RCC_MCO_2,FPGA_REFCLK,FPGA,"MCO2 from PLL2P; common time base"
 PG3,GPIO,FPGA_IRQ,FPGA,EXTI
 PG4,GPIO,FPGA_CRESET_B,FPGA,
@@ -46,7 +46,7 @@ PH1-OSC_OUT,RCC_OSC_OUT,HSE_OUT,CLOCK,
 PD3,SPI2_SCK,BUS_SCK,BORNIER,8 MHz mode 0
 PB14,SPI2_MISO,BUS_MISO,BORNIER,
 PB15,SPI2_MOSI,BUS_MOSI,BORNIER,
-PE0,GPIO,BUS_CS0,BORNIER,"CS0-CS11 on PE0-PE11: one BSRR write"
+PE0,GPIO,BUS_CS0,BORNIER,"CS0-CS10 on port E (PE0-PE10, CS2 on PE15): one BSRR write; CS11 on PG7"
 PE1,GPIO,BUS_CS1,BORNIER,
 PE2,OCTOSPIM_P1_IO2,FLASH_IO2,FLASH,"QSPI NAND W25N02KV, WP#"
 PE3,GPIO,BUS_CS3,BORNIER,
@@ -108,6 +108,6 @@ PA10,TIM1_CH3,LED_FAIL,UI,"PWM, active low: the ROM pull-up (USART1 RX) keeps it
 PF15,GPIO,GO_BTN,UI,"standalone programming start, EXTI15"
 PD0,FDCAN1_RX,FIELD_RX,FIELDBUS,"CAN or RS-485 (UART4_RX), through the 74LVC1G157 RX mux; ROM bootloader FDCAN1"
 PD1,FDCAN1_TX,FIELD_TX,FIELDBUS,"CAN or RS-485 (UART4_TX) to both transceivers; ROM bootloader FDCAN1"
-PB2,GPIO,FIELD_SEL_485,FIELDBUS,"pull-down: CAN by default; high: RS-485, TJA1051 silent"
+PB2,GPIO,FIELD_SEL_485,FIELDBUS,"pull-down: CAN by default; high: RS-485, TCAN3413 in standby"
 PG15,GPIO,RS485_DE,FIELDBUS,"pull-down: driver off; software direction"
-PB4,GPIO,TGT_NRST_SENSE,TARGET,"target nRST readback through 10k; 5 V tolerant pin to confirm"
+PB4,GPIO,TGT_NRST_SENSE,TARGET,"target nRST readback through 10k; FT_h pin (5 V tolerant)"

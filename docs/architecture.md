@@ -53,7 +53,7 @@ The probe implements the platform part of the Archet HIL harness specification:
 ```
  USB-C (FS, PD) ─┐                  ┌────────── iCE40UP5K ──────────┐
                  ├── STM32H723 ═════╡ SWD/JTAG/cJTAG engine          ├── level shifters ── target: STDC14 + ESP-Prog PROG
- Ethernet ───────┤   USB, TCP,  QSPI│ SWO capture + timestamping     │   1.2–5 V
+ Ethernet ───────┤   USB, TCP,  QSPI│ SWO capture + timestamping     │   1.65–5 V
  + PoE+          │   PTP, Maestro,  │ target UART, reset, EN/IO0     │
                  │   CMSIS-DAP      │ raw IOs: timestamping, rules   ├── shield: 2 × IDC 2 × 17
                  │                  └────────────────────────────────┘
@@ -67,7 +67,7 @@ The probe implements the platform part of the Archet HIL harness specification:
 
 - Transaction queue executed autonomously: retry on WAIT, parity, auto-incremented block reads/writes.
 - Adjustable SWDIO sampling delay, to compensate for the cable at high frequency. Realistic max frequency on the iCE40UP5K to be measured (logic fmax around 50 to 70 MHz).
-- SWDIO buffer direction driven by the FPGA (SN74LVC1T45, no auto-direction parts). A 10k pull-down holds it in input while the iCE40 is unconfigured (its IOs then have weak pull-ups). nRST and IO0 are open drain through 2N7002s, as on the ESP-Prog.
+- SWDIO buffer direction driven by the FPGA (SN74LVC1T45, no auto-direction parts). A 1k pull-down holds it in input while the iCE40 is unconfigured (its IOs then have weak pull-ups). nRST and IO0 are open drain through 2N7002s, as on the ESP-Prog.
 
 ### SWO (FPGA)
 
@@ -160,7 +160,7 @@ Archet also works without a host, as a production flasher: firmware images and t
   - Firmware duties: internal 8-bit ECC on by default; skip the factory-marked bad blocks (at least 2,008 of 2,048 valid) and retire the ones that fail later (P-FAIL / E-FAIL); program the pages of a block in order, at most 4 partial programs per page; one block per recipe, since erase is per 128 KB.
 - **GO button** (PF15, EXTI), next to the existing stop button (PC13).
 - **PASS and FAIL LEDs** on TIM1_CH4 (PE14) and TIM1_CH3 (PA10): one timer, brightness and blinking in PWM. Active low (cathode on the pin, anode to +3V3 through the resistor): the ROM bootloader pull-up on PA10 (USART1 RX) keeps FAIL off and the RX line idle.
-- **Buzzer: passive magnetic transducer MLT-8530** (2.7 kHz resonance) on TIM17_CH1 (PB9): the timer sets the tone (short high beep for PASS, low beeps for FAIL), the duty cycle the volume. 2N7002 low-side with a gate pull-down (PB9 is I²C1 SDA in the ROM) and a 1N4148WS flyback diode, fed from +5V through a 22 Ω 1206 series resistor (~95 mA bursts kept off the +3V3 logic rail). The coil is 16 Ω, and the datasheet's 95 mA at 5 Vo-p puts its impedance near 53 Ω at resonance; 22 Ω brings it to its 3.6 Vo-p rating. With the gate held high the resistor would take 0.34 W, above its 0.25 W rating: the firmware never leaves PB9 high. TIM17 is independent of TIM4: changing the tone leaves LED_STATUS untouched.
+- **Buzzer: passive magnetic transducer MLT-8530** (2.7 kHz resonance) on TIM17_CH1 (PB9): the timer sets the tone (short high beep for PASS, low beeps for FAIL), the duty cycle the volume. 2N7002 low-side with a gate pull-down (PB9 is I²C1 SDA in the ROM) and a 1N5819WS flyback diode, fed from +5V through a 22 Ω 1206 series resistor (~95 mA bursts kept off the +3V3 logic rail). The coil is 16 Ω, and the datasheet's 95 mA at 5 Vo-p puts its impedance near 53 Ω at resonance; 22 Ω brings it to its 3.6 Vo-p rating. With the gate held high the resistor would take 0.34 W, above its 0.25 W rating: the firmware never leaves PB9 high. TIM17 is independent of TIM4: changing the tone leaves LED_STATUS untouched.
 - **LEDs**: STATUS on the MCU (PB8, TIM4_CH3, alive from reset), PASS and FAIL on the MCU (must work with no bitstream), LINK and one spare on the iCE40 current sinks RGB1/RGB2 (40, 41), written by the MCU once the FPGA runs.
 
 ## Field bus: CAN FD or RS-485
@@ -266,8 +266,8 @@ VIN_EXT (10.8–24 V)    ┬─ MX74700T ─┘ SMBJ24CA│  (36 V, 3 A)        
    - TYP2-DET tells an at PSE (25.5 W) from an af one (13 W): a switch and 27 kΩ to VIN-, closed under a Type 2 PSE (the DP5700 copies the Silvertel Ag5700, datasheet §2.2.3, figure 4), carried to PC15 by an optocoupler;
    - input circuit as in the datasheet: MB10S bridges on both pair sets, SMAJ58A, RJ45 line-side centre taps on pins 7–10;
 3. **USB-C, two ports**. A host port rarely gives more than 5 V (laptops included), so the 480 Mbit/s link and PD are split:
-   - **J2, PD and FS**: STUSB4500 sink up to 20 V, D+/D− to the internal FS PHY (PA11/PA12): ROM DFU, or a 12 Mbit/s port for the firmware. The power input for a PD charger;
-   - **J5, HS, 5 V only**: Rd 5.1 kΩ on both CC lines, D+/D− to the USB3320C. A self-biased P-MOS soft start (Q11, no driver) keeps the ~90 µF of VSYS under the USB 2.0 attach limit (10 µF / 50 µC): on 13 ms after attach, 88 mA peak ([`hardware/sim/usb_hs_inrush.py`](../hardware/sim/usb_hs_inrush.py)). The CC lines are averaged into PA6 (R7/R8 100 kΩ): 0.51 × vRd, < 0.34 V default USB, 0.34–0.63 V 1.5 A, above 3 A. The Rd seen by the source stays at 4.98 kΩ (4.59–5.61 kΩ allowed);
+   - **J2, PD and FS**: STUSB4500 sink up to 20 V, D+/D− to the internal FS PHY (PA11/PA12): ROM DFU, or a 12 Mbit/s port for the firmware. The power input for a PD charger. The sink switch Q4 closes at attach on 5 V with a Miller soft start (C141 + R181, C134 1 µF): 0.27 A peak into VSYS, within the default current of a USB 2.0 port ([`hardware/sim/vbus_switch.py`](../hardware/sim/vbus_switch.py));
+   - **J5, HS, 5 V only**: Rd 5.1 kΩ on both CC lines, D+/D− to the USB3320C. A self-biased P-MOS soft start (Q11, no driver) keeps the ~90 µF of VSYS under the USB 2.0 attach limit (10 µF / 50 µC): on 13 ms after attach, 88 mA peak ([`hardware/sim/usb_hs_inrush.py`](../hardware/sim/usb_hs_inrush.py)). D21 (gate to GND) re-arms it when VBUS falls: a hub cycling the port finds Q11 off again. The CC lines are averaged into PA6 (R7/R8 100 kΩ): 0.51 × vRd, < 0.34 V default USB, 0.34–0.63 V 1.5 A, above 3 A. The Rd seen by the source stays at 4.98 kΩ (4.59–5.61 kΩ allowed);
    - a PD controller on J5 too would cost ~$4 and a second I²C device for a case (a PD charger on the data port) that J2 already covers;
    - current advertised on CC without PD: 0.5 A on a USB-A port, 1.5 or 3 A on a USB-C port (up to 15 W);
    - **USB PD** (independent of the USB 2.0 data rate, goes through CC): up to 20 V on a charger, hence the "PD charger + Ethernet without PoE" case;
@@ -296,6 +296,8 @@ Probe +3V3 rail, estimates to be confirmed against datasheets and on the prototy
 | Crystals, INA226, EEPROM, translators (MCU side), pull-ups | 10 | 20 |
 | **Total +3V3** | **345 (1.1 W)** | **550 (1.8 W)** |
 
++3V3_BUS (U44, ribbon modules) also draws from +3V3, up to its 616 mA limit: 1.17 A worst case, within the 2 A of the TLV62569.
+
 On +5V directly: buzzer (~95 mA during a beep), negligible against the 3 A rail.
 
 Efficiencies: TLV62569 ~90 %, LMR33630 ~90 %, DP5700 ~87 % *(to check)*. **Probe: 1.4 W typical, 2.1 W max at VSYS.** Target supply: 1 A max (5.6 W at VSYS at 5 V); 300 mA (1.7 W) reserved by default, anything above is taken from the shield and VIN_BUS share by the firmware.
@@ -322,8 +324,8 @@ Scripts in [`hardware/sim/`](../hardware/sim/), run with KiCad's Python (ngspice
 
 | Script | Checks | Result |
 |---|---|---|
-| `vbus_switch.py` | Q4 (AO4407A, VDMOS fitted to the datasheet) turn-on into VSYS, hot plug, PD 5 → 20 V | 3 A / 4.5 W peak at 5 V (×213 inside the SOA), 24 A at 20 V (×12.5); hot plug keeps Vgs above −0.1 V; 2.5 A on the PD step |
-| `usb_hs_inrush.py` | J5 attach through the Q11 soft start (1 and 50 µs edges, 0.35 A load) | 5.6 µC in the first ms (50 µC allowed), Vgs −0.66 V at attach (VGS(th) −1.3 V), on after 13 ms, 88 mA peak (394 mA loaded), final Vgs −3.9 V |
+| `vbus_switch.py` | Q4 (AO4407A, VDMOS fitted to the datasheet) turn-on into VSYS, hot plug, PD 5 → 20 V | 0.27 A peak at 5 V, VSYS in 1.7 ms (3 A with C134 alone, 6.6 A bare gate); 1.5 A at 20 V (×10 inside the SOA); 5 V hot plug keeps Vgs at −0.42 V, a 20 V one (non-compliant source) −1.8 V and 40 mA; 2.5 A on the PD step |
+| `usb_hs_inrush.py` | J5 attach through the Q11 soft start (1 and 50 µs edges, 0.35 A load); VBUS dropouts of 1–10 ms (hub port cycled, cable out) | 5.6 µC in the first ms (50 µC allowed), Vgs −0.66 V at attach (VGS(th) −1.3 V), on after 13 ms, 90 mA peak (396 mA loaded), final Vgs −3.9 V; 6–13 µC back from a dropout (400–670 µC without D21) |
 | `oring.py` | MX74700T handover, PD step with PoE feeding, VIN_EXT shorted | USB-C pulled: VSYS ≥ 11.9 V on PoE; 2.2 A back into PoE for < 1 µs; short: ~120 A reverse for < 1 µs (IDM 156 A), 31 V on the drain |
 | `buck5.py` | LMR33630 ripple, peak and valley vs limits, COUT vs eq. 6, dropout | peak 3.7 A at 36 V with L −20 % (ISC 3.85 A min); 3.38 A available; 61 µF effective vs 60–65 µF; ±5 % on a 2 A step |
 | `sequence.py` | iCE40 VCC/VCCPLL → SPI_VCCIO1/VPP_2V5, USB3320 VDD18 → VDDIO | VCCPLL ≥ 0.65 V when +3V3 starts (0.5 V required); +1V8 up first |
@@ -338,7 +340,7 @@ Residual points:
 
 ### Safety rules for shield design
 
-- The probe puts all shield IOs in high impedance at power-up, on reset and when the host goes silent. The shield guarantees its safe state with pull resistors.
+- The probe puts all shield IOs in high impedance at power-up, on reset and when the host goes silent. The shield guarantees its safe state with pull resistors. SHIELD_OE_N is pulled up to the probe +3V3 (R29), not to +3V3_OUT: a self-powered shield stays disabled while +3V3_OUT is off. Its OE_N input must accept 3.3 V while unpowered (Ioff buffer), 0.33 mA at most.
 - Overcurrent shutdown is **local and in hardware** on the shield. It never depends on the link with the probe.
 - The ≤ 10 µs shutdown on a real-time rule is commanded by the FPGA rule engine, through a raw IO.
 
@@ -348,7 +350,10 @@ From the schematic review of 2026-11-27:
 
 - **+5V and 5V_OUT on a 5 V USB source** sit at 4.1–4.6 V (cable drop, buck in dropout at 98 % duty); 5V_OUT stays off there anyway.
 - **TGT_VSUP** ceiling 5.04 V nominal, 4.90 V worst case (buffered DAC range), floor 1.65 V (translators).
-- **TVS clamp**: the SMBJ24CA clamps at 38.9 V only at its full surge current, above the 36 V of the LMR33630; accepted for a bench supply (see Sources).
+- **TVS clamp**: the SMBJ24CA clamps at 38.9 V only at its full surge current, above the 36 V of the LMR33630; accepted for a bench supply (see Sources). On J2 it starts conducting at 26.7 V, under the 28 V absolute maximum of the STUSB4500 VBUS pin only at low current: only a faulty charger gets there.
+- **Two USB ports at 5 V**: both feed VSYS through their ideal diodes and either can carry the load. The firmware budgets the smaller of the two announced currents (STUSB4500 contract on J2, CC level on PA6 for J5).
+- **TGT_VSUP 1 A and STOP** are firmware limits (INA226 alert, GPIO). A hung MCU is reset by the IWDG; the PC8 pull-down then turns U25 off.
+- **PoE MPS**: R14 loads the 12 V output with 12 mA (DP5700 minimum 10 mA), only ~4 mA at 48 V on the PSE side against the 10 mA 802.3 maintain power signature. To measure on the prototype with VIN_EXT winning the OR-ing: if the PSE drops power, the fallback to PoE is no longer seamless.
 - **IMON** of the VIN_BUS switches saturates above ~1 A total; the fault level (2.15–2.45 V at PF7) stays distinct.
 - **SWCLK, TDI and UART_TX** are always driven by their translators once TGT_VCC is present, also with the probe idle.
 - **RS-485**: no fail-safe bias on the probe; the bus terminations or a biased node provide it.
@@ -421,11 +426,11 @@ Choices made at assignment:
 
 - **iCE40 configured through the OCTOSPI2 pins** (single-line indirect write: CLK → SPI_SCK, NCS → SPI_SS, IO0 → SPI_SI, IO1 → SPI_SO), no separate configuration SPI. NCS and CLK switch to GPIO for the 8 clocks with SS high that precede the bitstream. The FPGA QSPI pins are therefore its configuration pins, and only CRESET_B and CDONE remain dedicated. No configuration flash. Pin numbers (SI 17, SO 14, SCK 15, SS 16) match the KiCad symbol `ICE40UP5K-SG48ITR`.
 - **iCE40 supplies**: core 1.2 V from an ME6211C12 LDO on **+5V**, so VCC and VCCPLL reach 0.5 V before SPI_VCCIO1 and VPP_2V5 (UltraPlus datasheet §4.5; to confirm on the prototype); VCCPLL through 100 Ω + 10 µF + 100 nF as on the Lattice UltraPlus development platform, even with the PLL unused; VPP_2V5 on +3V3 (NVCM unused); CRESET_B pulled down, CDONE and SHIELD_OE_N (RGB0, open drain) pulled up.
-- **USB3320C**: the C variant (not the USB3300) because RESETB low suspends it with every ULPI output high-Z, CLKOUT included (PA5 is SPI1_SCK of the ROM bootloader); RESETB has no internal pull, R33 holds it low. External 1.8 V from an ME6211C18 LDO on **+5V**, so VDD18 rises before +3V3 (absolute maximum: VDDIO 0.7 V while VDD18 is off). 24 MHz crystal, REFSEL[2:0] tied high; VBUS sensed through RVBUS 10 kΩ (up to 20 V on VBUS_CONN); ID tied to +3V3 (device only).
-- **LAN8742A**: REF_CLK Out mode (nINTSEL low through 10 kΩ): its own 25 MHz crystal, 50 MHz REF_CLK driven to PA1, since MCO1 (PA8) is taken. nINT is then unavailable, so PG7 is free and the link state is polled over MDIO. R42 (10 kΩ) holds nRST low until PG6 drives it; the straps are latched at that edge and left to the internal pulls (MODE = 111, PHYAD = 0, REGOFF low: internal 1.2 V regulator). 49.9 Ω terminations to the centre tap, fed from +3V3 through a ferrite bead; RBIAS 12.1 kΩ 1 %; MDIO pull-up 1 kΩ. RJ45 LEDs: anodes driven by LED1/LED2 through 330 Ω, cathodes to GND.
+- **USB3320C**: the C variant (not the USB3300) because RESETB low suspends it with every ULPI output high-Z, CLKOUT included (PA5 is SPI1_SCK of the ROM bootloader); RESETB has no internal pull, R33 holds it low. External 1.8 V from an ME6211C18 LDO on **+5V**, so VDD18 rises before +3V3 (absolute maximum: VDDIO 0.7 V while VDD18 is off). 24 MHz crystal, REFSEL[2:0] tied high; VBUS sensed through RVBUS 10 kΩ (VBUS_HS_CONN, the J5 port, 5 V; 20 V by mistake); ID tied to +3V3 (device only).
+- **LAN8742A**: REF_CLK Out mode (nINTSEL low through 10 kΩ): its own 25 MHz crystal, 50 MHz REF_CLK driven to PA1, since MCO1 (PA8) is taken. nINT is then unavailable, so PG7 is free and the link state is polled over MDIO. R42 (10 kΩ) holds nRST low until PG6 drives it; the straps are latched at that edge and left to the internal pulls (MODE = 111, PHYAD = 0, REGOFF low: internal 1.2 V regulator). 49.9 Ω terminations to the centre tap, fed from +3V3 through a ferrite bead; RBIAS 12.1 kΩ 1 %; MDIO pull-up 1 kΩ. RJ45 LEDs: anodes driven by LED1/LED2 through 120 Ω (~9 mA), cathodes to GND.
 - **Three I²C buses**: internal (I2C5: STUSB4500, INA226), Bornier (I2C1), shield (I2C4). An external bus fault (ribbon cable, unknown shield) never cuts the power management.
 - **CS0–CS10 on port E (PE0, PE1, PE3–PE10, PE15), CS11 on PG7**: a CS is still selected with one BSRR write. PE2 and PE11 went to the QSPI flash (OCTOSPI1 IO2 and NCS have no other pin left free).
-- **LATCH on TIM2_CH1 (PA15)**, 32-bit timer; the PPS (PG8) is looped back to TIM2_ETR (PA0) to reset its phase every PTP second. The reset needs no wire: ETH PPS is TIM2 internal trigger ITR4 (RM0468 table 355, slave reset mode). The loopback (R175) stays for an input capture of the PPS edge on PA0.
+- **LATCH on TIM2_CH1 (PA15)**, 32-bit timer; its phase is reset every PTP second by ETH PPS, TIM2 internal trigger ITR4 (RM0468 table 355, slave reset mode), with no wire. The PPS (PG8) is also looped back through R175 to TIM5_CH1 (PA0, 32-bit) for an input capture of its edge: TIM2_CH1 is taken by LATCH, and ETR is no capture input.
 - **FPGA reference clock on MCO2 (PC9)**, from PLL2P: frequency chosen in firmware, same crystal as the MAC.
 - LSE unused: PC13–PC15 (low-speed pads, 3 mA) only carry slow inputs (stop button, shield presence, PoE at).
 - JTAG disabled (SWD only): PA15 and PB4 are regular GPIOs. PB4 (NJTRST) keeps its pull-up from reset until the firmware reconfigures it: harmless on the nRST readback, which idles high; this is why the buzzer is not on PB4.
@@ -436,7 +441,7 @@ Goal: someone who receives an Archet and owns no debug probe can still program i
 
 - **GO is also BOOT0**: SW2 pulls GO_BTN to +3V3 (R68 pull-down), and R24 (1 kΩ) carries it to BOOT0 (R21 22 kΩ pull-down: 3.16 V). BOOT0 is only sampled at reset, so the button keeps its GO role once the firmware runs: GO is active high (rising edge), and GO held at power-up or reset enters the ROM bootloader. No separate BOOT0 button.
 - **J2, USB-C PD/FS port, on PA11/PA12** (ROM DFU). Any USB host powers the board through it (5 V, 150–250 mA in the bootloader). GO held at plug-in, then STM32CubeProgrammer or `dfu-util`. In normal use J2 is a 12 Mbit/s port for the firmware. The FS PHY and ULPI share the one OTG_HS controller: one or the other at a time.
-- **J6, 1×6 pads at 2.54 mm, FTDI cable pinout**: GND, BOOT0 (CTS position, test pad), VCC 5 V (through a Schottky to VSYS; R177 sinks its reverse leakage when the pads are open), CONSOLE_RX (PD9, cable TXD), CONSOLE_TX (PD8, cable RXD), NRST through a 1N5819WS Schottky, cathode on the cable side (cable RTS or adapter DTR): RTS low pulls NRST low, RTS high at 5 V is blocked, since NRST is not 5 V tolerant and keeps its internal pull-up. USART3 on PD8/PD9 is a ROM bootloader interface and the console in normal use. stm32flash (`-i` sequence for the reset, `-g` to start the application without dropping BOOT0) or stm32loader drive it. Needs an adapter whose VCC is 5 V.
+- **J6, 1×6 pads at 2.54 mm, FTDI cable pinout**: GND, BOOT0 (CTS position, test pad), VCC 5 V (through a Schottky to VSYS; R177 sinks its reverse leakage when the pads are open), CONSOLE_RX (PD9, cable TXD), CONSOLE_TX (PD8, cable RXD), NRST through a 1N5819WS Schottky, cathode on the cable side (cable RTS or adapter DTR): RTS low pulls NRST low, RTS high at 5 V is blocked, since NRST is not 5 V tolerant and keeps its internal pull-up. USART3 on PD8/PD9 is a ROM bootloader interface and the console in normal use. stm32flash (`-i` sequence for the reset, `-g` to start the application without dropping BOOT0) or stm32loader drive it. Needs an adapter whose VCC is 5 V **and supplies 250 mA**: the FTDI TTL-232R-5V cable is limited to 75 mA. Otherwise leave its VCC open and power the board from J2, J5 or VIN_EXT.
 - **J4 (SWD)** remains the full recovery path.
 
 **Bootloader interface selection.** The ROM polls every interface and keeps the first that shows activity (AN2606 rev 71, §62, figure 79): FDCAN frame, 0x7F on a USART, I²C address 0x5C, SPI synchronisation byte, then USB cable. AN2606 §4.4 asks for the RX lines of unused interfaces and D+/D− at a known level, no floating. The ROM also drives some pins as outputs. Survey of every ROM pin against its use on Archet:
@@ -473,7 +478,7 @@ Unit price for 1 to 9 parts (first runs of 2 to 5 boards). Type: BASIC and PREF 
 | MCU | STM32H723ZGT6 (LQFP-144) | C730146 | ext | 330 | $11.79 |
 | FPGA | iCE40UP5K-SG48I (QFN-48) | C2678152 | ext | 154 | $12.67 |
 | PoE at module, 12 V | DP5700-12V2A | C22358555 | ext | 66 | $6.85 |
-| PoE RJ45 (magnetics, centre taps) | ARJM11C7-114-BA-EW2 (through-hole) | C6578967 | ext | 79 | $5.97 |
+| PoE RJ45 (magnetics, centre taps, 600 mA per pair; the -114 is rated 350 mA) | ARJM11D7-104-AB-EW2 (through-hole) | C5554250 | ext | 64 | $3.72 |
 | PD controller | STUSB4500QTR | C2678061 | ext | 5,587 | $2.84 |
 | Ideal diode controller (×5: USB PD, USB HS, PoE, VIN_EXT, VIN_EXT to VIN_BUS), LM74700 pin-compatible | MX74700T | C22468156 | ext | 45,440 | $0.41 |
 | VSYS → +5V synchronous buck (3.8–36 V, 3 A) | LMR33630ADDAR | C841384 | ext | 22,086 | $0.52 |
@@ -517,7 +522,7 @@ Unit price for 1 to 9 parts (first runs of 2 to 5 boards). Type: BASIC and PREF 
 | Function | Part | Code | Type | Price |
 |---|---|---|---|---|
 | EEPROM | M24C02-WMN6TP | C7562 | PREF | $0.12 |
-| Schottky (×3: J6 VCC to VSYS, J6 RTS to NRST, buzzer flyback) | 1N5819WS | C191023 | BASIC | $0.01 |
+| Schottky (×4: J6 VCC to VSYS, J6 RTS to NRST, buzzer flyback, Q11 soft start re-arm) | 1N5819WS | C191023 | BASIC | $0.01 |
 | 25 MHz crystal, ×2 (Y1 HSE, Y3 RMII PHY) | X322525MOB4SI | C9006 | BASIC | $0.09 |
 | GO (also BOOT0) and STOP buttons | TS-1187A-B-A-B | C318884 | BASIC | $0.02 |
 | Green LEDs (PASS, LINK) | KT-0805G | C2297 | BASIC | $0.02 |
@@ -535,10 +540,10 @@ Out of stock on 2026-11-25: DP9700-AT, DP83825IRMQR, CH224K.
 
 | | 2 boards | 5 boards |
 |---|---|---|
-| Active parts | ~$64 | ~$64 |
+| Active parts | ~$62 | ~$62 |
 | Passives and small connectors | ~$10 | ~$10 |
 | Extended-part fees (~23 parts × $3 = $69 per order) | ~$35 | ~$14 |
-| **Total** | **~$109** | **~$88** |
+| **Total** | **~$107** | **~$86** |
 
 Fixed costs (PCB, assembly setup, stencil) are also divided by the run size. Consequences:
 

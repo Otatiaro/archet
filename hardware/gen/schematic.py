@@ -200,6 +200,14 @@ def usbc(prj):
     s.w("VBUS_GATE", s.P("C134", 2), (xc4, yg), (xr, yg))
     s.w("VBUS_GATE", (gx, yg), (gx, yg + 2.54))
     vpart(s, "R11", gx, yg + 2.54)
+    # C141 + R181: gate-drain (Miller) soft start, the drain side to the right of Q4
+    xm = fx + 17.78
+    s.w("VBUS_USB", (xm, yp), (xm, yp + 2.54))
+    vpart(s, "C141", xm, yp + 2.54)
+    xm2 = fx + 10.16
+    s.place("R181", xm2, yg, rot=270, ref_at=(xm2, yg - 5.08), val_at=(xm2, yg - 2.54))
+    s.w("VBUS_MILLER", s.P("C141", 2), (xm, yg), s.P("R181", 1))
+    s.w("VBUS_GATE", s.P("R181", 2), (gx, yg))
     ex, ey = s.P("U4", 16)
     s.w("VBUS_EN_N", s.P("R11", 2), (gx, ey), (ex, ey))
 
@@ -340,6 +348,10 @@ def usbc_hs(prj):
     xg2 = gx + 7.62
     vpart(s, "R180", xg2, yg)
     s.rail("GND", *s.P("R180", 2))
+    xk = gx - 6.35                                     # D21: re-arms the soft start when VBUS falls
+    s.place("D21", xk, yg + 3.81, rot=270, ref_at=(xk + 2.54, yg + 2.54), val_at=(xk + 2.54, yg + 5.08))
+    s.w("HS_GATE", s.P("D21", 1), (xk, yg))
+    s.rail("GND", *s.P("D21", 2))
     s.power("PWR_FLAG", fx2 - 53.34, yp, 0)
     ideal_diode(s, 5, "VBUS_HS", "Q12", "U53", "C139", "C140", fx2, yp, xbus, fx2 - 48.26)
     s.glabel("VSYS_OR", xbus, yp, 0, "bidirectional")
@@ -966,8 +978,7 @@ def fpga(prj):
     s.glabel("SHIELD_OE_N", ox + 40.64, oy, 0, "output")
     vpart(s, "R29", ox + 35.56, oy - 7.62)
     px, py = s.P("R29", 1)
-    s.w("+3V3_OUT", (px, py), (px, py - 2.54))
-    s.glabel("+3V3_OUT", px, py - 2.54, 90, "passive")
+    s.rail("+3V3", px, py)
     for num in ("40", "41"):                          # RGB1, RGB2: LED current sinks, LEDs on the UI sheet
         px, py = s.P("U13", num)
         s.glabel(prj.parts["U13"]["pins"][num], px, py, 0, "output")

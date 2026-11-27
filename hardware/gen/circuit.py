@@ -19,6 +19,7 @@ C1210 = "Capacitor_SMD:C_1210_3225Metric"
 C1206 = "Capacitor_SMD:C_1206_3216Metric"
 R0805 = "Resistor_SMD:R_0805_2012Metric"
 R1206 = "Resistor_SMD:R_1206_3216Metric"
+R0603 = "Resistor_SMD:R_0603_1608Metric"
 SMB = "Diode_SMD:D_SMB"
 
 # Passive palette: every resistor and capacitor of the board is one of these lines (one feeder each
@@ -51,7 +52,8 @@ PALETTE = {
     ("R", "120k", R0402): "C25750",        # preferred: TPS63020 DAC injection (hardware/sim/tgt_vsup.py)
     ("R", "50m", R1206): "C844686",        # ext, Vishay WSL1206R0500FEA 75 ppm/°C: INA226 shunts
     ("R", "22", R1206): "C17958",          # 250 mW: buzzer series resistor
-    ("R", "120", R0402): "C25079",         # field bus termination (~33 mW with a 2 V differential), RJ45 LEDs
+    ("R", "120", R0402): "C25079",         # RJ45 LEDs
+    ("R", "120", R0603): "C22787",         # 100 mW: field bus termination (75 mW with 3 V differential)
     ("R", "2k", R0402): "C4109",           # TPS2595 ILM: 1.04 A; I2C pull-ups; LMR33630 FB bottom
     ("R", "15m", R1206): "C844483",        # ext, Vishay WSL1206R0150FEA: boost sense, VSYS and 5V_OUT shunts
     ("R", "51k", R0402): "C25794",         # LM5155 RT: 425 kHz
@@ -71,6 +73,7 @@ NMOS = ("Transistor_FET:CSD18543Q3A", "CSD18543Q3A", "Package_SON:VSON-8_3.3x3.3
 # ANODE -100/+100 V (-90/+90 V operating), CATHODE-ANODE -5/+75 V, V(AK REV) -17 mV max, tReverse 0.75 µs max,
 # 2.37 A gate sink: the LM74700 figures sim/oring.py was built on. 0.41 $ against 2.61 $ (2026-11-27).
 IDEAL = ("Power_Management:LM74700", "MX74700T", "Package_TO_SOT_SMD:SOT-23-6", "C22468156")
+SCHOTTKY = ("Device:D_Schottky", "1N5819WS", "Diode_SMD:D_SOD-323", "C191023")  # pin 1 = cathode
 
 
 def ideal_diode(n, src, ctl, fet, cap, cin, note, out="VSYS_OR"):
@@ -152,11 +155,14 @@ c.R("R9", "1k", "VBUS_CONN", "PD_DISCH", note="VBUS sense and discharge path, 20
 c.part("Q4", "Transistor_FET:FDS9435A", "AO4407A", "Package_SO:SOIC-8_3.9x4.9mm_P1.27mm", "C2841482",
        {1: "VBUS_CONN", 2: "VBUS_CONN", 3: "VBUS_CONN", 4: "VBUS_GATE",
         5: "VBUS_USB", 6: "VBUS_USB", 7: "VBUS_USB", 8: "VBUS_USB"},
-       "Sink switch, -30 V, 18.5 mΩ max at -4.5 V (5 V VBUS), 11.5 mΩ at -10 V: 0.17-0.22 W at 3 A. Keeps the VSYS capacitors off VBUS until the "
-       "contract (inrush); its body diode only conducts toward the connector, the MX74700T blocks VSYS")
+       "Sink switch, -30 V, 18.5 mΩ max at -4.5 V (5 V VBUS), 11.5 mΩ at -10 V: 0.17-0.22 W at 3 A. Closes at attach (VBUS_EN_SNK) "
+       "with a Miller soft start (C141, R181): 0.27 A peak into VSYS; its body diode only conducts toward the connector, the MX74700T blocks VSYS")
 c.R("R10", "100k", "VBUS_CONN", "VBUS_GATE", note="Gate off when VBUS_EN_SNK is released")
-c.C("C134", "100nF", "VBUS_CONN", "VBUS_GATE", note="Gate-source: Q4 turns on ~0.7 ms after VBUS_EN_N, VSYS rises in "
-    "~140 µs, 3 A peak at 5 V (6.6 A without C134, sim/vbus_switch.py). Holds Vgs at 0 on a hot plug")
+c.C("C134", "1µF 50V", "VBUS_CONN", "VBUS_GATE", note="Gate-source: Q4 turns on ~6 ms after VBUS_EN_N. Holds Vgs at "
+    "-0.42 V on a 5 V hot plug (VGS(th) -1.3 V min)")
+c.C("C141", "100nF", "VBUS_USB", "VBUS_MILLER", note="Gate-drain (Miller) soft start with R181: VSYS rises in 1.7 ms, "
+    "0.27 A peak at 5 V attach (3 A with C134 alone, sim/vbus_switch.py)")
+c.R("R181", "1k", "VBUS_MILLER", "VBUS_GATE", note="Damps the Miller loop: 1.45 A peak without it")
 c.R("R11", "10k", "VBUS_GATE", "VBUS_EN_N", note="Vgs = -0.91 VBUS: -18.2 V at 20 V (±25 V max), -4.5 V at 5 V")
 c.part("D3", "Device:D_Dual_CommonAnode_KKA", "ESDA25W", "Package_TO_SOT_SMD:SOT-323_SC-70", "C2935152",
        {1: "CC2", 2: "CC1", 3: "GND"}, "CC lines ESD, 25 V breakdown: above the 22 V short-to-VBUS rating")
@@ -191,11 +197,14 @@ c.part("Q11", "Transistor_FET:FDS9435A", "AO4407A", "Package_SO:SOIC-8_3.9x4.9mm
        {1: "VBUS_HS_CONN", 2: "VBUS_HS_CONN", 3: "VBUS_HS_CONN", 4: "HS_GATE",
         5: "VBUS_HS", 6: "VBUS_HS", 7: "VBUS_HS", 8: "VBUS_HS"},
        "Self-biased soft start, as Q4 with no driver: USB 2.0 attach limit (10 µF / 50 µC) against ~90 µF on VSYS. "
-       "sim/usb_hs_inrush.py: on 13 ms after attach, VSYS in 4 ms, 88 mA peak. Body diode toward the connector")
+       "sim/usb_hs_inrush.py: on 13 ms after attach, VSYS in 4 ms, 90 mA peak; D21 re-arms it on a dropout. Body diode toward the connector")
 c.R("R179", "100k", "VBUS_HS_CONN", "HS_GATE", note="Gate-source: Vgs = -4.1 V once on (with R180)")
 c.R("R180", "22k", "HS_GATE", "GND", note="Pulls the gate down: 20 ms time constant with C136 + C137")
 c.C("C136", "1µF 50V", "VBUS_HS_CONN", "HS_GATE", note="Gate-source: Vgs -0.66 V on a 1 µs hot plug (VGS(th) -1.3 V min)")
 c.C("C137", "100nF", "VBUS_HS", "HS_GATE", note="Gate-drain (Miller): ramp ~0.9 V/ms, ~80 mA into VSYS")
+c.part("D21", *SCHOTTKY[:3], SCHOTTKY[3], {1: "HS_GATE", 2: "GND"},
+       "Re-arms the soft start: VBUS falling drags the gate below GND through C136, D21 empties C136. Without it "
+       "a hub port cycled for 1-10 ms finds Q11 on: 400-670 µC, 6-12 A into VSYS (sim/usb_hs_inrush.py)")
 ideal_diode(5, "VBUS_HS", "U53", "Q12", "C139", "C140", "Ideal diode, USB-C HS port (J5) VBUS after the soft start")
 c.part("U12", "Power_Protection:USBLC6-2SC6", "USBLC6-2SC6", "Package_TO_SOT_SMD:SOT-23-6", "C7519",
        {1: "HS_C_DM", 6: "USB_DM", 3: "HS_C_DP", 4: "USB_DP", 2: "GND", 5: "+3V3"},
@@ -304,7 +313,7 @@ sense("R124", "R125", "C125", "VIN_BUS", "VIN_BUS_SENSE")
 
 # --------------------------------------------------------------------------------------------
 c.block("+3V3 and +3V3_AUX: two TLV62569 2 A bucks from +5V, 1.5 MHz")
-# Probe rail: 520 mA max (docs/architecture.md, power budget). AUX rail: the 3V3_OUT eFuse, 1 A ceiling.
+# Probe rail: 550 mA max (docs/architecture.md, power budget), plus +3V3_BUS through U44 (616 mA limit): 1.17 A. AUX rail: the 3V3_OUT eFuse, 1 A ceiling.
 # Ripple 3.3 x (1 - 3.3/5) / (2.2 µH x 1.5 MHz) = 0.34 A p-p; peak 2.2 A at the 2 A rating.
 for u, l, cin, cout, rt, rb, out, tag in (("U9", "L2", "C27", "C28", "R17", "R18", "+3V3", "B3V3"),
                                          ("U10", "L3", "C29", "C30", "R19", "R20", "+3V3_AUX", "B3V3A")):
@@ -358,8 +367,8 @@ c.part("FB1", "Device:FerriteBead_Small", "600Ω@100MHz", "Inductor_SMD:L_0603_1
 c.C("C45", "1µF 50V", "VDDA", "GND", note="VDDA/VREF+ bulk, datasheet 1 µF")
 c.C("C46", "100nF", "VDDA", "GND", note="VDDA/VREF+ HF")
 c.C("C47", "100nF", "+3V3", "GND", note="VDD33USB decoupling (internal FS PHY: ROM DFU on J2)")
-c.R("R175", "33", "PPS", "PPS_IN", note="PPS loopback PG8 -> PA0 (TIM2_CH1): input capture of the "
-    "PPS edge. Reset or trigger mode needs no wire: ETH PPS is TIM2 ITR4 (RM0468 table 355)")
+c.R("R175", "33", "PPS", "PPS_IN", note="PPS loopback PG8 -> PA0 (TIM5_CH1, AF2): input capture of the "
+    "PPS edge; TIM2_CH1 is BUS_LATCH (PA15). TIM2 reset needs no wire: ETH PPS is TIM2 ITR4 (RM0468 table 355)")
 c.R("R21", "22k", "BOOT0", "GND", note="BOOT0 low: boot from flash. GO held through R24 (1k): 3.16 V, "
     "ROM bootloader at reset")
 c.R("R24", "1k", "GO_BTN", "BOOT0", note="GO is also BOOT0: held at power-up or reset, it enters the ROM "
@@ -367,7 +376,6 @@ c.R("R24", "1k", "GO_BTN", "BOOT0", note="GO is also BOOT0: held at power-up or 
 
 # Programming with no probe (architecture.md, "Programming a board with no debug probe"): the ROM
 # bootloader through USB FS DFU (J2) or USART3 (J6, FTDI cable), GO held at reset.
-SCHOTTKY = ("Device:D_Schottky", "1N5819WS", "Diode_SMD:D_SOD-323", "C191023")
 c.part("J6", "Connector_Generic:Conn_01x06", "Console / bootloader (FTDI)",
        "Connector_PinHeader_2.54mm:PinHeader_1x06_P2.54mm_Vertical", "",
        {1: "GND", 2: "BOOT0", 3: "J6_VCC", 4: "CONSOLE_RX", 5: "CONSOLE_TX", 6: "J6_RST"},
@@ -430,8 +438,9 @@ for i, pin in zip(range(57, 61), ("1 VCCIO_2", "22 SPI_VCCIO1", "24 VPP_2V5", "3
 c.R("R27", "10k", "FPGA_CRESET_B", "GND", note="FPGA held in reset until the MCU releases it: IOs high-Z while "
     "the MCU is in reset or in the ROM bootloader (QSPI pins shared with I2C2)")
 c.R("R28", "10k", "+3V3", "FPGA_CDONE", note="CDONE pull-up, open drain")
-c.R("R29", "10k", "+3V3_OUT", "SHIELD_OE_N", note="Shield drivers off until the bitstream pulls OE_N low (RGB0, "
-    "open drain)")
+c.R("R29", "10k", "+3V3", "SHIELD_OE_N", note="Shield drivers off until the bitstream pulls OE_N low (RGB0, "
+    "open drain). On +3V3, not +3V3_OUT: a self-powered shield stays disabled with +3V3_OUT off (0.33 mA "
+    "into an unpowered shield at most)")
 
 # --------------------------------------------------------------------------------------------
 c.block("USB HS: USB3320C ULPI PHY, 24 MHz crystal, 1.8 V LDO")
@@ -681,7 +690,8 @@ c.part("U30", "Archet:74LVC1G157", "74LVC1G157GW", "Package_TO_SOT_SMD:SOT-363_S
        "RX mux to PD0: S low = CAN (I0), S high = RS-485 (I1)")
 c.C("C104", "100nF", "+3V3", "GND", note="U30")
 c.R("R76", "10k", "FIELD_SEL_485", "GND", note="CAN by default: ROM bootloader and unprogrammed board")
-c.R("R77", "120", "FIELD_H", "FIELD_TERM", note="Bus termination, CAN and RS-485")
+c.R("R77", "120", "FIELD_H", "FIELD_TERM", fp=R0603, note="Bus termination, CAN and RS-485. 0603 (100 mW): "
+    "75 mW with a 3 V RS-485 differential held")
 c.part("SW4", "Switch:SW_SPDT", "TERM", "Archet:SW_SPDT_Shouhan_MSK12C02", "C431540",
        {1: "FIELD_L", 2: "FIELD_TERM"}, "MSK-12C02 slide switch: termination on in position 1-2")
 c.part("D16", "Power_Protection:NUP2105L", "NUP2105LT1G", "Package_TO_SOT_SMD:SOT-23", "C14486",
@@ -715,7 +725,7 @@ c.part("J11", IDC34[0], "SHIELD SVC", IDC34[1], IDC34[2], SVC,
        "from J1 is fused")
 for r, n in enumerate(SHIELD_IOS + SVC_SERIES, 78):           # R78-R100
     c.R(f"R{r}", "33", n, n + "_J", note="Series termination at the header" if r == 78 else "")
-c.R("R101", "2k", "+3V3_OUT", "SHIELD_SCL", note="I2C4 pull-ups, as I2C5. On +3V3_OUT, as R103 and R29: "
+c.R("R101", "2k", "+3V3_OUT", "SHIELD_SCL", note="I2C4 pull-ups, as I2C5. On +3V3_OUT, as R103: "
     "nothing back-powers a shield whose rail is off")
 c.R("R102", "2k", "+3V3_OUT", "SHIELD_SDA")
 c.R("R103", "10k", "+3V3_OUT", "SHIELD_RESET_N", note="Shield out of reset unless PG10 (open drain) pulls it low")
