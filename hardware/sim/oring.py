@@ -1,10 +1,12 @@
 # SPDX-License-Identifier: MIT
 # SPDX-FileCopyrightText: 2026 Thomas Legrand
-"""Source OR-ing: LM74700 + CSD18543Q3A ideal diodes into VSYS_OR (U1 VIN_EXT, U2 USB-C, U3 PoE)
-and VIN_EXT into VIN_BUS (U52/Q10). Source handover, reverse current on a shorted input.
+"""Source OR-ing: MX74700T + CSD18543Q3A ideal diodes into VSYS_OR (U1 VIN_EXT, U2 USB-C PD, U3 PoE;
+U53 USB-C HS, 5 V only, see usb_hs_inrush.py) and VIN_EXT into VIN_BUS (U52/Q10). Source handover,
+reverse current on a shorted input.
 
 Run: "C:\\Program Files\\KiCad\\10.0\\bin\\python.exe" -I oring.py
-The LM74700 is modelled by its reverse-blocking comparator (datasheet SNOSD17G, 6.5/6.6):
+The MX74700T (same pinout and thresholds as the TI LM74700) is modelled by its reverse-blocking
+comparator, with the LM74700 figures (datasheet SNOSD17G, 6.5/6.6; MX74700T datasheet identical):
 V(AK REV) -17 mV worst case, tReverse delay 0.75 us max (applied as a delay on V(AK), also on turn-on,
 where the datasheet gives 2.6 us max), on again above +30 mV, then a 2.37 A gate sink (switch-off in a few ns
 for the 11 nC of the CSD18543Q3A, neglected). Forward: the MOSFET (8.1 mOhm at 10 V) or its body diode.
@@ -145,7 +147,7 @@ def main():
     print(f"VIN_EXT 24 V feeding, J1 shorted: reverse peak Q1 {r['irev1']:.1f} A, Q10 {r['irev52']:.1f} A "
           f"(IDM {IDM:.0f} A), Q1 drain peak {r['vkmax']:.1f} V (60 V rating), VSYS min {r['vmin']:.1f} V, "
           f"then VSYS {r['vend']:.1f} V from USB-C; reverse pulses < 1 us, IDM rated for 100 us")
-    assert r["irev1"] < IDM and r["irev52"] < IDM and r["vkmax"] < 60      # LM74700 CATHODE-ANODE 75 V
+    assert r["irev1"] < IDM and r["irev52"] < IDM and r["vkmax"] < 60      # MX74700T CATHODE-ANODE 75 V
 
 
 if __name__ == "__main__":

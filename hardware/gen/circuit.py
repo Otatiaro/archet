@@ -36,6 +36,7 @@ PALETTE = {
     ("C", "10µF 50V", C1206): "C13585",
     ("C", "22µF 25V", C1206): "C12891",
     ("R", "22k", R0402): "C25768",
+    ("R", "5.1k", R0402): "C25905",        # 1 %: USB-C Rd (J5)
     ("C", "2.2µF", C0402): "C12530",       # 6.3 V X5R: VCAP (1.2 V)
     ("C", "15pF", C0402): "C1548",         # 50 V C0G
     ("R", "100", R0402): "C25076",         # VCCPLL filter
@@ -64,13 +65,16 @@ PALETTE = {
 
 c = Circuit(PALETTE, r_fp=R0402, c_fp=C0402)
 
-# One 60 V logic-level N-MOS for the three ideal diodes and the VIN_BUS boost: one extended part.
+# One 60 V logic-level N-MOS for the five ideal diodes and the VIN_BUS boost: one extended part.
 NMOS = ("Transistor_FET:CSD18543Q3A", "CSD18543Q3A", "Package_SON:VSON-8_3.3x3.3mm_P0.65mm_NexFET", "C840100")
-IDEAL = ("Power_Management:LM74700", "LM74700QDBVRQ1", "Package_TO_SOT_SMD:SOT-23-6", "C2941042")
+# Wuxi Maxin Micro MX74700T: pin-compatible LM74700 (KiCad symbol and SOT-23-6 kept). Datasheet V10 (LCSC):
+# ANODE -100/+100 V (-90/+90 V operating), CATHODE-ANODE -5/+75 V, V(AK REV) -17 mV max, tReverse 0.75 µs max,
+# 2.37 A gate sink: the LM74700 figures sim/oring.py was built on. 0.41 $ against 2.61 $ (2026-11-27).
+IDEAL = ("Power_Management:LM74700", "MX74700T", "Package_TO_SOT_SMD:SOT-23-6", "C22468156")
 
 
 def ideal_diode(n, src, ctl, fet, cap, cin, note, out="VSYS_OR"):
-    """LM74700 + N-MOS from `src` to `out`: source = anode (input), drain = cathode (output).
+    """MX74700T + N-MOS from `src` to `out`: source = anode (input), drain = cathode (output).
     EN tied to the anode (always on); charge pump capacitor between VCAP and ANODE (datasheet §9.2)."""
     c.part(fet, NMOS[0], NMOS[1], NMOS[2], NMOS[3], {1: src, 2: src, 3: src, 4: f"GATE{n}", 5: out},
            f"Ideal diode {n} switch; 60 V, 8.1 mΩ at 10 V: 73 mW at 3 A")
@@ -98,18 +102,18 @@ c.part("F1", "Device:Fuse", "5A 63V", "Fuse:Fuse_1206_3216Metric", "C2980745", {
        "12H1500C fast acting, 50 A breaking; worst case ~3 A at 10.8 V (probe, target, 11.5 W shield, VIN_BUS)")
 c.part("D1", "Device:D_TVS", "SMBJ24CA", SMB, "C78416", {1: "GND", 2: "VIN_EXT_P"},
        "Bidirectional: 24 V standoff, 26.7 V breakdown, 38.9 V clamp; a reversed supply only meets the "
-       "LM74700 ideal diodes U1 and U52 (anode -65 V; cathode to anode 75 V, 48.5 V with the boost running)")
+       "MX74700T ideal diodes U1 and U52 (anode -90 V; cathode to anode 75 V, 48.5 V with the boost running)")
 ideal_diode(1, "VIN_EXT_P", "U1", "Q1", "C1", "C2", "Ideal diode, VIN_EXT")
-ideal_diode(2, "VBUS_USB", "U2", "Q2", "C3", "C4", "Ideal diode, USB-C VBUS after the PD sink switch")
+ideal_diode(2, "VBUS_USB", "U2", "Q2", "C3", "C4", "Ideal diode, USB-C PD port (J2) VBUS after the sink switch")
 ideal_diode(3, "POE_12V", "U3", "Q3", "C5", "C6", "Ideal diode, PoE module 12 V output")
 c.part("C7", "Device:C_Polarized", "47µF 63V", "Capacitor_SMD:CP_Elec_6.3x7.7", "C46550423",
        {1: "VSYS_OR", 2: "GND"}, "Damps the hot-plug ringing of the cables and the ceramics")
 c.C("C8", "1µF 50V", "VSYS_OR", "GND", note="Layout: at the Q1 drain. A short on VIN_EXT turns Q1 off with ~120 A reverse "
-    "(sim/oring.py): 31 V on the drain with it, 83 V without (LM74700 cathode-anode 75 V)")
+    "(sim/oring.py): 31 V on the drain with it, 83 V without (MX74700T cathode-anode 75 V)")
 sense("R1", "R2", "C9", "VIN_EXT_P", "VIN_EXT_SENSE")
 sense("R3", "R4", "C10", "VBUS_USB", "VBUS_USB_SENSE")
 sense("R5", "R6", "C11", "POE_12V", "POE_12V_SENSE")
-sense("R7", "R8", "C12", "VSYS", "VSYS_SENSE")
+# VSYS itself: U43 bus voltage (no ADC divider; PA6 reads the J5 CC lines)
 c.R("R126", "15m", "VSYS_OR", "VSYS", fp=R1206,
     note="VSYS shunt: 81.9 mV full scale = 5.46 A; 135 mW at 3 A")
 c.part("U43", "Sensor_Energy:INA226", "INA226AIDGSR", "Package_SO:TSSOP-10_3x3mm_P0.5mm", "C49851",
@@ -120,13 +124,16 @@ c.part("U43", "Sensor_Energy:INA226", "INA226AIDGSR", "Package_SO:TSSOP-10_3x3mm
 c.C("C126", "100nF", "+3V3", "GND", note="U43")
 
 # --------------------------------------------------------------------------------------------
-c.block("USB-C sink: STUSB4500 PD controller, VBUS switch, ESD")
+c.block("USB-C PD port (J2): STUSB4500 sink, VBUS switch, USB FS for the ROM DFU, ESD")
+# Two USB-C ports (architecture.md, "USB ports"): J2 takes a PD charger (up to 20 V) and carries the FS
+# lines of the internal PHY (ROM DFU only); J5 carries USB HS to the USB3320C at 5 V, from a PC.
+# One OTG_HS controller: ULPI or the internal FS PHY, never both at once.
 c.part("J2", "Connector:USB_C_Receptacle_USB2.0_16P", "TYPE-C-31-M-12",
        "Archet:USB_C_Receptacle_HRO_TYPE-C-31-M-12", "C165948",
        {"A4": "VBUS_CONN", "A9": "VBUS_CONN", "B4": "VBUS_CONN", "B9": "VBUS_CONN", "A5": "CC1", "B5": "CC2",
         "A6": "USB_C_DP", "B6": "USB_C_DP", "A7": "USB_C_DM", "B7": "USB_C_DM",
         "A1": "GND", "B1": "GND", "A12": "GND", "B12": "GND", "SH": "GND"},
-       "USB 2.0 receptacle, 5 A contacts; SBU unused")
+       "PD and FS port, USB 2.0 receptacle, 5 A contacts; SBU unused")
 c.part("D2", "Device:D_TVS", "SMBJ24CA", SMB, "C78416", {1: "GND", 2: "VBUS_CONN"},
        "Same TVS as VIN_EXT: 24 V standoff covers the 20 V PD contract")
 c.C("C13", "1µF 50V", "VBUS_CONN", "GND", note="STUSB4500 VDD decoupling and USB cSnkBulk (1-10 µF)")
@@ -146,7 +153,7 @@ c.part("Q4", "Transistor_FET:FDS9435A", "AO4407A", "Package_SO:SOIC-8_3.9x4.9mm_
        {1: "VBUS_CONN", 2: "VBUS_CONN", 3: "VBUS_CONN", 4: "VBUS_GATE",
         5: "VBUS_USB", 6: "VBUS_USB", 7: "VBUS_USB", 8: "VBUS_USB"},
        "Sink switch, -30 V, 18.5 mΩ max at -4.5 V (5 V VBUS), 11.5 mΩ at -10 V: 0.17-0.22 W at 3 A. Keeps the VSYS capacitors off VBUS until the "
-       "contract (inrush); its body diode only conducts toward the connector, the LM74700 blocks VSYS")
+       "contract (inrush); its body diode only conducts toward the connector, the MX74700T blocks VSYS")
 c.R("R10", "100k", "VBUS_CONN", "VBUS_GATE", note="Gate off when VBUS_EN_SNK is released")
 c.C("C134", "100nF", "VBUS_CONN", "VBUS_GATE", note="Gate-source: Q4 turns on ~0.7 ms after VBUS_EN_N, VSYS rises in "
     "~140 µs, 3 A peak at 5 V (6.6 A without C134, sim/vbus_switch.py). Holds Vgs at 0 on a hot plug")
@@ -154,8 +161,45 @@ c.R("R11", "10k", "VBUS_GATE", "VBUS_EN_N", note="Vgs = -0.91 VBUS: -18.2 V at 2
 c.part("D3", "Device:D_Dual_CommonAnode_KKA", "ESDA25W", "Package_TO_SOT_SMD:SOT-323_SC-70", "C2935152",
        {1: "CC2", 2: "CC1", 3: "GND"}, "CC lines ESD, 25 V breakdown: above the 22 V short-to-VBUS rating")
 c.part("U5", "Power_Protection:USBLC6-2SC6", "USBLC6-2SC6", "Package_TO_SOT_SMD:SOT-23-6", "C7519",
-       {1: "USB_C_DM", 6: "USB_DM", 3: "USB_C_DP", 4: "USB_DP", 2: "GND", 5: "+3V3"},
+       {1: "USB_C_DM", 6: "USB_FS_DM", 3: "USB_C_DP", 4: "USB_FS_DP", 2: "GND", 5: "+3V3"},
        "D+/D- ESD, flow-through: 1-6 and 3-4 are joined inside, the tracks pass over the pads; reference on +3V3 since VBUS reaches 20 V (6 V max on pin 5)")
+c.R("R22", "100k", "GND", "USB_FS_DM", note="Known level with J2 open (AN2606 §4.4: no floating "
+    "D+/D- while the ROM polls the other interfaces)")
+c.R("R23", "100k", "USB_FS_DP", "GND", note="Same; against the 1.5 kΩ device pull-up D+ stays at 3.25 V")
+
+# --------------------------------------------------------------------------------------------
+c.block("USB-C HS port (J5): 5 V sink, soft start, ideal diode, CC current read-back, ESD")
+c.part("J5", "Connector:USB_C_Receptacle_USB2.0_16P", "TYPE-C-31-M-12",
+       "Archet:USB_C_Receptacle_HRO_TYPE-C-31-M-12", "C165948",
+       {"A4": "VBUS_HS_CONN", "A9": "VBUS_HS_CONN", "B4": "VBUS_HS_CONN", "B9": "VBUS_HS_CONN",
+        "A5": "CC1_HS", "B5": "CC2_HS", "A6": "HS_C_DP", "B6": "HS_C_DP", "A7": "HS_C_DM", "B7": "HS_C_DM",
+        "A1": "GND", "B1": "GND", "A12": "GND", "B12": "GND", "SH": "GND"},
+       "HS port, same receptacle as J2. 5 V only (no PD): a PC port, Type-A through a cable or Type-C")
+c.part("D7", "Device:D_TVS", "SMBJ24CA", SMB, "C78416", {1: "GND", 2: "VBUS_HS_CONN"},
+       "Same TVS as J2: survives a 20 V source plugged by mistake (the 5 V Rd sink asks for none)")
+c.C("C138", "1µF 50V", "VBUS_HS_CONN", "GND", note="cSnkBulk (1-10 µF), the only capacitance seen at attach")
+c.R("R25", "5.1k", "GND", "CC1_HS", note="Rd: the source turns VBUS on. Type-C sink without PD")
+c.R("R176", "5.1k", "CC2_HS", "GND", note="Rd, flipped cable")
+c.part("D20", "Device:D_Dual_CommonAnode_KKA", "ESDA25W", "Package_TO_SOT_SMD:SOT-323_SC-70", "C2935152",
+       {1: "CC2_HS", 2: "CC1_HS", 3: "GND"}, "CC lines ESD, as D3")
+c.R("R7", "100k", "CC1_HS", "CC_HS_SENSE", note="CC read-back: the active CC (vRd of the source Rp) averaged with "
+    "the open one at 0 V: 0.51 vRd on PA6. Default < 0.34 V, 1.5 A 0.34-0.63 V, 3 A > 0.63 V. Loads Rd to 4.98 kΩ "
+    "(4.59-5.61 kΩ allowed)")
+c.R("R8", "100k", "CC2_HS", "CC_HS_SENSE", note="Second CC into the average")
+c.C("C12", "100nF", "CC_HS_SENSE", "GND", note="ADC sampling reservoir, 5 ms time constant (vRd is static)")
+c.part("Q11", "Transistor_FET:FDS9435A", "AO4407A", "Package_SO:SOIC-8_3.9x4.9mm_P1.27mm", "C2841482",
+       {1: "VBUS_HS_CONN", 2: "VBUS_HS_CONN", 3: "VBUS_HS_CONN", 4: "HS_GATE",
+        5: "VBUS_HS", 6: "VBUS_HS", 7: "VBUS_HS", 8: "VBUS_HS"},
+       "Self-biased soft start, as Q4 with no driver: USB 2.0 attach limit (10 µF / 50 µC) against ~90 µF on VSYS. "
+       "sim/usb_hs_inrush.py: on 13 ms after attach, VSYS in 4 ms, 88 mA peak. Body diode toward the connector")
+c.R("R179", "100k", "VBUS_HS_CONN", "HS_GATE", note="Gate-source: Vgs = -4.1 V once on (with R180)")
+c.R("R180", "22k", "HS_GATE", "GND", note="Pulls the gate down: 20 ms time constant with C136 + C137")
+c.C("C136", "1µF 50V", "VBUS_HS_CONN", "HS_GATE", note="Gate-source: Vgs -0.66 V on a 1 µs hot plug (VGS(th) -1.3 V min)")
+c.C("C137", "100nF", "VBUS_HS", "HS_GATE", note="Gate-drain (Miller): ramp ~0.9 V/ms, ~80 mA into VSYS")
+ideal_diode(5, "VBUS_HS", "U53", "Q12", "C139", "C140", "Ideal diode, USB-C HS port (J5) VBUS after the soft start")
+c.part("U12", "Power_Protection:USBLC6-2SC6", "USBLC6-2SC6", "Package_TO_SOT_SMD:SOT-23-6", "C7519",
+       {1: "HS_C_DM", 6: "USB_DM", 3: "HS_C_DP", 4: "USB_DP", 2: "GND", 5: "+3V3"},
+       "J5 D+/D- ESD to the USB3320C, flow-through as U5")
 
 # --------------------------------------------------------------------------------------------
 c.block("PoE+: RJ45 with PoE+ magnetics, bridges, isolated 12 V PD module")
@@ -313,43 +357,28 @@ c.part("FB1", "Device:FerriteBead_Small", "600Ω@100MHz", "Inductor_SMD:L_0603_1
        {1: "+3V3", 2: "VDDA"}, "GZ1608D601TF: 200 mA, 0.45 Ω. Separates VDDA/VREF+ (ADC, DAC) from VDD noise")
 c.C("C45", "1µF 50V", "VDDA", "GND", note="VDDA/VREF+ bulk, datasheet 1 µF")
 c.C("C46", "100nF", "VDDA", "GND", note="VDDA/VREF+ HF")
-c.C("C47", "100nF", "+3V3", "GND", note="VDD33USB decoupling (internal FS PHY: ROM DFU on J5)")
+c.C("C47", "100nF", "+3V3", "GND", note="VDD33USB decoupling (internal FS PHY: ROM DFU on J2)")
 c.R("R175", "33", "PPS", "PPS_IN", note="PPS loopback PG8 -> PA0 (TIM2_CH1): input capture of the "
     "PPS edge. Reset or trigger mode needs no wire: ETH PPS is TIM2 ITR4 (RM0468 table 355)")
-c.R("R21", "22k", "BOOT0", "GND", note="BOOT0 low: boot from flash. With 5 V on J5 or J6 through 10k: "
-    "3.4 V, ROM bootloader (BOOT0 rated 9 V)")
+c.R("R21", "22k", "BOOT0", "GND", note="BOOT0 low: boot from flash. GO held through R24 (1k): 3.16 V, "
+    "ROM bootloader at reset")
+c.R("R24", "1k", "GO_BTN", "BOOT0", note="GO is also BOOT0: held at power-up or reset, it enters the ROM "
+    "bootloader (DFU on J2, USART3 on J6); once running, BOOT0 is ignored")
 
 # Programming with no probe (architecture.md, "Programming a board with no debug probe"): the ROM
-# bootloader through USB FS DFU (J5) or USART3 (J6, FTDI cable), BOOT0 raised by the cable's 5 V.
+# bootloader through USB FS DFU (J2) or USART3 (J6, FTDI cable), GO held at reset.
 SCHOTTKY = ("Device:D_Schottky", "1N5819WS", "Diode_SMD:D_SOD-323", "C191023")
-c.part("J5", "Connector:USB_B_Micro", "USB FS (ROM DFU)", "Archet:USB_Micro-B_Molex-105133-0001", "C782257",
-       {1: "USB_FS_VBUS", 2: "J5_DM", 3: "J5_DP", 5: "GND", "SH": "GND"},
-       "Molex 105133-0001, vertical (as on Bornier): placed anywhere on the board. Prototypes; may be left off in production (firmware DFU over USB HS). ID unused")
-c.part("U12", "Power_Protection:USBLC6-2SC6", "USBLC6-2SC6", "Package_TO_SOT_SMD:SOT-23-6", "C7519",
-       {1: "J5_DP", 6: "USB_FS_DP", 3: "J5_DM", 4: "USB_FS_DM", 2: "GND", 5: "+3V3"},
-       "J5 D+/D- ESD, flow-through as U5")
-c.R("R22", "100k", "USB_FS_DM", "GND", note="Known level with J5 open or absent (AN2606 §4.4: no floating "
-    "D+/D- while the ROM polls the other interfaces)")
-c.R("R23", "100k", "USB_FS_DP", "GND", note="Same; against the 1.5 kΩ device pull-up D+ stays at 3.25 V")
-c.part("D7", *SCHOTTKY[:3], SCHOTTKY[3], {1: "VSYS", 2: "USB_FS_VBUS"},
-       "J5 VBUS powers the whole board (150-250 mA in the bootloader); blocks VSYS from the cable")
-c.R("R24", "10k", "USB_FS_VBUS", "BOOT0", note="Plugging J5 enters the ROM bootloader. Remove it to use J5 "
-    "as a plain USB FS port")
-c.R("R176", "1k", "USB_FS_VBUS", "GND", note="Sinks the D7 reverse leakage (VSYS up to 24 V, hot) with J5 "
-    "unplugged, so it cannot lift BOOT0; 5 mA from the cable. BOOT0 VIL 0.73 V: up to 1.06 mA of leakage, "
-    "Hottech 1N5819WS 0.5 mA typical at 24 V / 85 °C, its maximum reaches 1 mA near 45 °C (accepted, bench probe)")
 c.part("J6", "Connector_Generic:Conn_01x06", "Console / bootloader (FTDI)",
        "Connector_PinHeader_2.54mm:PinHeader_1x06_P2.54mm_Vertical", "",
        {1: "GND", 2: "BOOT0", 3: "J6_VCC", 4: "CONSOLE_RX", 5: "CONSOLE_TX", 6: "J6_RST"},
        "Pads only, FTDI cable pinout: 1 GND, 2 CTS (BOOT0 test pad), 3 VCC 5 V, 4 TXD, 5 RXD, 6 RTS. "
        "USART3 PD8/PD9 (FT pins: 5 V cables accepted)", bare=True)
-c.part("D8", *SCHOTTKY[:3], SCHOTTKY[3], {1: "VSYS", 2: "J6_VCC"}, "J6 VCC powers the board, as D7")
-c.R("R25", "10k", "BOOT0", "J6_VCC", note="J6 VCC enters the ROM bootloader, as R24")
-c.R("R177", "1k", "GND", "J6_VCC", note="Sinks the D8 reverse leakage, as R176")
+c.part("D8", *SCHOTTKY[:3], SCHOTTKY[3], {1: "VSYS", 2: "J6_VCC"},
+       "J6 VCC powers the whole board (150-250 mA in the bootloader); blocks VSYS from the cable")
+c.R("R177", "1k", "GND", "J6_VCC", note="Sinks the D8 reverse leakage (VSYS up to 24 V, hot) with J6 open: "
+    "the VCC pad stays near 0 V")
 c.part("D9", *SCHOTTKY[:3], SCHOTTKY[3], {1: "J6_RST", 2: "NRST"},
        "RTS low pulls NRST low; RTS high (5 V on a 5 V cable) is blocked: NRST is not 5 V tolerant")
-c.part("SW1", "Switch:SW_Push", "BOOT0", "Archet:SW_Push_1P1T_XKB_TS-1187A", "C318884",
-       {1: "+3V3", 2: "BOOT0"}, "TS-1187A-B-A-B, as GO and STOP: hold at power-up or reset to enter the ROM bootloader")
 c.C("C48", "100nF", "NRST", "GND", note="NRST filter, datasheet 100 nF; internal pull-up")
 c.part("Y1", "Device:Crystal_GND24", "25MHz", "Crystal:Crystal_SMD_3225-4Pin_3.2x2.5mm", "C9006",
        {1: "HSE_IN", 3: "HSE_OUT", 2: "GND", 4: "GND"},
@@ -430,8 +459,8 @@ c.C("C65", "10µF 25V", "+3V3", "GND", fp=C0805, note="COUT: VDD33 pin 20, datas
     "keeps well above 2.2 µF at 3.3 V DC bias")
 c.C("C66", "100nF", "+3V3", "GND", note="CBYP: VBAT pin 21")
 c.C("C67", "100nF", "+3V3", "GND", note="CBYP: VDDIO pin 32")
-c.R("R30", "10k", "VBUS_CONN", "PHY_VBUS", note="RVBUS, device mode 10 kΩ (table 5-7). Works with the internal "
-    "overvoltage clamp up to 30 V: (20 - 5.02)² / 10k = 22 mW at 20 V PD")
+c.R("R30", "10k", "VBUS_HS_CONN", "PHY_VBUS", note="RVBUS, device mode 10 kΩ (table 5-7): J5 VBUS, ahead of "
+    "Q11 (session valid as soon as the host turns VBUS on). Internal clamp up to 30 V covers a 20 V source by mistake")
 c.R("R31", "8.06k", "PHY_RBIAS", "GND", note="RBIAS 8.06 kΩ 1 %, close to the pin")
 c.R("R33", "10k", "ULPI_RST", "GND", note="PHY held in reset (RESETB has no internal pull) until the firmware "
     "drives PD10 high: ULPI_CK quiet on PA5 = SPI1_SCK of the ROM bootloader")
@@ -600,13 +629,17 @@ c.C("C98", "100nF", "+3V3", "GND", note="U27")
 c.R("R65", "10k", "+3V3", "FLASH_NCS", note="Flash deselected until OCTOSPI1 runs")
 c.R("R66", "10k", "+3V3", "FLASH_IO2", note="/WP inactive outside quad mode")
 c.R("R67", "10k", "+3V3", "FLASH_IO3", note="/HOLD inactive outside quad mode")
-# Buttons to GND with a 10 kΩ pull-up and a 1 ms RC: clean EXTI edges, defined level with the MCU in reset.
+# Buttons with a 10 kΩ resistor and a 1 ms RC: clean EXTI edges, defined level with the MCU in reset.
+# GO is active high (to +3V3, pull-down) since it also raises BOOT0 through R24; STOP is active low.
 BUTTON = ("Switch:SW_Push", "Archet:SW_Push_1P1T_XKB_TS-1187A", "C318884")
-for sw, r, cf, net, what in (("SW2", "R68", "C99", "GO_BTN", "GO: programs the target with the stored image"),
-                             ("SW3", "R69", "C100", "STOP_BTN", "Emergency stop: target supply and outputs off")):
-    c.part(sw, BUTTON[0], net.split("_")[0], BUTTON[1], BUTTON[2], {1: net, 2: "GND"},
+for sw, r, cf, net, rail, what in (
+        ("SW2", "R68", "C99", "GO_BTN", "+3V3", "GO (active high): programs the target with the stored image; "
+         "held at reset, ROM bootloader (R24)"),
+        ("SW3", "R69", "C100", "STOP_BTN", "GND", "Emergency stop (active low): target supply and outputs off")):
+    high = rail == "+3V3"
+    c.part(sw, BUTTON[0], net.split("_")[0], BUTTON[1], BUTTON[2], {1: rail, 2: net} if high else {1: net, 2: rail},
            f"TS-1187A-B-A-B, 5.1 x 5.1 mm. {what}")
-    c.R(r, "10k", "+3V3", net)
+    c.R(r, "10k", *((net, "GND") if high else ("+3V3", net)))
     c.C(cf, "100nF", net, "GND", note="Debounce, 1 ms")
 # LEDs: MCU ones active low through 1 kΩ (~1.3 mA, indicator brightness), iCE40 ones on the RGB current sinks
 # (no resistor, current set in the RGB_DRV IP, 2 mA).

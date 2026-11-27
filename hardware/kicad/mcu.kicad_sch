@@ -12246,399 +12246,6 @@
 			)
 			(embedded_fonts no)
 		)
-		(symbol "Connector:USB_B_Micro"
-			(pin_names
-				(offset 1.016)
-			)
-			(exclude_from_sim no)
-			(in_bom yes)
-			(on_board yes)
-			(in_pos_files yes)
-			(duplicate_pin_numbers_are_jumpers no)
-			(property "Reference" "J"
-				(at -5.08 11.43 0)
-				(show_name no)
-				(do_not_autoplace no)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(justify left)
-				)
-			)
-			(property "Value" "USB_B_Micro"
-				(at -5.08 8.89 0)
-				(show_name no)
-				(do_not_autoplace no)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(justify left)
-				)
-			)
-			(property "Footprint" ""
-				(at 3.81 -1.27 0)
-				(show_name no)
-				(do_not_autoplace no)
-				(hide yes)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-				)
-			)
-			(property "Datasheet" ""
-				(at 3.81 -1.27 0)
-				(show_name no)
-				(do_not_autoplace no)
-				(hide yes)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-				)
-			)
-			(property "Description" "USB Micro Type B connector"
-				(at 0 0 0)
-				(show_name no)
-				(do_not_autoplace no)
-				(hide yes)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-				)
-			)
-			(property "ki_keywords" "connector USB micro"
-				(at 0 0 0)
-				(show_name no)
-				(do_not_autoplace no)
-				(hide yes)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-				)
-			)
-			(property "ki_fp_filters" "USB*Micro*B*"
-				(at 0 0 0)
-				(show_name no)
-				(do_not_autoplace no)
-				(hide yes)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-				)
-			)
-			(symbol "USB_B_Micro_0_1"
-				(rectangle
-					(start -5.08 -7.62)
-					(end 5.08 7.62)
-					(stroke
-						(width 0.254)
-						(type default)
-					)
-					(fill
-						(type background)
-					)
-				)
-				(polyline
-					(pts
-						(xy -4.699 5.842)
-						(xy -4.699 5.588)
-						(xy -4.445 4.826)
-						(xy -4.445 4.572)
-						(xy -1.651 4.572)
-						(xy -1.651 4.826)
-						(xy -1.397 5.588)
-						(xy -1.397 5.842)
-						(xy -4.699 5.842)
-					)
-					(stroke
-						(width 0)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(polyline
-					(pts
-						(xy -4.318 5.588)
-						(xy -1.778 5.588)
-						(xy -2.032 4.826)
-						(xy -4.064 4.826)
-						(xy -4.318 5.588)
-					)
-					(stroke
-						(width 0)
-						(type default)
-					)
-					(fill
-						(type outline)
-					)
-				)
-				(circle
-					(center -3.81 2.159)
-					(radius 0.635)
-					(stroke
-						(width 0.254)
-						(type default)
-					)
-					(fill
-						(type outline)
-					)
-				)
-				(polyline
-					(pts
-						(xy -3.175 2.159)
-						(xy -2.54 2.159)
-						(xy -1.27 3.429)
-						(xy -0.635 3.429)
-					)
-					(stroke
-						(width 0.254)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(polyline
-					(pts
-						(xy -2.54 2.159)
-						(xy -1.905 2.159)
-						(xy -1.27 0.889)
-						(xy 0 0.889)
-					)
-					(stroke
-						(width 0.254)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(polyline
-					(pts
-						(xy -1.905 2.159)
-						(xy 0.635 2.159)
-					)
-					(stroke
-						(width 0.254)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(circle
-					(center -0.635 3.429)
-					(radius 0.381)
-					(stroke
-						(width 0.254)
-						(type default)
-					)
-					(fill
-						(type outline)
-					)
-				)
-				(rectangle
-					(start -0.127 -7.62)
-					(end 0.127 -6.858)
-					(stroke
-						(width 0)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(rectangle
-					(start 0.254 1.27)
-					(end -0.508 0.508)
-					(stroke
-						(width 0.254)
-						(type default)
-					)
-					(fill
-						(type outline)
-					)
-				)
-				(polyline
-					(pts
-						(xy 0.635 2.794)
-						(xy 0.635 1.524)
-						(xy 1.905 2.159)
-						(xy 0.635 2.794)
-					)
-					(stroke
-						(width 0.254)
-						(type default)
-					)
-					(fill
-						(type outline)
-					)
-				)
-				(rectangle
-					(start 5.08 4.953)
-					(end 4.318 5.207)
-					(stroke
-						(width 0)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(rectangle
-					(start 5.08 -0.127)
-					(end 4.318 0.127)
-					(stroke
-						(width 0)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(rectangle
-					(start 5.08 -2.667)
-					(end 4.318 -2.413)
-					(stroke
-						(width 0)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(rectangle
-					(start 5.08 -5.207)
-					(end 4.318 -4.953)
-					(stroke
-						(width 0)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-			)
-			(symbol "USB_B_Micro_1_1"
-				(pin power_out line
-					(at 7.62 5.08 180)
-					(length 2.54)
-					(name "VBUS"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "1"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin bidirectional line
-					(at 7.62 -2.54 180)
-					(length 2.54)
-					(name "D-"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "2"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin bidirectional line
-					(at 7.62 0 180)
-					(length 2.54)
-					(name "D+"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "3"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin passive line
-					(at 7.62 -5.08 180)
-					(length 2.54)
-					(name "ID"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "4"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin power_out line
-					(at 0 -10.16 90)
-					(length 2.54)
-					(name "GND"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "5"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin passive line
-					(at -2.54 -10.16 90)
-					(length 2.54)
-					(name "Shield"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "SH"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-			)
-			(embedded_fonts no)
-		)
 		(symbol "Connector_Generic:Conn_01x06"
 			(pin_names
 				(offset 1.016)
@@ -12903,172 +12510,6 @@
 						)
 					)
 					(number "6"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-			)
-			(embedded_fonts no)
-		)
-		(symbol "Switch:SW_Push"
-			(pin_numbers
-				(hide yes)
-			)
-			(pin_names
-				(offset 1.016)
-				(hide yes)
-			)
-			(exclude_from_sim no)
-			(in_bom yes)
-			(on_board yes)
-			(in_pos_files yes)
-			(duplicate_pin_numbers_are_jumpers no)
-			(property "Reference" "SW"
-				(at 1.27 2.54 0)
-				(show_name no)
-				(do_not_autoplace no)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(justify left)
-				)
-			)
-			(property "Value" "SW_Push"
-				(at 0 -1.524 0)
-				(show_name no)
-				(do_not_autoplace no)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-				)
-			)
-			(property "Footprint" ""
-				(at 0 5.08 0)
-				(show_name no)
-				(do_not_autoplace no)
-				(hide yes)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-				)
-			)
-			(property "Datasheet" ""
-				(at 0 5.08 0)
-				(show_name no)
-				(do_not_autoplace no)
-				(hide yes)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-				)
-			)
-			(property "Description" "Push button switch, generic, two pins"
-				(at 0 0 0)
-				(show_name no)
-				(do_not_autoplace no)
-				(hide yes)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-				)
-			)
-			(property "ki_keywords" "switch normally-open pushbutton push-button"
-				(at 0 0 0)
-				(show_name no)
-				(do_not_autoplace no)
-				(hide yes)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-				)
-			)
-			(symbol "SW_Push_0_1"
-				(circle
-					(center -2.032 0)
-					(radius 0.508)
-					(stroke
-						(width 0)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(polyline
-					(pts
-						(xy 0 1.27)
-						(xy 0 3.048)
-					)
-					(stroke
-						(width 0)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(circle
-					(center 2.032 0)
-					(radius 0.508)
-					(stroke
-						(width 0)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(polyline
-					(pts
-						(xy 2.54 1.27)
-						(xy -2.54 1.27)
-					)
-					(stroke
-						(width 0)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(pin passive line
-					(at -5.08 0 0)
-					(length 2.54)
-					(name "1"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "1"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin passive line
-					(at 5.08 0 180)
-					(length 2.54)
-					(name "2"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "2"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -18797,6 +18238,172 @@
 			)
 			(embedded_fonts no)
 		)
+		(symbol "Switch:SW_Push"
+			(pin_numbers
+				(hide yes)
+			)
+			(pin_names
+				(offset 1.016)
+				(hide yes)
+			)
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(in_pos_files yes)
+			(duplicate_pin_numbers_are_jumpers no)
+			(property "Reference" "SW"
+				(at 1.27 2.54 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(justify left)
+				)
+			)
+			(property "Value" "SW_Push"
+				(at 0 -1.524 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Footprint" ""
+				(at 0 5.08 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Datasheet" ""
+				(at 0 5.08 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Description" "Push button switch, generic, two pins"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "ki_keywords" "switch normally-open pushbutton push-button"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(symbol "SW_Push_0_1"
+				(circle
+					(center -2.032 0)
+					(radius 0.508)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 0 1.27)
+						(xy 0 3.048)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(circle
+					(center 2.032 0)
+					(radius 0.508)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(polyline
+					(pts
+						(xy 2.54 1.27)
+						(xy -2.54 1.27)
+					)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+				(pin passive line
+					(at -5.08 0 0)
+					(length 2.54)
+					(name "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at 5.08 0 180)
+					(length 2.54)
+					(name "2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+			(embedded_fonts no)
+		)
 		(symbol "Device:LED"
 			(pin_numbers
 				(hide yes)
@@ -23839,7 +23446,7 @@
 			)
 		)
 	)
-	(global_label "VSYS_SENSE"
+	(global_label "CC_HS_SENSE"
 		(shape bidirectional)
 		(at 342.9 134.62 0)
 		(fields_autoplaced yes)
@@ -23849,7 +23456,7 @@
 			)
 			(justify left)
 		)
-		(uuid "9cfb5181-8a48-5b8b-b31b-7a4c7253aa6c")
+		(uuid "95b59e8a-d1c7-58f8-95d1-2ca78a0798e5")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
 			(at 342.9 134.62 0)
 			(effects
@@ -24888,25 +24495,47 @@
 			)
 		)
 	)
-	(label "USB_FS_DM"
+	(global_label "USB_FS_DM"
+		(shape bidirectional)
 		(at 342.9 147.32 0)
+		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
 			)
-			(justify left bottom)
+			(justify left)
 		)
-		(uuid "dda8d0ba-2548-5a16-942e-d64e5c43c04a")
+		(uuid "214d3f52-a317-58e3-b284-2445367a877e")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 342.9 147.32 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 	)
-	(label "USB_FS_DP"
+	(global_label "USB_FS_DP"
+		(shape bidirectional)
 		(at 342.9 149.86 0)
+		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
 			)
-			(justify left bottom)
+			(justify left)
 		)
-		(uuid "8f0f65a1-1e41-504a-9e81-c9eab5c2a6cf")
+		(uuid "129bce81-5816-53a7-bc29-170b16452703")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 342.9 149.86 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 	)
 	(label "MCU_SWDIO"
 		(at 342.9 152.4 0)
@@ -27105,7 +26734,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" "VDD33USB decoupling (internal FS PHY: ROM DFU on J5)"
+		(property "Description" "VDD33USB decoupling (internal FS PHY: ROM DFU on J2)"
 			(at 269.24 105.41 0)
 			(effects
 				(font
@@ -27794,7 +27423,7 @@
 	)
 	(symbol
 		(lib_id "Device:C")
-		(at 203.2 123.19 0)
+		(at 185.42 123.19 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -27802,7 +27431,7 @@
 		(dnp no)
 		(uuid "67901496-177d-5566-b8ba-36c0fe9fc4a1")
 		(property "Reference" "C48"
-			(at 205.74 121.92 0)
+			(at 177.8 121.92 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -27811,7 +27440,7 @@
 			)
 		)
 		(property "Value" "100nF"
-			(at 205.74 124.46 0)
+			(at 177.8 124.46 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -27820,7 +27449,7 @@
 			)
 		)
 		(property "Footprint" "Capacitor_SMD:C_0402_1005Metric"
-			(at 203.2 123.19 0)
+			(at 185.42 123.19 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -27830,7 +27459,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 203.2 123.19 0)
+			(at 185.42 123.19 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -27840,7 +27469,7 @@
 			)
 		)
 		(property "Description" "NRST filter, datasheet 100 nF; internal pull-up"
-			(at 203.2 123.19 0)
+			(at 185.42 123.19 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -27850,7 +27479,7 @@
 			)
 		)
 		(property "LCSC" "C307331"
-			(at 203.2 123.19 0)
+			(at 185.42 123.19 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -27876,7 +27505,7 @@
 	)
 	(symbol
 		(lib_id "power:GND")
-		(at 203.2 129.54 0)
+		(at 185.42 129.54 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -27884,7 +27513,7 @@
 		(dnp no)
 		(uuid "e7597eb5-ca18-5f0b-912a-45edf2350dda")
 		(property "Reference" "#PWRMCU19"
-			(at 203.2 129.54 0)
+			(at 185.42 129.54 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -27893,7 +27522,7 @@
 			)
 		)
 		(property "Value" "GND"
-			(at 203.2 133.35 0)
+			(at 185.42 133.35 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -27901,7 +27530,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 203.2 129.54 0)
+			(at 185.42 129.54 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -27978,7 +27607,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" "BOOT0 low: boot from flash. With 5 V on J5 or J6 through 10k: 3.4 V, ROM bootloader (BOOT0 rated 9 V)"
+		(property "Description" "BOOT0 low: boot from flash. GO held through R24 (1k): 3.16 V, ROM bootloader at reset"
 			(at 215.9 128.27 0)
 			(effects
 				(font
@@ -28060,15 +27689,26 @@
 			)
 		)
 	)
-	(label "BOOT0"
-		(at 220.98 124.46 0)
+	(global_label "BOOT0"
+		(shape input)
+		(at 210.82 124.46 180)
+		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
 			)
-			(justify left bottom)
+			(justify right)
 		)
-		(uuid "070b273e-a3fa-56d8-8fbf-43fd47eaaefb")
+		(uuid "f16d0de4-2e5a-5276-9cb0-f9bfca40afff")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 210.82 124.46 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 	)
 	(label "VDDA"
 		(at 254 129.54 180)
@@ -29067,7 +28707,7 @@
 	)
 	(text "Programming with no probe: ROM bootloader (AN2606)"
 		(exclude_from_sim no)
-		(at 444.5 96.52 0)
+		(at 444.5 162.56 0)
 		(effects
 			(font
 				(size 1.8 1.8)
@@ -29077,950 +28717,9 @@
 		)
 		(uuid "eea487d2-ee1a-502e-ad2a-3c292bcc23ba")
 	)
-	(symbol
-		(lib_id "Connector:USB_B_Micro")
-		(at 449.58 129.54 0)
-		(unit 1)
+	(text "Hold GO at power-up or reset: R24 (1k, UI sheet) lifts BOOT0 to 3.16 V against R21.\nDFU through the internal FS PHY on J2 (USB-C sheet), or USART3 through J6 below."
 		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "fd79cf99-7982-5363-b1c2-07839e5e0334")
-		(property "Reference" "J5"
-			(at 439.42 114.3 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "USB FS (ROM DFU)"
-			(at 439.42 116.84 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "Archet:USB_Micro-B_Molex-105133-0001"
-			(at 449.58 129.54 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 449.58 129.54 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "Description" "Molex 105133-0001, vertical (as on Bornier): placed anywhere on the board. Prototypes; may be left off in production (firmware DFU over USB HS). ID unused"
-			(at 449.58 129.54 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "LCSC" "C782257"
-			(at 449.58 129.54 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "3e271f52-7d8d-5cd2-bd10-cc82e2cc62e0")
-		)
-		(pin "2"
-			(uuid "85942961-f85a-5dd5-8ba2-cf2f28443519")
-		)
-		(pin "3"
-			(uuid "e9aa18ce-1dd3-5489-8909-8a4ebc5a88c6")
-		)
-		(pin "4"
-			(uuid "0ed890c0-97a3-5657-9f20-6eee5bf16169")
-		)
-		(pin "5"
-			(uuid "516b8d3b-0299-58a7-a220-82e013fccd48")
-		)
-		(pin "SH"
-			(uuid "18fed019-55e3-5c70-9aa0-ae550e4ecd32")
-		)
-		(instances
-			(project "archet"
-				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/39edc9fc-3dfd-56a0-a3cc-73de24f6514a"
-					(reference "J5")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "power:GND")
-		(at 449.58 142.24 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "3ab4e722-f867-5ea9-98f1-f91f585a6075")
-		(property "Reference" "#PWRMCU30"
-			(at 449.58 142.24 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Value" "GND"
-			(at 449.58 146.05 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 449.58 142.24 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "ec4f10d3-cae9-5e81-89cd-484f3d889d3d")
-		)
-		(instances
-			(project "archet"
-				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/39edc9fc-3dfd-56a0-a3cc-73de24f6514a"
-					(reference "#PWRMCU30")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Device:D_Schottky")
-		(at 480.06 109.22 180)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "0658913e-8faf-5cf2-bfd4-867313ac977e")
-		(property "Reference" "D7"
-			(at 477.52 104.14 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "1N5819WS"
-			(at 477.52 106.68 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "Diode_SMD:D_SOD-323"
-			(at 480.06 109.22 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 480.06 109.22 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "Description" "J5 VBUS powers the whole board (150-250 mA in the bootloader); blocks VSYS from the cable"
-			(at 480.06 109.22 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "LCSC" "C191023"
-			(at 480.06 109.22 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "b69a7041-6d70-53fb-b5a0-e8f1f5e268b7")
-		)
-		(pin "2"
-			(uuid "4dc77d4f-4c04-5cef-a38c-32dafb256598")
-		)
-		(instances
-			(project "archet"
-				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/39edc9fc-3dfd-56a0-a3cc-73de24f6514a"
-					(reference "D7")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(label "USB_FS_VBUS"
-		(at 458.47 109.22 0)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left bottom)
-		)
-		(uuid "3749e2e9-28e6-568b-a7d4-8eb09d3abd37")
-	)
-	(symbol
-		(lib_id "Device:R")
-		(at 467.36 113.03 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "0cc98386-b72d-5c8c-b565-9440ecf928b9")
-		(property "Reference" "R24"
-			(at 469.9 111.76 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "10k"
-			(at 469.9 114.3 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
-			(at 467.36 113.03 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 467.36 113.03 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "Description" "Plugging J5 enters the ROM bootloader. Remove it to use J5 as a plain USB FS port"
-			(at 467.36 113.03 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "LCSC" "C25744"
-			(at 467.36 113.03 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "76aede8f-2de8-5adc-a7b1-f0231d7a2abc")
-		)
-		(pin "2"
-			(uuid "8178d861-093d-52f9-8098-8fe060b7e60e")
-		)
-		(instances
-			(project "archet"
-				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/39edc9fc-3dfd-56a0-a3cc-73de24f6514a"
-					(reference "R24")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(label "BOOT0"
-		(at 467.36 116.84 270)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right bottom)
-		)
-		(uuid "3cea7d28-f43f-580c-aaba-f5ef1e7bf686")
-	)
-	(symbol
-		(lib_id "Device:R")
-		(at 462.28 113.03 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "f8f0f03d-ae31-5b9c-89d8-32a0ddffedf6")
-		(property "Reference" "R176"
-			(at 454.66 111.76 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "1k"
-			(at 454.66 114.3 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
-			(at 462.28 113.03 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 462.28 113.03 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "Description" "Sinks the D7 reverse leakage (VSYS up to 24 V, hot) with J5 unplugged, so it cannot lift BOOT0; 5 mA from the cable. BOOT0 VIL 0.73 V: up to 1.06 mA of leakage, Hottech 1N5819WS 0.5 mA typical at 24 V / 85 °C, its maximum reaches 1 mA near 45 °C (accepted, bench probe)"
-			(at 462.28 113.03 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "LCSC" "C11702"
-			(at 462.28 113.03 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "03b04b55-55fc-51df-8ea3-1621d1fda954")
-		)
-		(pin "2"
-			(uuid "cee97b4f-1d52-517e-bd5f-8dfbd8e9c752")
-		)
-		(instances
-			(project "archet"
-				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/39edc9fc-3dfd-56a0-a3cc-73de24f6514a"
-					(reference "R176")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "power:GND")
-		(at 462.28 119.38 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "6e70580a-112a-5913-8066-e1d821e36da4")
-		(property "Reference" "#PWRMCU31"
-			(at 462.28 119.38 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Value" "GND"
-			(at 462.28 123.19 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 462.28 119.38 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "01049ca9-8697-5b53-957d-234a5a27855f")
-		)
-		(instances
-			(project "archet"
-				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/39edc9fc-3dfd-56a0-a3cc-73de24f6514a"
-					(reference "#PWRMCU31")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(global_label "VSYS"
-		(shape bidirectional)
-		(at 497.84 109.22 0)
-		(fields_autoplaced yes)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left)
-		)
-		(uuid "186fea22-fb8a-5459-b856-8424e9dc3c9c")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 497.84 109.22 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Power_Protection:USBLC6-2SC6")
-		(at 474.98 129.54 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "dcdcda28-d00d-5bbb-ad26-d4d7514171d2")
-		(property "Reference" "U12"
-			(at 459.74 137.16 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "USBLC6-2SC6"
-			(at 459.74 139.7 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "Package_TO_SOT_SMD:SOT-23-6"
-			(at 474.98 129.54 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 474.98 129.54 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "Description" "J5 D+/D- ESD, flow-through as U5"
-			(at 474.98 129.54 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "LCSC" "C7519"
-			(at 474.98 129.54 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "2face4ae-b7d6-5dee-8c71-26e6874d05f4")
-		)
-		(pin "2"
-			(uuid "0bf9a0d5-20c5-5596-b65b-2ad678e024fe")
-		)
-		(pin "3"
-			(uuid "b514546b-b05d-53e6-ae41-d7507c8aeefc")
-		)
-		(pin "4"
-			(uuid "2a5a61ef-4fa6-5013-8f5c-47aa92d96bb6")
-		)
-		(pin "5"
-			(uuid "2d08a3fa-dedd-5581-ba2b-c9b7c75f8cfb")
-		)
-		(pin "6"
-			(uuid "7de9edd4-1ff1-5c03-ae1a-dd3c66406357")
-		)
-		(instances
-			(project "archet"
-				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/39edc9fc-3dfd-56a0-a3cc-73de24f6514a"
-					(reference "U12")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "power:+3V3")
-		(at 474.98 121.92 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "b8b2dda2-eec5-5d49-924e-8688455af0f3")
-		(property "Reference" "#PWRMCU32"
-			(at 474.98 121.92 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Value" "+3V3"
-			(at 474.98 118.11 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 474.98 121.92 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "7a1fdc31-00a6-5c90-8500-1cde0ccf3632")
-		)
-		(instances
-			(project "archet"
-				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/39edc9fc-3dfd-56a0-a3cc-73de24f6514a"
-					(reference "#PWRMCU32")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "power:GND")
-		(at 474.98 139.7 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "877f1355-30ae-5d2b-a62a-63de52a0a36c")
-		(property "Reference" "#PWRMCU33"
-			(at 474.98 139.7 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Value" "GND"
-			(at 474.98 143.51 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 474.98 139.7 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "d9a4a7a8-f3f8-5243-abfe-b88e4cacf67e")
-		)
-		(instances
-			(project "archet"
-				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/39edc9fc-3dfd-56a0-a3cc-73de24f6514a"
-					(reference "#PWRMCU33")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(label "USB_FS_DP"
-		(at 510.54 129.54 0)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left bottom)
-		)
-		(uuid "d6aeaca4-3203-5745-bfcc-a8de72032ec4")
-	)
-	(symbol
-		(lib_id "Device:R")
-		(at 500.38 133.35 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "357be8f1-95c5-5619-b64e-0c4b2eb52348")
-		(property "Reference" "R23"
-			(at 502.92 132.08 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "100k"
-			(at 502.92 134.62 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
-			(at 500.38 133.35 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 500.38 133.35 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "Description" "Same; against the 1.5 kΩ device pull-up D+ stays at 3.25 V"
-			(at 500.38 133.35 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "LCSC" "C25741"
-			(at 500.38 133.35 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "091545ce-ac01-58a1-9090-5b432b8c3671")
-		)
-		(pin "2"
-			(uuid "64d62d82-d984-5059-9e18-970ec38937ac")
-		)
-		(instances
-			(project "archet"
-				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/39edc9fc-3dfd-56a0-a3cc-73de24f6514a"
-					(reference "R23")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "power:GND")
-		(at 500.38 139.7 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "008c3464-9a52-5a1e-8521-5991a39e64e0")
-		(property "Reference" "#PWRMCU34"
-			(at 500.38 139.7 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Value" "GND"
-			(at 500.38 143.51 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 500.38 139.7 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "90f8dff8-0501-5191-a90a-3baeb348c372")
-		)
-		(instances
-			(project "archet"
-				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/39edc9fc-3dfd-56a0-a3cc-73de24f6514a"
-					(reference "#PWRMCU34")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(label "USB_FS_DM"
-		(at 510.54 147.32 0)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left bottom)
-		)
-		(uuid "eee79289-d4b8-5efe-b59e-582d18008aec")
-	)
-	(symbol
-		(lib_id "Device:R")
-		(at 495.3 151.13 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "93090579-0b2a-553e-9592-617b1ce422a7")
-		(property "Reference" "R22"
-			(at 497.84 149.86 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "100k"
-			(at 497.84 152.4 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
-			(at 495.3 151.13 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 495.3 151.13 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "Description" "Known level with J5 open or absent (AN2606 §4.4: no floating D+/D- while the ROM polls the other interfaces)"
-			(at 495.3 151.13 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "LCSC" "C25741"
-			(at 495.3 151.13 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "9edf6a9a-d419-5fc8-8bd4-4dcea9a3a6db")
-		)
-		(pin "2"
-			(uuid "e6bd9c07-a296-5118-bac0-82f50ac3eb6c")
-		)
-		(instances
-			(project "archet"
-				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/39edc9fc-3dfd-56a0-a3cc-73de24f6514a"
-					(reference "R22")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "power:GND")
-		(at 495.3 157.48 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "9baafd77-37c1-5693-9c03-b5bf7d54e8f0")
-		(property "Reference" "#PWRMCU35"
-			(at 495.3 157.48 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Value" "GND"
-			(at 495.3 161.29 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 495.3 157.48 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "47f4d296-e3f3-5a0e-be68-f8cefbc171fe")
-		)
-		(instances
-			(project "archet"
-				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/39edc9fc-3dfd-56a0-a3cc-73de24f6514a"
-					(reference "#PWRMCU35")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(text "J5: prototypes, may be left off. R24 out: J5 is a plain USB FS port.\nR22/R23: D+/D- at a known level while the ROM polls the other interfaces."
-		(exclude_from_sim no)
-		(at 444.5 162.56 0)
+		(at 444.5 170.18 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -30028,7 +28727,7 @@
 			)
 			(justify left top)
 		)
-		(uuid "f6911e0f-aa28-5cfc-8912-1345dba6e810")
+		(uuid "c299fa2d-0bc4-56a8-84ab-58e9b8939423")
 	)
 	(symbol
 		(lib_id "Connector_Generic:Conn_01x06")
@@ -30133,8 +28832,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "1996d538-cf47-554a-be0e-3443d4721ed2")
-		(property "Reference" "#PWRMCU36"
+		(uuid "3ab4e722-f867-5ea9-98f1-f91f585a6075")
+		(property "Reference" "#PWRMCU30"
 			(at 454.66 200.66 0)
 			(effects
 				(font
@@ -30162,235 +28861,35 @@
 			)
 		)
 		(pin "1"
-			(uuid "3d902253-40b4-52ac-8eff-5adcc5c35cc8")
+			(uuid "ec4f10d3-cae9-5e81-89cd-484f3d889d3d")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/39edc9fc-3dfd-56a0-a3cc-73de24f6514a"
-					(reference "#PWRMCU36")
+					(reference "#PWRMCU30")
 					(unit 1)
 				)
 			)
 		)
 	)
-	(label "BOOT0"
+	(global_label "BOOT0"
+		(shape bidirectional)
 		(at 510.54 190.5 0)
+		(fields_autoplaced yes)
 		(effects
 			(font
 				(size 1.27 1.27)
 			)
-			(justify left bottom)
+			(justify left)
 		)
-		(uuid "719c7fba-8adc-5e49-ab52-aafddb26c3fc")
-	)
-	(symbol
-		(lib_id "Switch:SW_Push")
-		(at 500.38 185.42 270)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "7a0a3dd5-856e-513c-bafa-c72839b99809")
-		(property "Reference" "SW1"
-			(at 502.92 182.88 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "BOOT0"
-			(at 502.92 185.42 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "Archet:SW_Push_1P1T_XKB_TS-1187A"
-			(at 500.38 185.42 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 500.38 185.42 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "Description" "TS-1187A-B-A-B, as GO and STOP: hold at power-up or reset to enter the ROM bootloader"
-			(at 500.38 185.42 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "LCSC" "C318884"
-			(at 500.38 185.42 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "5ab9c0f4-f848-5f06-9fa0-4e2933c8cfed")
-		)
-		(pin "2"
-			(uuid "7007d843-e8d2-57c0-aa4b-23287fc3dcd1")
-		)
-		(instances
-			(project "archet"
-				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/39edc9fc-3dfd-56a0-a3cc-73de24f6514a"
-					(reference "SW1")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "power:+3V3")
-		(at 500.38 177.8 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "24c36502-5725-58c0-9e5c-7977c48fb058")
-		(property "Reference" "#PWRMCU37"
-			(at 500.38 177.8 0)
+		(uuid "8943957b-dbeb-590b-be5c-26ed077dc779")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 510.54 190.5 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
 				(hide yes)
-			)
-		)
-		(property "Value" "+3V3"
-			(at 500.38 173.99 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 500.38 177.8 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "9fb9eeb5-284a-54b8-b275-9890e2c7f76f")
-		)
-		(instances
-			(project "archet"
-				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/39edc9fc-3dfd-56a0-a3cc-73de24f6514a"
-					(reference "#PWRMCU37")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Device:R")
-		(at 474.98 194.31 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "c80e0870-25e4-54c0-8bc2-f3fd600354b3")
-		(property "Reference" "R25"
-			(at 477.52 193.04 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "10k"
-			(at 477.52 195.58 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
-			(at 474.98 194.31 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 474.98 194.31 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "Description" "J6 VCC enters the ROM bootloader, as R24"
-			(at 474.98 194.31 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-				(hide yes)
-			)
-		)
-		(property "LCSC" "C25744"
-			(at 474.98 194.31 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "93e3f7c4-2dac-56a6-9968-d2c322d4d7af")
-		)
-		(pin "2"
-			(uuid "21af385e-2afd-5b1f-b3da-a170d82957ec")
-		)
-		(instances
-			(project "archet"
-				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/39edc9fc-3dfd-56a0-a3cc-73de24f6514a"
-					(reference "R25")
-					(unit 1)
-				)
 			)
 		)
 	)
@@ -30404,7 +28903,7 @@
 		(dnp no)
 		(uuid "75653fae-55c4-5b3c-b843-8f935c2ac115")
 		(property "Reference" "D8"
-			(at 495.3 198.12 0)
+			(at 500.38 198.12 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -30413,7 +28912,7 @@
 			)
 		)
 		(property "Value" "1N5819WS"
-			(at 495.3 200.66 0)
+			(at 500.38 200.66 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -30441,7 +28940,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" "J6 VCC powers the board, as D7"
+		(property "Description" "J6 VCC powers the whole board (150-250 mA in the bootloader); blocks VSYS from the cable"
 			(at 490.22 205.74 0)
 			(effects
 				(font
@@ -30533,7 +29032,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" "Sinks the D8 reverse leakage, as R176"
+		(property "Description" "Sinks the D8 reverse leakage (VSYS up to 24 V, hot) with J6 open: the VCC pad stays near 0 V"
 			(at 483.87 201.93 0)
 			(effects
 				(font
@@ -30576,8 +29075,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "34770642-eeea-5bb7-bb93-0771cc409906")
-		(property "Reference" "#PWRMCU38"
+		(uuid "6e70580a-112a-5913-8066-e1d821e36da4")
+		(property "Reference" "#PWRMCU31"
 			(at 483.87 195.58 0)
 			(effects
 				(font
@@ -30592,6 +29091,7 @@
 				(font
 					(size 1.27 1.27)
 				)
+				(hide yes)
 			)
 		)
 		(property "Footprint" ""
@@ -30604,12 +29104,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "e856dfec-654b-5c28-929c-d7307162c435")
+			(uuid "01049ca9-8697-5b53-957d-234a5a27855f")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/39edc9fc-3dfd-56a0-a3cc-73de24f6514a"
-					(reference "#PWRMCU38")
+					(reference "#PWRMCU31")
 					(unit 1)
 				)
 			)
@@ -30748,7 +29248,7 @@
 		)
 		(uuid "3532ced3-f185-59ec-8a24-583f549e3b34")
 	)
-	(text "J6: pads only, FTDI cable pinout (TTL-232R-5V or adapter with 5 V on VCC).\nVCC powers the board (D8) and raises BOOT0 (R25). RTS resets through D9: NRST is not\n5 V tolerant. stm32flash -i / stm32loader drive RTS/DTR. SW1: BOOT0 by hand."
+	(text "J6: pads only, FTDI cable pinout (TTL-232R-5V or adapter with 5 V on VCC).\nVCC powers the board (D8). RTS resets through D9: NRST is not 5 V tolerant.\nPin 2 (CTS) is a BOOT0 test pad: an adapter driving CTS high enters the bootloader."
 		(exclude_from_sim no)
 		(at 444.5 228.6 0)
 		(effects
@@ -30767,10 +29267,6 @@
 	(no_connect
 		(at 342.9 264.16)
 		(uuid "bb6833b0-68be-5b3e-ada7-20d601b72a7c")
-	)
-	(no_connect
-		(at 457.2 134.62)
-		(uuid "49482498-3535-5251-8b12-06feac801658")
 	)
 	(label "HSE_IN"
 		(at 215.9 165.1 0)
@@ -30801,26 +29297,6 @@
 			(justify left bottom)
 		)
 		(uuid "d84772b6-716b-5836-80f2-7a5341312b5b")
-	)
-	(label "J5_DP"
-		(at 463.55 129.54 0)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left bottom)
-		)
-		(uuid "c80fe5c0-09aa-52a7-b18e-f9fa59985f18")
-	)
-	(label "J5_DM"
-		(at 463.55 132.08 0)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify left bottom)
-		)
-		(uuid "e60dce80-e91d-5ae9-b18d-b2a94599e5ca")
 	)
 	(label "J6_RST"
 		(at 459.74 213.36 0)
@@ -31528,24 +30004,24 @@
 	(wire
 		(pts
 			(xy 266.7 119.38)
-			(xy 203.2 119.38)
+			(xy 185.42 119.38)
 		)
 		(stroke
 			(width 0)
 			(type default)
 		)
-		(uuid "7a5d4662-d8ae-5739-b596-3180e951ece9")
+		(uuid "d5216769-d8d4-5898-8f41-f5e7df5e1399")
 	)
 	(wire
 		(pts
-			(xy 203.2 127)
-			(xy 203.2 129.54)
+			(xy 185.42 127)
+			(xy 185.42 129.54)
 		)
 		(stroke
 			(width 0)
 			(type default)
 		)
-		(uuid "2dff7772-bfd2-55ef-b4ff-f067595199b1")
+		(uuid "41b18259-e1b4-5c43-a931-1b5cfbc8f7fc")
 	)
 	(wire
 		(pts
@@ -31557,6 +30033,17 @@
 			(type default)
 		)
 		(uuid "d379f2f9-b1c7-5571-9f51-1f4ea09992bc")
+	)
+	(wire
+		(pts
+			(xy 215.9 124.46)
+			(xy 210.82 124.46)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "95450168-97b8-509f-9ed2-0b7d19917390")
 	)
 	(wire
 		(pts
@@ -31846,237 +30333,6 @@
 	)
 	(wire
 		(pts
-			(xy 447.04 139.7)
-			(xy 447.04 142.24)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "0d7e30c5-5a17-55f0-9bf5-31cbee5cbd94")
-	)
-	(wire
-		(pts
-			(xy 447.04 142.24)
-			(xy 449.58 142.24)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "f732d294-5221-5ce3-bdcf-2e16a83de6b7")
-	)
-	(wire
-		(pts
-			(xy 449.58 139.7)
-			(xy 449.58 142.24)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "6ab92f11-8446-5ee7-9549-fc211643f6e5")
-	)
-	(wire
-		(pts
-			(xy 457.2 124.46)
-			(xy 457.2 109.22)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "e77945d2-e1f6-50c3-9115-2b927065e114")
-	)
-	(wire
-		(pts
-			(xy 457.2 109.22)
-			(xy 462.28 109.22)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "74df69b6-e12e-5657-9805-7b866dc6895a")
-	)
-	(wire
-		(pts
-			(xy 462.28 109.22)
-			(xy 467.36 109.22)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "3f9dfae0-b05b-5127-a620-66998b74c64e")
-	)
-	(wire
-		(pts
-			(xy 467.36 109.22)
-			(xy 476.25 109.22)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "3fad885d-7f73-54ce-8c74-4eee3449b90f")
-	)
-	(wire
-		(pts
-			(xy 462.28 116.84)
-			(xy 462.28 119.38)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "5d3a033f-e74f-513c-9209-98735e9a32e0")
-	)
-	(wire
-		(pts
-			(xy 483.87 109.22)
-			(xy 497.84 109.22)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "98df9caf-b566-5e09-9206-0dcc7078d4f5")
-	)
-	(wire
-		(pts
-			(xy 457.2 129.54)
-			(xy 469.9 129.54)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "e91e2de7-78a6-52f3-83af-f3531c5f20d0")
-	)
-	(wire
-		(pts
-			(xy 457.2 132.08)
-			(xy 469.9 132.08)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "d6ca9a23-1b2c-5f76-93a0-847f96ec1c4d")
-	)
-	(wire
-		(pts
-			(xy 474.98 124.46)
-			(xy 474.98 121.92)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "1fc072fa-5ab3-5d05-a2b7-e2fc7074ef92")
-	)
-	(wire
-		(pts
-			(xy 474.98 137.16)
-			(xy 474.98 139.7)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "c578fb19-b5e6-502b-9e3e-47f9badb18f2")
-	)
-	(wire
-		(pts
-			(xy 480.06 129.54)
-			(xy 500.38 129.54)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "1b3324fd-1399-5459-82aa-39705cc9d5d9")
-	)
-	(wire
-		(pts
-			(xy 500.38 129.54)
-			(xy 510.54 129.54)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "9bc0f82f-7de8-5713-a74f-969759d312d2")
-	)
-	(wire
-		(pts
-			(xy 500.38 137.16)
-			(xy 500.38 139.7)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "81dc90a4-8512-55f6-99d5-92c42fff2e66")
-	)
-	(wire
-		(pts
-			(xy 480.06 132.08)
-			(xy 482.6 132.08)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "12b5e40c-9e55-573e-925e-b0f428a7721a")
-	)
-	(wire
-		(pts
-			(xy 482.6 132.08)
-			(xy 482.6 147.32)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "9bdc124e-ae80-5d59-b9a5-f0e2a7265130")
-	)
-	(wire
-		(pts
-			(xy 482.6 147.32)
-			(xy 495.3 147.32)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "79779304-347c-587a-9f6c-7f67e6d6f05c")
-	)
-	(wire
-		(pts
-			(xy 495.3 147.32)
-			(xy 510.54 147.32)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "c7b91029-85db-59bb-8320-885dc81ccd66")
-	)
-	(wire
-		(pts
-			(xy 495.3 154.94)
-			(xy 495.3 157.48)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "287f9415-42f2-5719-8aaa-d741c477c5e5")
-	)
-	(wire
-		(pts
 			(xy 452.12 200.66)
 			(xy 454.66 200.66)
 		)
@@ -32111,68 +30367,24 @@
 	(wire
 		(pts
 			(xy 459.74 190.5)
-			(xy 474.98 190.5)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "0aca7fcf-39b6-5b0c-bbcd-a1e75b1557f2")
-	)
-	(wire
-		(pts
-			(xy 474.98 190.5)
-			(xy 500.38 190.5)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "d7e711ec-1c24-5c67-867c-abdbbeec8146")
-	)
-	(wire
-		(pts
-			(xy 500.38 190.5)
 			(xy 510.54 190.5)
 		)
 		(stroke
 			(width 0)
 			(type default)
 		)
-		(uuid "057dcaa3-71b5-5efd-a67c-b720db3b5ce9")
-	)
-	(wire
-		(pts
-			(xy 500.38 180.34)
-			(xy 500.38 177.8)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "e03eb4d4-860d-50a3-81cf-1f839c5cb2f7")
+		(uuid "5b4aa24a-aa1c-5785-b7c9-dabc94843cc4")
 	)
 	(wire
 		(pts
 			(xy 452.12 205.74)
-			(xy 474.98 205.74)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "c359167f-b9c8-5880-8649-3a645eff8d98")
-	)
-	(wire
-		(pts
-			(xy 474.98 205.74)
 			(xy 483.87 205.74)
 		)
 		(stroke
 			(width 0)
 			(type default)
 		)
-		(uuid "b9f6417a-a5e6-5d7f-89a6-2fd7d089af7c")
+		(uuid "92c8f6b0-617c-5358-85d0-f0e4f7388cb3")
 	)
 	(wire
 		(pts
@@ -32184,17 +30396,6 @@
 			(type default)
 		)
 		(uuid "0ddd711f-8917-5834-85ab-22e471692dfb")
-	)
-	(wire
-		(pts
-			(xy 474.98 198.12)
-			(xy 474.98 205.74)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "bbbe1d73-53e0-516d-8121-5f0857779a87")
 	)
 	(wire
 		(pts
@@ -32325,6 +30526,12 @@
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "5c89fbd7-4365-5615-9259-ec63796f216b")
+	)
+	(junction
+		(at 215.9 124.46)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "b378a4c2-d6d5-5b9a-9d1b-a3b2bf378405")
 	)
 	(junction
 		(at 218.44 101.6)
@@ -32477,51 +30684,9 @@
 		(uuid "2d319142-bfb1-5e01-bd3b-8a551cd81d4d")
 	)
 	(junction
-		(at 462.28 109.22)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "1b716a98-99e8-5d63-a4e7-822838876d8f")
-	)
-	(junction
-		(at 467.36 109.22)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "4aa0b5b2-029e-5773-9437-50239706d4e3")
-	)
-	(junction
-		(at 474.98 190.5)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "e31e1c05-6ce8-5d99-abf3-ce9caa7d4e83")
-	)
-	(junction
-		(at 474.98 205.74)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "13a989fe-ca45-5230-8fab-8b737e367afa")
-	)
-	(junction
 		(at 483.87 205.74)
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "62c10ac9-ebc0-516a-8d11-1d589194b352")
-	)
-	(junction
-		(at 495.3 147.32)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "2c2a2780-5aca-57dd-a23f-78b90cff8a73")
-	)
-	(junction
-		(at 500.38 129.54)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "cd40c33e-a0fe-550b-8321-b32077ec008c")
-	)
-	(junction
-		(at 500.38 190.5)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "e2ff2538-20de-51c1-8f08-ee596d45d2b9")
 	)
 )

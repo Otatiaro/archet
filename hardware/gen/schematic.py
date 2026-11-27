@@ -21,8 +21,7 @@ KICAD = os.path.join(HERE, "..", "kicad")
 # ERC kinds tolerated while some sheets are still missing: none since all sheets are drawn.
 PENDING_ERC = ()
 # VCAP1 and VCAP2 are both LDO outputs ("power output"): ST ties them, each with its 2.2 µF (NUCLEO-H723ZG, AN5419).
-# USB_B_Micro declares its GND pin "power output" (KiCad library): it meets the GND PWR_FLAG.
-WAIVED_ERC = (("pin_to_pin", "VCAP"), ("pin_to_pin", "Symbol J5 Pin 5"))
+WAIVED_ERC = (("pin_to_pin", "VCAP"),)
 
 
 def vpart(s, ref, x, y_top, label_dx=2.54):
@@ -46,7 +45,7 @@ def sense(s, rt, rb, cf, net, out, x, yr):
 
 
 def ideal_diode(s, n, src, q, u, cap, cin, fx, yr, xbus, x0, out="VSYS_OR"):
-    """N-MOS on the row line (source left, drain right, gate down), LM74700 below it."""
+    """N-MOS on the row line (source left, drain right, gate down), MX74700T below it."""
     s.place(q, fx, yr + 2.54, rot=270, mirror="x", ref_at=(fx + 2.54, yr - 6.35), val_at=(fx + 2.54, yr - 3.81))
     ly = yr + 25.4
     s.place(u, fx, ly, ref_at=(fx + 10.16, ly + 3.81), val_at=(fx + 10.16, ly + 6.35))
@@ -77,9 +76,9 @@ def ideal_diode(s, n, src, q, u, cap, cin, fx, yr, xbus, x0, out="VSYS_OR"):
 def oring(prj):
     s = prj.sheet("Sources", "sources.kicad_sch", "Source OR-ing into VSYS: VIN_EXT, USB-C VBUS, PoE 12 V")
     s.text("SOURCE OR-ING", 20.32, 17.78, 2.54, True)
-    s.text("Highest voltage wins, no control logic: VIN_EXT 24 V > PD 15-20 V > PoE 12 V > USB 5 V.\n"
-           "Each source enters through an LM74700 ideal diode: no back-feeding of a host, a PoE module or a supply.\n"
-           "The firmware identifies the active source from the four ADC inputs and derives the power budget.",
+    s.text("Highest voltage wins, no control logic: VIN_EXT 24 V > PD 15-20 V > PoE 12 V > USB 5 V (J2 or J5).\n"
+           "Each source enters through an MX74700T ideal diode: no back-feeding of a host, a PoE module or a supply.\n"
+           "The firmware identifies the active source from the ADC inputs and U43, and derives the power budget.",
            20.32, 25.4)
     fx, xbus = 203.2, 254.0
     rows = (63.5, 134.62, 205.74)
@@ -118,7 +117,7 @@ def oring(prj):
         rt, rb, cf, q, u, cap, cin = refs
         sense(s, rt, rb, cf, src, f"{src}_SENSE", 106.68, yr)
         ideal_diode(s, d, src, q, u, cap, cin, fx, yr, xbus, 106.68)
-    s.text("From the USB-C sheet\n(STUSB4500 sink switch)", 66.04, rows[1] - 10.16)
+    s.text("From the USB-C PD sheet\n(STUSB4500 sink switch)", 66.04, rows[1] - 10.16)
     s.text("From the PoE module\n(DP5700, isolated 12 V)", 66.04, rows[2] - 10.16)
 
     # --- VSYS_OR bus, shunt, VSYS ---
@@ -136,19 +135,21 @@ def oring(prj):
     s.w("VSYS", s.P("R126", 2), (xbus + 93.98, y))
     s.glabel("VSYS", xbus + 93.98, y, 0, "output")
     s.power("PWR_FLAG", xbus + 63.5, y, 0)
-    sense(s, "R7", "R8", "C12", "VSYS", "VSYS_SENSE", xbus + 71.12, y)
+    s.w("VSYS_OR", (xbus, rows[2]), (xbus, rows[2] + 12.7))
+    s.glabel("VSYS_OR", xbus, rows[2] + 12.7, 270, "bidirectional")
+    s.text("From the USB HS sheet\n(ideal diode 5, J5)", xbus + 2.54, rows[2] + 20.32)
     ina_monitor(s, "U43", "C126", "VSYS_OR", "VSYS", xB + 20.32, y + 63.5, xB, y,
-                "Address 0x41 (A1 = GND, A0 = VS)")
+                "Address 0x41 (A1 = GND, A0 = VS)", raw_global=True)
     s.text("VSYS: 4.5-24 V, to the +5V buck (LMR33630) and the VIN_BUS boost (LM5155).\n"
            "U43 reads everything drawn from the active source.", xbus + 2.54, y - 15.24)
     s.text("ADC dividers 100k / 10k: 24 V -> 2.18 V; the TVS clamp (38.9 V) gives 3.54 V\n"
-           "through 100 kΩ, 35 µA into the pin protection. Inputs: PF12, PF13, PF14, PA6.",
-           xbus + 2.54, rows[2] + 25.4)
+           "through 100 kΩ, 35 µA into the pin protection. Inputs: PF12, PF13, PF14. VSYS: U43.",
+           xbus + 30.48, rows[2] + 25.4)
 
 
 def usbc(prj):
-    s = prj.sheet("USB-C", "usbc.kicad_sch", "USB-C sink: STUSB4500 PD controller, VBUS switch, ESD")
-    s.text("USB-C SINK", 20.32, 17.78, 2.54, True)
+    s = prj.sheet("USB-C", "usbc.kicad_sch", "USB-C PD port (J2): STUSB4500 sink, VBUS switch, USB FS, ESD")
+    s.text("USB-C PD PORT (J2)", 20.32, 17.78, 2.54, True)
     s.text("The STUSB4500 negotiates the highest PDO stored in its NVM, then closes Q4 (VBUS_EN_SNK low).\n"
            "Dead battery mode: with the probe unpowered, CCxDB presents Rd so that the source turns VBUS on.",
            20.32, 25.4)
@@ -265,13 +266,137 @@ def usbc(prj):
     s.w("USB_C_DP", p2, (xv, p2[1]))
     s.rail("+3V3", *s.P("U5", 5))
     s.rail("GND", *s.P("U5", 2))
-    for pin, net in ((6, "USB_DM"), (4, "USB_DP")):
+    # D- (pin 6) runs above D+ (pin 4): R22 stands above its line (GND on top), R23 hangs below
+    for pin, net, ref, xr, up in ((6, "USB_FS_DM", "R22", ux + 25.4, True), (4, "USB_FS_DP", "R23", ux + 20.32, False)):
         ox, oy = s.P("U5", pin)
-        s.w(net, (ox, oy), (ux + 30.48, oy))
-        s.glabel(net, ux + 30.48, oy, 0, "bidirectional")
-    s.text("To the USB3320C\n(ULPI sheet)", ux + 30.48, yl - 7.62)
+        s.w(net, (ox, oy), (ux + 38.1, oy))
+        s.glabel(net, ux + 38.1, oy, 0, "bidirectional")
+        if up:
+            vpart(s, ref, xr, oy - 7.62)
+            rx, ry = s.P(ref, 1)
+            s.w("GND", (rx, ry), (rx, ry - 2.54))
+            s.rail("GND", rx, ry - 2.54, up=True)
+        else:
+            s.w(net, (xr, oy), (xr, oy + 2.54))
+            vpart(s, ref, xr, oy + 2.54)
+            s.rail("GND", *s.P(ref, 2))
+    s.text("To the MCU internal FS PHY (PA11 / PA12):\nROM DFU only. R22/R23: known level with J2 open.",
+           ux + 38.1, yl - 15.24)
     s.text("SYS_SCL / SYS_SDA: I2C5, pull-ups R63/R64 on the\ntarget supply sheet. PD_ALERT: PG0, MCU pull-up.",
            20.32, uy + 50.8)
+
+
+def usbc_hs(prj):
+    s = prj.sheet("USB-C HS", "usbc_hs.kicad_sch", "USB-C HS port (J5): 5 V sink, soft start, ideal diode")
+    s.text("USB-C HS PORT (J5)", 20.32, 17.78, 2.54, True)
+    s.text("USB 2.0 HS to the USB3320C, 5 V only (Rd on both CC lines, no PD): a PC port, Type-A cable or Type-C.\n"
+           "Q11 soft start limits the attach inrush (USB 2.0: 10 µF / 50 µC) against ~90 µF on VSYS, then ideal diode 5.",
+           20.32, 25.4)
+    yp = 50.8
+    jx, jy = 40.64, 119.38
+    fx, fx2, xbus = 152.4, 233.68, 284.48
+
+    s.place("J5", jx, jy, ref_at=(jx - 7.62, jy - 26.67), val_at=(jx - 7.62, jy - 24.13))
+    s.rail("GND", *s.P("J5", "A1"))
+    s.rail("GND", *s.P("J5", "SH"))
+
+    # --- VBUS row: connector -> TVS, bulk -> Q11 soft start -> ideal diode 5 -> VSYS_OR ---
+    xv = jx + 17.78
+    vx, vy = s.P("J5", "A4")
+    s.w("VBUS_HS_CONN", (vx, vy), (xv, vy), (xv, yp))
+    s.place("Q11", fx, yp + 2.54, rot=270, mirror="x", ref_at=(fx + 2.54, yp - 6.35), val_at=(fx + 2.54, yp - 3.81))
+    s.w("VBUS_HS_CONN", (xv, yp), s.P("Q11", 1))
+    s.power("PWR_FLAG", xv + 7.62, yp, 0)
+    s.w("VBUS_HS_CONN", (xv, yp), (xv - 20.32, yp))
+    s.glabel("VBUS_HS_CONN", xv - 20.32, yp, 180, "output")
+    s.text("To the USB3320C VBUS\n(R30, ULPI sheet)", xv - 38.1, yp - 7.62)
+    xt = 76.2
+    s.w("VBUS_HS_CONN", (xt, yp), (xt, yp + 2.54))
+    s.place("D7", xt, yp + 6.35, rot=90, ref_at=(xt - 2.54, yp + 5.08), val_at=(xt - 2.54, yp + 7.62))
+    s.rail("GND", *s.P("D7", 1))
+    xc = 96.52
+    s.w("VBUS_HS_CONN", (xc, yp), (xc, yp + 2.54))
+    vpart(s, "C138", xc, yp + 2.54)
+    s.rail("GND", *s.P("C138", 2))
+
+    # gate: R179 + C136 to the source, R180 to GND, C137 to the drain (Miller ramp)
+    gx, gy = s.P("Q11", 4)
+    yg = gy + 5.08
+    xr = fx - 12.7
+    s.w("VBUS_HS_CONN", (xr, yp), (xr, yp + 2.54))
+    vpart(s, "R179", xr, yp + 2.54)
+    s.w("HS_GATE", s.P("R179", 2), (xr, yg), (gx, yg), (gx, gy))
+    xc4 = xr - 17.78
+    s.w("VBUS_HS_CONN", (xc4, yp), (xc4, yp + 2.54))
+    vpart(s, "C136", xc4, yp + 2.54)
+    s.w("HS_GATE", s.P("C136", 2), (xc4, yg), (xr, yg))
+    s.label("HS_GATE", xr + 1.27, yg, 0)
+    xd = fx + 15.24
+    xq, yq = s.P("Q11", 5)
+    s.w("VBUS_HS", (xq, yq), (fx2 - 48.26, yp))
+    s.w("VBUS_HS", (xd, yp), (xd, yp + 2.54))
+    vpart(s, "C137", xd, yp + 2.54)
+    s.w("HS_GATE", s.P("C137", 2), (xd, yg), (gx, yg))
+    xg2 = gx + 7.62
+    vpart(s, "R180", xg2, yg)
+    s.rail("GND", *s.P("R180", 2))
+    s.power("PWR_FLAG", fx2 - 53.34, yp, 0)
+    ideal_diode(s, 5, "VBUS_HS", "Q12", "U53", "C139", "C140", fx2, yp, xbus, fx2 - 48.26)
+    s.glabel("VSYS_OR", xbus, yp, 0, "bidirectional")
+    s.text("To the Sources sheet\n(VSYS_OR bus)", xbus - 12.7, yp - 10.16)
+
+    # --- CC lines: Rd to GND on each, ESD, then averaged by R7 / R8 into the PA6 ADC input ---
+    c1x, c1y = s.P("J5", "A5")
+    xcc = jx + 22.86
+    ycc1 = jy - 22.86
+    xn = 127.0
+    s.w("CC1_HS", (c1x, c1y), (xcc, c1y), (xcc, ycc1), (xn - 16.51, ycc1))
+    c2x, c2y = s.P("J5", "B5")
+    s.w("CC2_HS", (c2x, c2y), (xn - 16.51, c2y))
+    s.label("CC2_HS", c2x + 5.08, c2y, 0)
+    s.label("CC1_HS", xcc + 1.27, ycc1, 0)
+    xe = 76.2
+    s.place("D20", xe, (ycc1 + c2y) / 2, rot=90, ref_at=(xe - 2.54, ycc1 + 6.35), val_at=(xe - 2.54, ycc1 + 8.89))
+    ax, ay = s.P("D20", 3)
+    s.w("GND", (ax, ay), (ax + 2.54, ay))
+    s.rail("GND", ax + 2.54, ay)
+    xd5 = 93.98
+    vpart(s, "R25", xd5, ycc1 - 7.62, label_dx=-7.62)   # above CC1: GND on top
+    rx, ry = s.P("R25", 1)
+    s.w("GND", (rx, ry), (rx, ry - 2.54))
+    s.rail("GND", rx, ry - 2.54, up=True)
+    vpart(s, "R176", xd5, c2y)
+    s.rail("GND", *s.P("R176", 2))
+    for ref, y in (("R7", ycc1), ("R8", c2y)):
+        s.place(ref, xn - 12.7, y, rot=90, ref_at=(xn - 12.7, y - 4.57), val_at=(xn - 12.7, y + 2.54))
+        s.w("CC_HS_SENSE", s.P(ref, 2), (xn, y))
+    s.w("CC_HS_SENSE", (xn, ycc1), (xn, c2y + 2.54))
+    vpart(s, "C12", xn, c2y + 2.54)
+    s.rail("GND", *s.P("C12", 2))
+    ym = (ycc1 + c2y) / 2
+    s.w("CC_HS_SENSE", (xn, ym), (xn + 15.24, ym))
+    s.glabel("CC_HS_SENSE", xn + 15.24, ym, 0, "output")
+    s.text("PA6 (ADC1_INP3) reads 0.51 x vRd of the active CC:\n"
+           "< 0.34 V default USB, 0.34-0.63 V 1.5 A, > 0.63 V 3 A.\n"
+           "Rd seen by the source: 5.1k // 200k = 4.98 kΩ.", xn + 17.78, ym + 5.08)
+
+    # --- D+ / D-: through U12 to the USB3320C ---
+    yl = jy + 20.32
+    xu = 101.6
+    s.place("U12", xu, yl, ref_at=(xu + 2.54, yl - 7.62), val_at=(xu + 2.54, yl + 10.16))
+    m1, m2 = s.P("J5", "A7"), s.P("J5", "B7")
+    s.w("HS_C_DM", m1, (xv, m1[1]), (xv, m2[1]))
+    s.w("HS_C_DM", m2, (xv, m2[1]), (jx + 25.4, m2[1]), (jx + 25.4, yl), s.P("U12", 1))
+    p1, p2 = s.P("J5", "A6"), s.P("J5", "B6")
+    s.w("HS_C_DP", p1, (xv, p1[1]), (xv, yl + 2.54), s.P("U12", 3))
+    s.w("HS_C_DP", p2, (xv, p2[1]))
+    s.rail("+3V3", *s.P("U12", 5))
+    s.rail("GND", *s.P("U12", 2))
+    for pin, net in ((6, "USB_DM"), (4, "USB_DP")):
+        ox, oy = s.P("U12", pin)
+        s.w(net, (ox, oy), (xu + 38.1, oy))
+        s.glabel(net, xu + 38.1, oy, 0, "bidirectional")
+    s.text("To the USB3320C\n(ULPI sheet)", xu + 38.1, yl - 7.62)
 
 
 def poe(prj):
@@ -560,7 +685,7 @@ def boost(prj):
     ideal_diode(s, 4, "VIN_EXT_P", "Q10", "U52", "C135", None, fq, y18, x18, fq - 50.8, out="VIN_BUS")
     s.w("VIN_BUS", (x18, y18), (x18, yp))
     s.glabel("VIN_EXT_P", fq - 50.8, y18, 180, "input")
-    s.text("VIN_EXT path: LM74700 ideal diode, as on the Sources sheet.\nBlocks the boost output (no leakage "
+    s.text("VIN_EXT path: MX74700T ideal diode, as on the Sources sheet.\nBlocks the boost output (no leakage "
            "into VIN_EXT_P, which drives Q9),\nand a reversed VIN_EXT with the boost running.", fq - 50.8, y18 + 40.64)
     xf = kx + 81.28
     s.w("VIN_BUS", (xf, yp), (xf, yp + 2.54))
@@ -622,7 +747,7 @@ def buck3v3(prj):
         s.text(dest, xe - 12.7, ly - 12.7)
 
 
-DEBUG_NETS = ("MCU_SWDIO", "MCU_SWCLK", "MCU_SWO", "USB_FS_DM", "USB_FS_DP", "CONSOLE_TX", "CONSOLE_RX")
+DEBUG_NETS = ("MCU_SWDIO", "MCU_SWCLK", "MCU_SWO", "CONSOLE_TX", "CONSOLE_RX")
 
 
 def mcu(prj):
@@ -686,15 +811,15 @@ def mcu(prj):
 
     # left column: NRST, BOOT0, VREF+, PDR_ON
     nx, ny = s.P("U11", "25")
-    s.w("NRST", (nx, ny), (nx - 63.5, ny))
-    vpart(s, "C48", nx - 63.5, ny)
+    s.w("NRST", (nx, ny), (nx - 81.28, ny))
+    vpart(s, "C48", nx - 81.28, ny, label_dx=-7.62)
     s.rail("GND", *s.P("C48", 2))
     s.label("NRST", nx - 58.42, ny, 0)
     bx, by = s.P("U11", "138")
-    s.w("BOOT0", (bx, by), (bx - 50.8, by))
+    s.w("BOOT0", (bx, by), (bx - 55.88, by))
     vpart(s, "R21", bx - 50.8, by)
     s.rail("GND", *s.P("R21", 2))
-    s.label("BOOT0", bx - 45.72, by, 0)
+    s.glabel("BOOT0", bx - 55.88, by, 180, "input")
     rx, ry = s.P("U11", "32")
     s.w("VDDA", (rx, ry), (rx - 12.7, ry))
     s.label("VDDA", rx - 12.7, ry, 180)
@@ -741,38 +866,10 @@ def mcu(prj):
     s.text("TC2030 footprint, nothing to fit: J-Link through the\nSEGGER 6-pin Needle Adapter or a TC2030-CTX cable.",
            jx - 7.62, jy + 20.32)
 
-    # J5 micro-B: ROM DFU on the internal FS PHY. VBUS powers the board and raises BOOT0
-    s.text("Programming with no probe: ROM bootloader (AN2606)", 444.5, 96.52, 1.8, True)
-    x5, y5 = 449.58, 129.54
-    s.place("J5", x5, y5, ref_at=(x5 - 10.16, y5 - 15.24), val_at=(x5 - 10.16, y5 - 12.7))
-    s.w("GND", s.P("J5", "SH"), (x5 - 2.54, y5 + 12.7), (x5, y5 + 12.7))
-    s.rail("GND", *s.P("J5", 5))
-    yv = 109.22
-    s.place("D7", 480.06, yv, rot=180, ref_at=(477.52, yv - 5.08), val_at=(477.52, yv - 2.54))
-    s.w("USB_FS_VBUS", s.P("J5", 1), (457.2, yv), s.P("D7", 2))
-    s.label("USB_FS_VBUS", 457.2 + 1.27, yv, 0)
-    vpart(s, "R24", 467.36, yv)
-    s.label("BOOT0", *s.P("R24", 2), 270, tag="j5")
-    vpart(s, "R176", 462.28, yv, label_dx=-7.62)          # sinks the D7 leakage with J5 unplugged
-    s.rail("GND", *s.P("R176", 2))
-    s.w("VSYS", s.P("D7", 1), (497.84, yv))
-    s.glabel("VSYS", 497.84, yv, 0, "bidirectional", tag="j5")
-    s.place("U12", 474.98, y5, ref_at=(459.74, y5 + 7.62), val_at=(459.74, y5 + 10.16))
-    s.w("J5_DP", s.P("J5", 3), s.P("U12", 1))
-    s.w("J5_DM", s.P("J5", 2), s.P("U12", 3))
-    s.rail("+3V3", *s.P("U12", 5))
-    s.rail("GND", *s.P("U12", 2))
-    s.w("USB_FS_DP", s.P("U12", 6), (510.54, y5))
-    s.label("USB_FS_DP", 510.54, y5, 0)
-    vpart(s, "R23", 500.38, y5)
-    s.rail("GND", *s.P("R23", 2))
-    ym = 147.32
-    s.w("USB_FS_DM", s.P("U12", 4), (482.6, y5 + 2.54), (482.6, ym), (510.54, ym))
-    s.label("USB_FS_DM", 510.54, ym, 0)
-    vpart(s, "R22", 495.3, ym)
-    s.rail("GND", *s.P("R22", 2))
-    s.text("J5: prototypes, may be left off. R24 out: J5 is a plain USB FS port.\n"
-           "R22/R23: D+/D- at a known level while the ROM polls the other interfaces.", 444.5, 162.56)
+    # ROM bootloader: GO held at reset raises BOOT0 (R24 on the UI sheet); DFU on J2 (USB-C sheet), USART3 on J6
+    s.text("Programming with no probe: ROM bootloader (AN2606)", 444.5, 162.56, 1.8, True)
+    s.text("Hold GO at power-up or reset: R24 (1k, UI sheet) lifts BOOT0 to 3.16 V against R21.\n"
+           "DFU through the internal FS PHY on J2 (USB-C sheet), or USART3 through J6 below.", 444.5, 170.18)
 
     # J6: FTDI cable pads (USART3 console and ROM bootloader). Cable on the left, flow to the right
     x6, y6 = 447.04, 205.74
@@ -783,18 +880,15 @@ def mcu(prj):
     s.power("GND", px + 2.54, gy, 90, show=False)
     yb = 190.5
     s.w("BOOT0", s.P("J6", 2), (px + 7.62, s.P("J6", 2)[1]), (px + 7.62, yb), (510.54, yb))
-    s.label("BOOT0", 510.54, yb, 0, tag="j6")
-    sx = 500.38
-    s.place("SW1", sx, yb - 5.08, rot=270, ref_at=(sx + 2.54, yb - 7.62), val_at=(sx + 2.54, yb - 5.08))
-    s.rail("+3V3", *s.P("SW1", 1))
+    s.glabel("BOOT0", 510.54, yb, 0, "bidirectional", tag="j6")
     yc = s.P("J6", 3)[1]
-    vpart(s, "R25", 474.98, yb)
-    s.place("D8", 490.22, yc, rot=180, ref_at=(495.3, yc - 7.62), val_at=(495.3, yc - 5.08))
+    s.place("D8", 490.22, yc, rot=180, ref_at=(500.38, yc - 7.62), val_at=(500.38, yc - 5.08))
     s.w("J6_VCC", s.P("J6", 3), s.P("D8", 2))
     s.label("J6_VCC", s.P("J6", 3)[0] + 3.81, yc, 0)
-    s.w("J6_VCC", s.P("R25", 2), (474.98, yc))
-    vpart(s, "R177", 483.87, yc - 7.62, label_dx=-7.62)  # sinks the D8 leakage, as R176; above the console lines
-    s.rail("GND", *s.P("R177", 1), up=True)
+    vpart(s, "R177", 483.87, yc - 7.62, label_dx=-7.62)  # sinks the D8 leakage; above the console lines
+    gx, gy = s.P("R177", 1)
+    s.w("GND", (gx, gy), (gx, gy - 2.54))
+    s.power("GND", gx, gy - 2.54, 180, show=False)    # name hidden: it would sit on R177
     s.w("VSYS", s.P("D8", 1), (497.84, yc))
     s.glabel("VSYS", 497.84, yc, 0, "bidirectional", tag="j6")
     for n, net in ((4, "CONSOLE_RX"), (5, "CONSOLE_TX")):
@@ -807,8 +901,8 @@ def mcu(prj):
     s.w("NRST", s.P("D9", 2), (510.54, ry + 5.08))
     s.label("NRST", 510.54, ry + 5.08, 0, tag="j6")
     s.text("J6: pads only, FTDI cable pinout (TTL-232R-5V or adapter with 5 V on VCC).\n"
-           "VCC powers the board (D8) and raises BOOT0 (R25). RTS resets through D9: NRST is not\n"
-           "5 V tolerant. stm32flash -i / stm32loader drive RTS/DTR. SW1: BOOT0 by hand.", 444.5, 228.6)
+           "VCC powers the board (D8). RTS resets through D9: NRST is not 5 V tolerant.\n"
+           "Pin 2 (CTS) is a BOOT0 test pad: an adapter driving CTS high enters the bootloader.", 444.5, 228.6)
 
 
 FPGA_SHAPE = {"in": "input", "out": "output", "io": "bidirectional"}
@@ -943,8 +1037,8 @@ def ulpi(prj):
     s.place("R30", 147.32, vy, rot=90, ref_at=(147.32, vy - 2.54), val_at=(147.32, vy + 2.54))
     s.w("PHY_VBUS", s.P("R30", 2), (vx, vy))
     s.label("PHY_VBUS", s.P("R30", 2)[0] + 1.27, vy, 0)
-    s.w("VBUS_CONN", s.P("R30", 1), (xg, vy))
-    s.glabel("VBUS_CONN", xg, vy, 180, "input")
+    s.w("VBUS_HS_CONN", s.P("R30", 1), (xg, vy))
+    s.glabel("VBUS_HS_CONN", xg, vy, 180, "input")
     for pin in ("18", "19"):
         px, py = s.P("U15", pin)
         s.w(nets[pin], (px, py), (xg, py))
@@ -1538,15 +1632,26 @@ def ui_field(prj):
     s.rail("GND", *s.P("U27", 9))
     s.text("R65: deselected until OCTOSPI1 runs.\nR66 / R67: /WP and /HOLD off in SPI mode.", 40.64, 124.46)
 
-    # --- buttons: switch to GND, 10k pull-up, 100 nF debounce, level out to the MCU on the right ---
+    # --- buttons: 10k, 100 nF debounce, level out to the MCU on the right. GO: switch to +3V3 (above the
+    # line), pull-down, and R24 to BOOT0; STOP: switch to GND (below the line), pull-up ---
     s.text("Buttons", 40.64, 137.16, 1.524, True)
-    for sw, r, cf, net, yb in (("SW2", "R68", "C99", "GO_BTN", 147.32), ("SW3", "R69", "C100", "STOP_BTN", 175.26)):
-        s.place(sw, 55.88, yb + 5.08, rot=270, ref_at=(59.69, yb + 3.81), val_at=(59.69, yb + 6.35))
-        s.rail("GND", *s.P(sw, 2))
-        s.w(net, s.P(sw, 1), (106.68, yb))
+    for sw, r, cf, net, yb, high in (("SW2", "R68", "C99", "GO_BTN", 147.32, True),
+                                     ("SW3", "R69", "C100", "STOP_BTN", 180.34, False)):
+        if high:
+            s.place(sw, 55.88, yb - 5.08, rot=270, ref_at=(59.69, yb - 6.35), val_at=(59.69, yb - 3.81))
+            s.rail("+3V3", *s.P(sw, 1))
+            s.w(net, s.P(sw, 2), (106.68, yb))
+            vpart(s, r, 71.12, yb)
+            s.rail("GND", *s.P(r, 2))
+            vpart(s, "R24", 96.52, yb)
+            s.glabel("BOOT0", *s.P("R24", 2), 270, "output")
+        else:
+            s.place(sw, 55.88, yb + 5.08, rot=270, ref_at=(59.69, yb + 3.81), val_at=(59.69, yb + 6.35))
+            s.rail("GND", *s.P(sw, 2))
+            s.w(net, s.P(sw, 1), (106.68, yb))
+            vpart(s, r, 71.12, yb - 7.62)
+            s.rail("+3V3", *s.P(r, 1))
         s.glabel(net, 106.68, yb, 0, "output")
-        vpart(s, r, 71.12, yb - 7.62)
-        s.rail("+3V3", *s.P(r, 1))
         vpart(s, cf, 86.36, yb)
         s.rail("GND", *s.P(cf, 2))
 
@@ -1873,7 +1978,7 @@ def shield_supply(prj):
         ina_monitor(s, ina, cina, raw, out, ux + 96.52, uy + 20.32, xB, yo, addr)
 
 
-def ina_monitor(s, ina, cina, raw, out, xi, yi, xB, yo, addr):
+def ina_monitor(s, ina, cina, raw, out, xi, yi, xB, yo, addr, raw_global=False):
     """INA226 at (xi, yi): Vbus tapped on the output row at xB, Kelvin sense across the shunt, I2C5 out."""
     s.place(ina, xi, yi, ref_at=(xi + 5.08, yi + 15.24), val_at=(xi + 5.08, yi + 17.78))
     bx, by = s.P(ina, 8)
@@ -1881,8 +1986,8 @@ def ina_monitor(s, ina, cina, raw, out, xi, yi, xB, yo, addr):
     for pin, net in (("10", raw), ("9", out)):
         px, py = s.P(ina, pin)
         s.w(net, (px, py), (px - 7.62, py))
-        if net == out:
-            s.glabel(net, px - 7.62, py, 180, "output", ina)
+        if net == out or raw_global:
+            s.glabel(net, px - 7.62, py, 180, "output" if net == out else "bidirectional", ina)
         else:
             s.label(net, px - 7.62, py, 180, ina)
     a1, a0 = s.prj.parts[ina]["pins"]["1"], s.prj.parts[ina]["pins"]["2"]
@@ -2104,6 +2209,7 @@ def main():
     prj = Project("archet", c, "Archet debug probe", "2026-11-26", libs=symbols.write())
     oring(prj)
     usbc(prj)
+    usbc_hs(prj)
     poe(prj)
     buck5(prj)
     boost(prj)
