@@ -16,6 +16,8 @@ from ngs import run  # noqa: E402
 
 R1, R2, R3 = 150e3, 18e3, 120e3       # FB top, FB bottom, DAC injection
 CDAC = 100e-9                          # filter on the DAC node
+RISO = 1e3                             # R178: isolates the DAC buffer from CDAC (50 pF max load)
+ROFF = 15e3                            # DAC output impedance, buffer off
 VFB = (0.495, 0.500, 0.505)            # datasheet SLVS916I, 6.5: min, typ, max
 VDDA = 3.3
 TOL = 0.01                             # 1 % resistors
@@ -34,7 +36,7 @@ Rload out 0 5
 """
 
 
-def net(vdac=0.0, rdac=1.0, r1=R1, r2=R2, r3=R3, vfb=0.5):
+def net(vdac=0.0, rdac=RISO, r1=R1, r2=R2, r3=R3, vfb=0.5):
     return NET.format(vdac=vdac, rdac=rdac, cdac=CDAC, r1=r1, r2=r2, r3=r3, vfb=vfb)
 
 
@@ -43,7 +45,7 @@ def vout(vdac, **kw):
 
 
 def main():
-    print("## Nominal transfer, buffered DAC (0 ohm)")
+    print("## Nominal transfer, buffered DAC through R178 (1 kohm)")
     sweep = run(net(), "dc vdac 0 3.3 0.1")
     v = sweep["out"]
     for k in range(0, len(v), 3):
@@ -53,7 +55,7 @@ def main():
 
     print("## DAC buffer off (output impedance ~15 kohm)")
     for vd in (0.0, 1.65, 3.3):
-        print(f"  DAC {vd:4.2f} V -> {vout(vd, rdac=15e3):.3f} V (buffered {vout(vd):.3f} V)")
+        print(f"  DAC {vd:4.2f} V -> {vout(vd, rdac=ROFF + RISO):.3f} V (buffered {vout(vd):.3f} V)")
     print("## DAC buffer on, its range 0.2 V .. VDDA - 0.2 V")
     print(f"  {vout(3.1):.3f} .. {vout(0.2):.3f} V")
 
@@ -61,19 +63,25 @@ def main():
     print(f"  {vout(0.0, rdac=1e12):.3f} V")
 
     print("## Worst case: 1 % resistors, VFB 495-505 mV (2^4 corners)")
-    hi, lo = [], []
+    hi, lo, top, bot = [], [], [], []
     for s1, s2, s3, vfb in itertools.product((-1, 1), (-1, 1), (-1, 1), (VFB[0], VFB[2])):
         kw = dict(r1=R1 * (1 + s1 * TOL), r2=R2 * (1 + s2 * TOL), r3=R3 * (1 + s3 * TOL), vfb=vfb)
         hi.append(vout(0.0, **kw))
         lo.append(vout(VDDA, **kw))
+        top.append(vout(0.2, **kw))
+        bot.append(vout(VDDA - 0.2, **kw))
     print(f"  DAC 0 V    : {min(hi):.3f} .. {max(hi):.3f} V (limit {VOUT_ABS} V)")
     print(f"  DAC 3.3 V  : {min(lo):.3f} .. {max(lo):.3f} V (TPS63020 minimum 1.2 V)")
     assert max(hi) < VOUT_ABS, "maximum output above the recommended range"
+    print(f"  DAC 0.2 V  : {min(top):.3f} .. {max(top):.3f} V (5.04 V ceiling, buffered range)")
+    print(f"  DAC 3.1 V  : {min(bot):.3f} .. {max(bot):.3f} V (1.65 V floor, translators)")
     assert max(lo) < 1.65, "1.8 V targets out of reach"
+    assert min(top) >= 4.75, "5 V targets (-5 %) out of reach with the DAC buffer on"
+    assert max(bot) <= 1.65, "1.65 V floor out of reach with the DAC buffer on"
 
     print("## DAC step 3.3 -> 0 V, buffer off: output slew through the 100 nF filter")
     t = run(NET.replace("Vdac dac0 0 {vdac}", "Vdac dac0 0 pulse(3.3 0 1m 1u 1u 1 2)").format(
-        rdac=15e3, cdac=CDAC, r1=R1, r2=R2, r3=R3, vfb=0.5), "tran 10u 12m")
+        rdac=ROFF + RISO, cdac=CDAC, r1=R1, r2=R2, r3=R3, vfb=0.5), "tran 10u 12m")
     tt, vo = t["time"], t["out"]
     v10 = vo[0] + 0.1 * (vo[-1] - vo[0])
     v90 = vo[0] + 0.9 * (vo[-1] - vo[0])
@@ -84,7 +92,7 @@ def main():
     print("## Inductor peak current (datasheet 8.2.2.2), L = 1.5 uH -20 %, f = 2.4 MHz -10 %")
     L, f, eta = 1.5e-6 * 0.8, 2.4e6 * 0.9, 0.85
     worst = (0, None)
-    for vin, vo_, io in itertools.product((4.5, 5.0, 5.25), (1.25, 1.8, 3.3, 5.0, 5.3), (1.0,)):
+    for vin, vo_, io in itertools.product((4.4, 5.0, 5.25), (1.25, 1.8, 3.3, 5.0, 5.3), (1.0,)):
         if vo_ > vin:                                     # boost
             d = 1 - vin * eta / vo_
             ip = io / (eta * (1 - d)) + vin * d / (2 * f * L)
