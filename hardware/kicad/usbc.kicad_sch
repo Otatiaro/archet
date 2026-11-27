@@ -22991,7 +22991,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" "Sink switch, -30 V, 11 mΩ at -10 V: 0.1 W at 3 A. Keeps the VSYS capacitors off VBUS until the contract (inrush); its body diode only conducts toward the connector, the LM74700 blocks VSYS"
+		(property "Description" "Sink switch, -30 V, 18.5 mΩ max at -4.5 V (5 V VBUS), 11.5 mΩ at -10 V: 0.17-0.22 W at 3 A. Keeps the VSYS capacitors off VBUS until the contract (inrush); its body diode only conducts toward the connector, the LM74700 blocks VSYS"
 			(at 203.2 53.34 90)
 			(effects
 				(font

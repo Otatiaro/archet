@@ -144,7 +144,7 @@ c.R("R9", "1k", "VBUS_CONN", "PD_DISCH", note="VBUS sense and discharge path, 20
 c.part("Q4", "Transistor_FET:FDS9435A", "AO4407A", "Package_SO:SOIC-8_3.9x4.9mm_P1.27mm", "C2841482",
        {1: "VBUS_CONN", 2: "VBUS_CONN", 3: "VBUS_CONN", 4: "VBUS_GATE",
         5: "VBUS_USB", 6: "VBUS_USB", 7: "VBUS_USB", 8: "VBUS_USB"},
-       "Sink switch, -30 V, 11 mΩ at -10 V: 0.1 W at 3 A. Keeps the VSYS capacitors off VBUS until the "
+       "Sink switch, -30 V, 18.5 mΩ max at -4.5 V (5 V VBUS), 11.5 mΩ at -10 V: 0.17-0.22 W at 3 A. Keeps the VSYS capacitors off VBUS until the "
        "contract (inrush); its body diode only conducts toward the connector, the LM74700 blocks VSYS")
 c.R("R10", "100k", "VBUS_CONN", "VBUS_GATE", note="Gate off when VBUS_EN_SNK is released")
 c.C("C134", "100nF", "VBUS_CONN", "VBUS_GATE", note="Gate-source: Q4 turns on in ~1 ms (R11), not ~25 µs into "
@@ -174,12 +174,13 @@ c.part("D6", "Diode:SMAJ58A", "SMAJ58A", "Diode_SMD:D_SMA", "C10762", {1: "POE_V
        "Input TVS of the DP5700 typical circuit: 58 V standoff, 93.6 V clamp (module surge rating 80 V for 1 ms)")
 c.part("U6", "Archet:DP5700-12V2A", "DP5700-12V2A", "Archet:DP5700", "C22358555",
        {4: "POE_VP", 6: "POE_VN", 5: "POE_TYP2", 1: "POE_12V", 2: "GND"},
-       "Class 4 PD, 12.07 V with ADJ open, 1500 V isolation. TYP2-DET assumed open drain to VIN- "
-       "(the datasheet gives no electrical detail): the opto LED resistor limits the current in any case")
-c.R("R12", "47k", "POE_VP", "POE_OPTO_A", fp=R0805, note="Opto LED, 1.2 mA at 57 V; 69 mW, 150 V rating")
+       "Class 4 PD, 12.07 V with ADJ open, 1500 V isolation. TYP2-DET: switch + 27 kΩ to VIN-, "
+       "closed under a Type 2 PSE (copy of the Silvertel Ag5700: its datasheet §2.2.3, figure 4, opto LED from VIN+)")
+c.R("R12", "47k", "POE_VP", "POE_OPTO_A", fp=R0805, note="Opto LED, in series with the 27 kΩ inside TYP2-DET: "
+    "0.48-0.75 mA at 37-57 V; 26 mW, 150 V rating")
 c.part("U7", "Isolator:PC817", "PC817X2CSP9F", "Package_DIP:SMDIP-4_W7.62mm", "C66405",
        {1: "POE_OPTO_A", 2: "POE_TYP2", 4: "POE_AT_N", 3: "GND"},
-       "Carries TYP2-DET across the isolation barrier (5 kV); CTR >= 50 %: 0.6 mA available, 33 µA needed")
+       "Carries TYP2-DET across the isolation barrier (5 kV); CTR >= 50 % at 5 mA, lower at 0.5 mA: ~0.15 mA available, 33 µA needed")
 c.R("R13", "100k", "+3V3", "POE_AT_N", note="POE_AT_N to PC15: low when a Type 2 (at) PSE powers the probe")
 c.part("C17", "Device:C_Polarized", "100µF 25V", "Capacitor_SMD:CP_Elec_6.3x7.7", "C970685",
        {1: "POE_12V", 2: "GND"}, "Output capacitor of the DP5700 typical circuit")
@@ -311,8 +312,8 @@ c.part("FB1", "Device:FerriteBead_Small", "600Ω@100MHz", "Inductor_SMD:L_0603_1
 c.C("C45", "1µF 50V", "VDDA", "GND", note="VDDA/VREF+ bulk, datasheet 1 µF")
 c.C("C46", "100nF", "VDDA", "GND", note="VDDA/VREF+ HF")
 c.C("C47", "100nF", "+3V3", "GND", note="VDD33USB decoupling (internal FS PHY: ROM DFU on J5)")
-c.R("R175", "33", "PPS", "PPS_IN", note="PPS loopback PG8 -> PA0 (TIM2_ETR). Not fitted if TIM2 takes the ETH PPS "
-    "as an internal trigger (RM0468)")
+c.R("R175", "33", "PPS", "PPS_IN", note="PPS loopback PG8 -> PA0 (TIM2_CH1): input capture of the "
+    "PPS edge. Reset or trigger mode needs no wire: ETH PPS is TIM2 ITR4 (RM0468 table 355)")
 c.R("R21", "22k", "BOOT0", "GND", note="BOOT0 low: boot from flash. With 5 V on J5 or J6 through 10k: "
     "3.4 V, ROM bootloader (BOOT0 rated 9 V)")
 
@@ -333,7 +334,8 @@ c.part("D7", *SCHOTTKY[:3], SCHOTTKY[3], {1: "VSYS", 2: "USB_FS_VBUS"},
 c.R("R24", "10k", "USB_FS_VBUS", "BOOT0", note="Plugging J5 enters the ROM bootloader. Remove it to use J5 "
     "as a plain USB FS port")
 c.R("R176", "1k", "USB_FS_VBUS", "GND", note="Sinks the D7 reverse leakage (VSYS up to 24 V, hot) with J5 "
-    "unplugged, so it cannot lift BOOT0; 5 mA from the cable")
+    "unplugged, so it cannot lift BOOT0; 5 mA from the cable. BOOT0 VIL 0.73 V: up to 1.06 mA of leakage, "
+    "Hottech 1N5819WS 0.5 mA typical at 24 V / 85 °C, its maximum reaches 1 mA near 45 °C (accepted, bench probe)")
 c.part("J6", "Connector_Generic:Conn_01x06", "Console / bootloader (FTDI)",
        "Connector_PinHeader_2.54mm:PinHeader_1x06_P2.54mm_Vertical", "",
        {1: "GND", 2: "BOOT0", 3: "J6_VCC", 4: "CONSOLE_RX", 5: "CONSOLE_TX", 6: "J6_RST"},

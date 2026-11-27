@@ -261,8 +261,8 @@ VIN_EXT (10.8–24 V)    ┬─ LM74700 ──┘ SMBJ24CA│  (36 V, 3 A)      
 
 1. **VIN_EXT** (10.8 to 24 V), through the shield or a power terminal block: also powers the probe, including on Ethernet without PoE, and goes straight to VIN_BUS;
 2. **PoE+** 802.3at class 4 (25.5 W at the PD), through an **integrated isolated SDAPO PD module**: DP5700-12V2A (24 W, documented 802.3at compliance); the DP9700 "at" is out of stock at JLCPCB (2026-11-25). To check:
-   - presence of a "PSE at detected" signal: without it, the probe cannot tell an af switch (13 W) from an at one (25.5 W), and must assume 13 W unless configured (or negotiated over LLDP);
-   - input circuit required by the datasheet: bridge rectifiers, TVS, RJ45 with accessible centre taps;
+   - TYP2-DET tells an at PSE (25.5 W) from an af one (13 W): a switch and 27 kΩ to VIN-, closed under a Type 2 PSE (the DP5700 copies the Silvertel Ag5700, datasheet §2.2.3, figure 4), carried to PC15 by an optocoupler;
+   - input circuit as in the datasheet: MB10S bridges on both pair sets, SMAJ58A, RJ45 line-side centre taps on pins 7–10;
 3. **USB-C**:
    - current advertised on CC without PD: 0.5 A on a USB-A port, 1.5 or 3 A on a USB-C port (up to 15 W);
    - **USB PD** (independent of the USB 2.0 data rate, goes through CC): up to 20 V on a charger, hence the "PD charger + Ethernet without PoE" case;
@@ -309,7 +309,7 @@ Remaining at VSYS after the probe and the target (3.8 W max), shared between the
 | PoE+ at (25.5 W at the PD) | ~22 W | ~18 W |
 | VIN_EXT | supply rating, configured | shield ≤ 11.5 W; VIN_BUS straight from VIN_EXT, 2 × 480 mA |
 
-Without a "PSE at" signal from the PoE module, the probe assumes af. This table is to be published in the shield documentation.
+Under an af PSE (TYP2-DET open) the probe takes the 13 W budget. This table is to be published in the shield documentation.
 
 ### Safety rules for shield design
 
@@ -400,7 +400,7 @@ Choices made at assignment:
 - **LAN8742A**: REF_CLK Out mode (nINTSEL low through 10 kΩ): its own 25 MHz crystal, 50 MHz REF_CLK driven to PA1, since MCO1 (PA8) is taken. nINT is then unavailable, so PG7 is free and the link state is polled over MDIO. R42 (10 kΩ) holds nRST low until PG6 drives it; the straps are latched at that edge and left to the internal pulls (MODE = 111, PHYAD = 0, REGOFF low: internal 1.2 V regulator). 49.9 Ω terminations to the centre tap, fed from +3V3 through a ferrite bead; RBIAS 12.1 kΩ 1 %; MDIO pull-up 1 kΩ. RJ45 LEDs: anodes driven by LED1/LED2 through 330 Ω, cathodes to GND.
 - **Three I²C buses**: internal (I2C5: STUSB4500, INA226), Bornier (I2C1), shield (I2C4). An external bus fault (ribbon cable, unknown shield) never cuts the power management.
 - **CS0–CS10 on port E (PE0, PE1, PE3–PE10, PE15), CS11 on PG7**: a CS is still selected with one BSRR write. PE2 and PE11 went to the QSPI flash (OCTOSPI1 IO2 and NCS have no other pin left free).
-- **LATCH on TIM2_CH1 (PA15)**, 32-bit timer; the PPS (PG8) is looped back to TIM2_ETR (PA0) to reset its phase every PTP second. The loopback can go if an internal ETH PPS → TIM2 trigger exists *(to be checked in RM0468)*.
+- **LATCH on TIM2_CH1 (PA15)**, 32-bit timer; the PPS (PG8) is looped back to TIM2_ETR (PA0) to reset its phase every PTP second. The reset needs no wire: ETH PPS is TIM2 internal trigger ITR4 (RM0468 table 355, slave reset mode). The loopback (R175) stays for an input capture of the PPS edge on PA0.
 - **FPGA reference clock on MCO2 (PC9)**, from PLL2P: frequency chosen in firmware, same crystal as the MAC.
 - LSE unused: PC13–PC15 (low-speed pads, 3 mA) only carry slow inputs (stop button, shield presence, PoE at).
 - JTAG disabled (SWD only): PA15 and PB4 are regular GPIOs. PB4 (NJTRST) keeps its pull-up from reset until the firmware reconfigures it: harmless on the nRST readback, which idles high; this is why the buzzer is not on PB4.
@@ -535,8 +535,7 @@ To check: no fee for preferred parts in Standard assembly (granted in Economic).
 - TGT_VSUP: TPS63020 behaviour when a target back-drives its output, to measure on the prototype (load disconnect in shutdown, §7.3.3; no sinking in power save).
 - STDC14 pins 1–2: confirm on a STLINK-V3SET (5 V on pin 1 with JP2, SWDIO direction and polarity on pin 2).
 - ESP-Prog PROG pinout to confirm against the Espressif documentation.
-- Power budget figures to confirm against datasheets (H723 at 550 MHz, LAN8742A, DP5700 efficiency) and on the prototype; "PSE at" signal on the DP5700.
+- Power budget figures to confirm against datasheets (H723 at 550 MHz, LAN8742A, DP5700 efficiency) and on the prototype.
 - Transport protocol specification (`docs/protocol.md`), aligned with Maestro.
 - CAN bootloader bitrates and frame format from AN5405 (FDCAN1, H7); termination switch reachable once the case is drawn.
-- PB4 nRST readback: 10 kΩ series against a 5 V target nRST; confirm PB4 is FT in the H723 datasheet.
 - Standalone image format and recipe (target, algorithm, option bytes, verification), shared with the host-driven path.

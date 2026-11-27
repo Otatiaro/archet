@@ -23153,7 +23153,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" "Class 4 PD, 12.07 V with ADJ open, 1500 V isolation. TYP2-DET assumed open drain to VIN- (the datasheet gives no electrical detail): the opto LED resistor limits the current in any case"
+		(property "Description" "Class 4 PD, 12.07 V with ADJ open, 1500 V isolation. TYP2-DET: switch + 27 kΩ to VIN-, closed under a Type 2 PSE (copy of the Silvertel Ag5700: its datasheet §2.2.3, figure 4, opto LED from VIN+)"
 			(at 177.8 68.58 0)
 			(effects
 				(font
@@ -23826,7 +23826,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" "Carries TYP2-DET across the isolation barrier (5 kV); CTR >= 50 %: 0.6 mA available, 33 µA needed"
+		(property "Description" "Carries TYP2-DET across the isolation barrier (5 kV); CTR >= 50 % at 5 mA, lower at 0.5 mA: ~0.15 mA available, 33 µA needed"
 			(at 177.8 116.84 0)
 			(effects
 				(font
@@ -23914,7 +23914,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" "Opto LED, 1.2 mA at 57 V; 69 mW, 150 V rating"
+		(property "Description" "Opto LED, in series with the 27 kΩ inside TYP2-DET: 0.48-0.75 mA at 37-57 V; 26 mW, 150 V rating"
 			(at 149.86 114.3 90)
 			(effects
 				(font

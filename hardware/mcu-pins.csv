@@ -29,7 +29,7 @@ PF2,OCTOSPIM_P2_IO2,FPGA_QSPI_IO2,FPGA,fixed
 PF3,OCTOSPIM_P2_IO3,FPGA_QSPI_IO3,FPGA,fixed
 PG12,OCTOSPIM_P2_NCS,FPGA_QSPI_NCS,FPGA,"fixed; also iCE40 SPI_SS; switched to GPIO for the 8 pre-configuration clocks"
 PG8,ETH_PPS_OUT,PPS,FPGA,"fixed; to iCE40 and looped back to PA0"
-PA0,TIM2_ETR,PPS_IN,FPGA,"PPS loopback: resets TIM2 so LATCH follows the PTP second (unless an internal trigger exists)"
+PA0,TIM2_ETR,PPS_IN,FPGA,"PPS loopback: input capture of the PPS edge (TIM2 phase reset uses ITR4 = ETH PPS, no wire)"
 PC9,RCC_MCO_2,FPGA_REFCLK,FPGA,"MCO2 from PLL2P; common time base"
 PG3,GPIO,FPGA_IRQ,FPGA,EXTI
 PG4,GPIO,FPGA_CRESET_B,FPGA,
@@ -61,7 +61,7 @@ PE11,OCTOSPIM_P1_NCS,FLASH_NCS,FLASH,"pull-up: also SPI4 NSS of the ROM bootload
 PB6,I2C1_SCL,BUS_SCL,BORNIER,module EEPROMs
 PB7,I2C1_SDA,BUS_SDA,BORNIER,
 PD11,GPIO,BUS_IRQ,BORNIER,EXTI
-PA15,TIM2_CH1,BUS_LATCH,BORNIER,"32-bit timer, phase reset by PPS_IN"
+PA15,TIM2_CH1,BUS_LATCH,BORNIER,"32-bit timer, phase reset by ETH PPS (ITR4)"
 PD14,GPIO,BUS_OE,BORNIER,active low
 PG2,GPIO,VIN_BUS1_EN,BORNIER_PWR,
 PG9,GPIO,VIN_BUS2_EN,BORNIER_PWR,"off PD1: FDCAN1 TX of the ROM bootloader, driven recessive high"

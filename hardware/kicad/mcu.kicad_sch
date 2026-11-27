@@ -27703,7 +27703,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" "PPS loopback PG8 -> PA0 (TIM2_ETR). Not fitted if TIM2 takes the ETH PPS as an internal trigger (RM0468)"
+		(property "Description" "PPS loopback PG8 -> PA0 (TIM2_CH1): input capture of the PPS edge. Reset or trigger mode needs no wire: ETH PPS is TIM2 ITR4 (RM0468 table 355)"
 			(at 444.5 279.4 90)
 			(effects
 				(font
@@ -29449,7 +29449,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" "Sinks the D7 reverse leakage (VSYS up to 24 V, hot) with J5 unplugged, so it cannot lift BOOT0; 5 mA from the cable"
+		(property "Description" "Sinks the D7 reverse leakage (VSYS up to 24 V, hot) with J5 unplugged, so it cannot lift BOOT0; 5 mA from the cable. BOOT0 VIL 0.73 V: up to 1.06 mA of leakage, Hottech 1N5819WS 0.5 mA typical at 24 V / 85 °C, its maximum reaches 1 mA near 45 °C (accepted, bench probe)"
 			(at 462.28 113.03 0)
 			(effects
 				(font
