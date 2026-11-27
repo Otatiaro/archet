@@ -168,7 +168,7 @@ Archet also works without a host, as a production flasher: firmware images and t
 One 3-point pluggable terminal (J_FIELD, 3.81 mm, same family as VIN_EXT): H, L, GND. CAN FD and RS-485 are both a differential pair with a 120 Ω termination, so they share the terminal, the termination and the ESD; one is active at a time.
 
 - **Uses**: drive Archet from a host or a PLC over the field bus, sniff or send frames to other devices of a HIL bench, and reach the **STM32 ROM bootloader over CAN** (FDCAN1 on PD0/PD1).
-- **Transceivers**: TCAN3413 (CAN FD, 5 Mbit/s, 3.3 V supply, ISO 11898-2: mixes with 5 V nodes; independent of +5V, which sags on a 5 V USB source) and XL3485 (RS-485 half duplex, 3.3 V, no fail-safe bias on the probe: the bus terminations provide it). Both TX inputs on PD1 (FDCAN1_TX or UART4_TX); RX back to PD0 through a 74LVC1G157 mux.
+- **Transceivers**: TCAN3413 (CAN FD, 5 Mbit/s, 3.3 V supply, ISO 11898-2: mixes with 5 V nodes; independent of +5V, which sags on a 5 V USB source) and THVD2450 (RS-485 half duplex, 3.3 V, 50 Mbit/s, ±70 V bus fault: survives 24 V wired to H or L, where a MAX3485-class part stops at ±13 V; fail-safe receiver, no bias on the probe). Both TX inputs on PD1 (FDCAN1_TX or UART4_TX); RX back to PD0 through a 74LVC1G157 mux.
 - **Mode: FIELD_SEL_485 (PB2), pulled down: CAN by default**, the state the ROM bootloader and an unprogrammed board see. High: mux on the RS-485 receiver and TCAN3413 in standby (STB pin on the same net), so the CAN driver never fights the RS-485 driver.
 - **RS-485 direction**: DE on PG15, pulled down (driver off); receiver always on (RE tied low). CAN listen-only (sniffing) uses the FDCAN bus monitoring mode, no extra pin.
 - **Termination**: 120 Ω through a slide switch (MSK-12C02), off when Archet sits in the middle of a bus. ESD: NUP2105L (24 V working voltage, covers both CAN and RS-485 common-mode range).
@@ -254,7 +254,7 @@ VIN_EXT (10.8–24 V)    ┬─ MX74700T ─┘ SMBJ24CA│  (36 V, 3 A)        
 
 - **Priority: highest voltage wins**, with no control logic: VIN_EXT 24 V > PD 15–20 V > PoE 12 V > USB 5 V in the usual cases. A forced priority would need back-to-back FETs per source (an ideal diode with EN low still conducts through the body diode of its FET); none of the cases below justifies it. The firmware identifies the active source from the ADC inputs (VIN_EXT, PD VBUS, PoE 12 V, HS port CC) and the VSYS INA226, and derives the budget from it.
 - **One ideal diode per source**, both USB ports included: a sink P-MOS alone would back-feed the host VBUS through its body diode as soon as VSYS exceeds 5 V.
-- **MX74700T** (Wuxi Maxin Micro, C22468156): pin-compatible with the TI LM74700 (same KiCad symbol and SOT-23-6), same figures (datasheet V10: V(AK REV) −17 mV max, tReverse 0.75 µs max, 2.37 A gate sink), anode ±90 V operating, cathode–anode 75 V; $0.41 against $2.61, 45,000 in stock. Simulated with the LM74700 figures (`oring.py`).
+- **MX74700T** (Wuxi Maxin Micro, C22468156): pin-compatible with the TI LM74700 (same KiCad symbol and SOT-23-6), same figures (datasheet V10: V(AK REV) −17 mV max, tReverse 0.75 µs max, 2.37 A gate sink), anode ±90 V operating, cathode–anode 75 V; $0.41 against $2.61, 45,000 in stock. Simulated with the LM74700 figures (`oring.py`). VCAP 1 µF 50 V 0603 (0.1 µF minimum): ~0.5 µF left at the 12–13 V VCAP–ANODE bias. The 300 µA pump then needs ~22 ms to reach its 6.6 V UVLO at power-up, on the body diode meanwhile, as the simulations assume.
 - **LMR33630 rather than TPS5430**: the TPS5430 needs 5.5 V and would not run on a 5 V USB port. 36 V, 1.5 × the 24 V maximum: the SMBJ24CA only clamps at 38.9 V at its full rated surge current (15.5 A), an EMC test case; on a bench it only conducts on hot-plug ringing, at low current, around 27–30 V. No basic or preferred buck fits (TPS54331: 28 V, too close to the TVS breakdown). Synchronous, it runs up to ~98 % duty: on 5 V USB, +5V is 4.6 V typical and 4.1 V worst case ([`hardware/sim/buck5.py`](../hardware/sim/buck5.py)), enough for the TLV62569 (2.5–5.5 V); 5V_OUT stays off.
 - **+3V3_AUX separate from +3V3**: a shield or target short never pulls the probe rail down.
 - **VIN_BUS**: VIN_EXT through a fourth ideal diode (U52 MX74700T + Q10, < 10 mW at 1 A; ~2 µA reverse leakage, where a Schottky would lift VIN_EXT_P from the boost output and fake a VIN_EXT), or the boost when VIN_EXT is absent. The boost enable is gated in hardware by VIN_EXT presence: with a 12 V VIN_EXT, the 24 V boost would otherwise take over.
@@ -292,7 +292,7 @@ Probe +3V3 rail, estimates to be confirmed against datasheets and on the prototy
 | USB3320C, HS active | 50 | 70 |
 | LAN8742A, 100BASE-TX, line drivers included | 80 | 100 |
 | iCE40UP5K through its 1.2 V LDO, banks included | 30 | 60 |
-| LEDs (STATUS, PASS, FAIL, LINK, spare, 2 RJ45), W25N02KV, XL3485 | 25 | 50 |
+| LEDs (STATUS, PASS, FAIL, LINK, spare, 2 RJ45), W25N02KV, THVD2450 | 25 | 50 |
 | Crystals, INA226, EEPROM, translators (MCU side), pull-ups | 10 | 20 |
 | **Total +3V3** | **345 (1.1 W)** | **550 (1.8 W)** |
 
@@ -356,7 +356,7 @@ From the schematic review of 2026-11-27:
 - **PoE MPS**: R14 loads the 12 V output with 12 mA (DP5700 minimum 10 mA), only ~4 mA at 48 V on the PSE side against the 10 mA 802.3 maintain power signature. To measure on the prototype with VIN_EXT winning the OR-ing: if the PSE drops power, the fallback to PoE is no longer seamless.
 - **IMON** of the VIN_BUS switches saturates above ~1 A total; the fault level (2.15–2.45 V at PF7) stays distinct.
 - **SWCLK, TDI and UART_TX** are always driven by their translators once TGT_VCC is present, also with the probe idle.
-- **RS-485**: no fail-safe bias on the probe; the bus terminations or a biased node provide it.
+- **RS-485**: no fail-safe bias on the probe. The THVD2450 receiver reads an idle or open bus as high; other nodes may still need the bias of a terminated node.
 - **Back-powering rule**: the firmware keeps every line to the Bornier bus low or high-Z while +3V3_BUS is off, and every shield line while +3V3_OUT is off. The pull-ups already go to those rails, not to +3V3.
 
 ## Software principle
@@ -458,7 +458,7 @@ Goal: someone who receives an Archet and owns no debug probe can still program i
 | SPI1 | PA5 SCK, PA7 MOSI, PA4 NSS, PA6 MISO (output) | ULPI_CK, RMII_CRS_DV, TGT_VSET, CC_HS_SENSE | **both PHYs in reset**: no clock on ULPI_CK, CRS_DV weakly high (MODE2 strap pull-up). MISO high drives the CC lines through R7/R8 (≤ 30 µA each): the source still sees Rd (attach below 2.6 V), and the CC reading only matters once the firmware runs |
 | SPI3 | PC10 SCK, PC12 MOSI, PA15 NSS, PC11 MISO (output) | SYS_SDA, SHIELD_UART_TX, BUS_LATCH, SYS_SCL | SYS_SDA held high by its pull-up, no clock. MISO drives SYS_SCL: I²C slaves only, idle |
 | SPI4 | PE12 SCK, PE14 MOSI, PE11 NSS, PE13 MISO (output) | SHIELD_SWCLK, LED_PASS, FLASH_NCS, SHIELD_SWDIO | nothing drives SHIELD_SWCLK. NSS pulled up: flash deselected. MISO drives SHIELD_SWDIO: a target only drives it in an SWD read |
-| FDCAN1 | PD0 RX, PD1 TX (output, recessive high) | **FIELD_RX/TX, wanted interface** | FIELD_SEL_485 pulled down: TCAN3413 active, RX mux on CAN. A host on J_FIELD reaches the bootloader over CAN (bitrates: AN5405). PD1 also reaches the XL3485 DI, harmless with DE pulled down |
+| FDCAN1 | PD0 RX, PD1 TX (output, recessive high) | **FIELD_RX/TX, wanted interface** | FIELD_SEL_485 pulled down: TCAN3413 active, RX mux on CAN. A host on J_FIELD reaches the bootloader over CAN (bitrates: AN5405). PD1 also reaches the THVD2450 D input, harmless with DE pulled down |
 | DFU | PA11/PA12 | USB_FS_DM/DP (J2) | 100 kΩ pull-downs on D+/D−: known level when J2 is unplugged |
 
 Rules that follow, for every later sheet:
@@ -508,7 +508,7 @@ Unit price for 1 to 9 parts (first runs of 2 to 5 boards). Type: BASIC and PREF 
 | 1.8 V LDO (USB3320C VDD18, from +5V) | ME6211C18M5G-N | C236671 | ext | 26,442 | $0.06 |
 | USB3320C RBIAS 8.06 kΩ 1 % (0402) | 0402WGF8061TCE | C25923 | ext | 32,211 | $0.001 |
 | CAN FD transceiver (3.3 V supply) | TCAN3413DR | C22433320 | ext | 1,806 | $0.94 |
-| RS-485 transceiver, 3.3 V half duplex | XL3485 | C609753 | ext | 40,090 | $0.15 |
+| RS-485 transceiver, 3.3 V half duplex, ±70 V bus fault | THVD2450DR | C2672621 | ext | 22,517 | $0.87 |
 | Field bus RX mux (CAN / RS-485) | 74LVC1G157GW,125 | C135822 | ext | 10,352 | $0.21 |
 | Field bus ESD | NUP2105LT1G | C14486 | ext | 124,230 | $0.08 |
 | Field bus termination switch | MSK12C02 | C431540 | ext | 173,785 | $0.05 |
@@ -540,10 +540,10 @@ Out of stock on 2026-11-25: DP9700-AT, DP83825IRMQR, CH224K.
 
 | | 2 boards | 5 boards |
 |---|---|---|
-| Active parts | ~$62 | ~$62 |
+| Active parts | ~$63 | ~$63 |
 | Passives and small connectors | ~$10 | ~$10 |
 | Extended-part fees (~23 parts × $3 = $69 per order) | ~$35 | ~$14 |
-| **Total** | **~$107** | **~$86** |
+| **Total** | **~$108** | **~$87** |
 
 Fixed costs (PCB, assembly setup, stencil) are also divided by the run size. Consequences:
 

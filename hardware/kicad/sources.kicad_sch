@@ -23432,7 +23432,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "100nF"
+		(property "Value" "1µF 50V"
 			(at 180.34 88.9 0)
 			(effects
 				(font
@@ -23441,7 +23441,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Capacitor_SMD:C_0402_1005Metric"
+		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
 			(at 177.8 87.63 0)
 			(effects
 				(font
@@ -23461,7 +23461,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" "Charge pump, 0.1 µF minimum between VCAP and ANODE"
+		(property "Description" "Charge pump, 0.1 µF minimum between VCAP and ANODE. 1 µF: ~0.5 µF left at the 12-13 V VCAP-ANODE bias (100 nF 0402 keeps ~65 nF); the 300 µA pump reaches its 6.6 V UVLO in ~22 ms, body diode meanwhile (the sims assume it)"
 			(at 177.8 87.63 0)
 			(effects
 				(font
@@ -23471,7 +23471,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C307331"
+		(property "LCSC" "C15849"
 			(at 177.8 87.63 0)
 			(effects
 				(font
@@ -24306,7 +24306,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "100nF"
+		(property "Value" "1µF 50V"
 			(at 180.34 160.02 0)
 			(effects
 				(font
@@ -24315,7 +24315,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Capacitor_SMD:C_0402_1005Metric"
+		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
 			(at 177.8 158.75 0)
 			(effects
 				(font
@@ -24335,7 +24335,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" "Charge pump, 0.1 µF minimum between VCAP and ANODE"
+		(property "Description" "Charge pump, 0.1 µF minimum between VCAP and ANODE. 1 µF: ~0.5 µF left at the 12-13 V VCAP-ANODE bias (100 nF 0402 keeps ~65 nF); the 300 µA pump reaches its 6.6 V UVLO in ~22 ms, body diode meanwhile (the sims assume it)"
 			(at 177.8 158.75 0)
 			(effects
 				(font
@@ -24345,7 +24345,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C307331"
+		(property "LCSC" "C15849"
 			(at 177.8 158.75 0)
 			(effects
 				(font
@@ -25180,7 +25180,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "100nF"
+		(property "Value" "1µF 50V"
 			(at 180.34 231.14 0)
 			(effects
 				(font
@@ -25189,7 +25189,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Capacitor_SMD:C_0402_1005Metric"
+		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
 			(at 177.8 229.87 0)
 			(effects
 				(font
@@ -25209,7 +25209,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" "Charge pump, 0.1 µF minimum between VCAP and ANODE"
+		(property "Description" "Charge pump, 0.1 µF minimum between VCAP and ANODE. 1 µF: ~0.5 µF left at the 12-13 V VCAP-ANODE bias (100 nF 0402 keeps ~65 nF); the 300 µA pump reaches its 6.6 V UVLO in ~22 ms, body diode meanwhile (the sims assume it)"
 			(at 177.8 229.87 0)
 			(effects
 				(font
@@ -25219,7 +25219,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C307331"
+		(property "LCSC" "C15849"
 			(at 177.8 229.87 0)
 			(effects
 				(font

@@ -26833,7 +26833,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "XL3485"
+		(property "Value" "THVD2450DR"
 			(at 303.53 149.86 0)
 			(effects
 				(font
@@ -26862,7 +26862,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" "RS-485 half duplex, 3.3 V, MAX3485 pinout. Receiver always on (/RE low); A = H, B = L"
+		(property "Description" "RS-485 half duplex, 3.3 V, MAX3485 pinout, 50 Mbit/s. ±70 V bus fault (24 V wired to H or L by mistake), ±25 V common mode, fail-safe receiver. Receiver always on (/RE low); A = H, B = L"
 			(at 299.72 129.54 0)
 			(effects
 				(font
@@ -26872,7 +26872,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C609753"
+		(property "LCSC" "C2672621"
 			(at 299.72 129.54 0)
 			(effects
 				(font

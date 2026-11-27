@@ -83,7 +83,9 @@ def ideal_diode(n, src, ctl, fet, cap, cin, note, out="VSYS_OR"):
            f"Ideal diode {n} switch; 60 V, 8.1 mΩ at 10 V: 73 mW at 3 A")
     c.part(ctl, IDEAL[0], IDEAL[1], IDEAL[2], IDEAL[3],
            {1: f"VCAP{n}", 2: "GND", 3: src, 4: out, 5: f"GATE{n}", 6: src}, note)
-    c.C(cap, "100nF", src, f"VCAP{n}", note="Charge pump, 0.1 µF minimum between VCAP and ANODE")
+    c.C(cap, "1µF 50V", src, f"VCAP{n}", note="Charge pump, 0.1 µF minimum between VCAP and ANODE. 1 µF: ~0.5 µF left "
+        "at the 12-13 V VCAP-ANODE bias (100 nF 0402 keeps ~65 nF); the 300 µA pump reaches its 6.6 V UVLO in ~22 ms, "
+        "body diode meanwhile (the sims assume it)")
     if cin:
         c.C(cin, "1µF 50V", src, "GND", note="Local decoupling of the source cable")
 
@@ -672,7 +674,7 @@ c.part("D15", *SCHOTTKY[:3], SCHOTTKY[3], {1: "BUZ_P", 2: "BUZ_N"}, "Flyback acr
 c.part("Q7", "Transistor_FET:2N7002", "2N7002", "Package_TO_SOT_SMD:SOT-23", "C8545",
        {1: "BUZZER", 2: "GND", 3: "BUZ_N"}, "Low-side switch, TIM17_CH1 (PB9)")
 c.R("R74", "10k", "BUZZER", "GND", note="Silent while PB9 is I2C1 SDA in the ROM bootloader")
-# Field bus: TCAN3413 (CAN FD) and XL3485 (RS-485) share J9, the termination and the ESD; FIELD_SEL_485 picks one.
+# Field bus: TCAN3413 (CAN FD) and THVD2450 (RS-485) share J9, the termination and the ESD; FIELD_SEL_485 picks one.
 c.part("U28", "Interface_CAN_LIN:TJA1051T-3", "TCAN3413DR", "Package_SO:SOIC-8_3.9x4.9mm_P1.27mm", "C22433320",
        {1: "FIELD_TX", 2: "GND", 3: "+3V3", 4: "CAN_RXD", 5: "+3V3", 6: "FIELD_L", 7: "FIELD_H",
         8: "FIELD_SEL_485"}, "CAN FD 5 Mbit/s, 3.3 V supply (ISO 11898-2, mixes with 5 V nodes): independent "
@@ -680,9 +682,10 @@ c.part("U28", "Interface_CAN_LIN:TJA1051T-3", "TCAN3413DR", "Package_SO:SOIC-8_3
        "is STB: high (RS-485 mode) = standby, driver off")
 c.C("C101", "100nF", "+3V3", "GND", note="U28 VCC")
 c.C("C102", "100nF", "+3V3", "GND", note="U28 VIO")
-c.part("U29", "Interface_UART:MAX3485", "XL3485", "Package_SO:SOIC-8_3.9x4.9mm_P1.27mm", "C609753",
+c.part("U29", "Interface_UART:MAX3485", "THVD2450DR", "Package_SO:SOIC-8_3.9x4.9mm_P1.27mm", "C2672621",
        {1: "RS485_RO", 2: "GND", 3: "RS485_DE", 4: "FIELD_TX", 5: "GND", 6: "FIELD_H", 7: "FIELD_L", 8: "+3V3"},
-       "RS-485 half duplex, 3.3 V, MAX3485 pinout. Receiver always on (/RE low); A = H, B = L")
+       "RS-485 half duplex, 3.3 V, MAX3485 pinout, 50 Mbit/s. ±70 V bus fault (24 V wired to H or L by mistake), "
+       "±25 V common mode, fail-safe receiver. Receiver always on (/RE low); A = H, B = L")
 c.C("C103", "100nF", "+3V3", "GND", note="U29")
 c.R("R75", "10k", "RS485_DE", "GND", note="RS-485 driver off until the firmware drives PG15")
 c.part("U30", "Archet:74LVC1G157", "74LVC1G157GW", "Package_TO_SOT_SMD:SOT-363_SC-70-6", "C135822",
