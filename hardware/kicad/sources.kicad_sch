@@ -26014,7 +26014,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
+		(property "Description" "Layout: at the Q1 drain. A short on VIN_EXT turns Q1 off with ~120 A reverse (sim/oring.py): 31 V on the drain with it, 83 V without (LM74700 cathode-anode 75 V)"
 			(at 284.48 120.65 0)
 			(effects
 				(font

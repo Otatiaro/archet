@@ -104,7 +104,8 @@ ideal_diode(2, "VBUS_USB", "U2", "Q2", "C3", "C4", "Ideal diode, USB-C VBUS afte
 ideal_diode(3, "POE_12V", "U3", "Q3", "C5", "C6", "Ideal diode, PoE module 12 V output")
 c.part("C7", "Device:C_Polarized", "47µF 63V", "Capacitor_SMD:CP_Elec_6.3x7.7", "C46550423",
        {1: "VSYS_OR", 2: "GND"}, "Damps the hot-plug ringing of the cables and the ceramics")
-c.C("C8", "1µF 50V", "VSYS_OR", "GND")
+c.C("C8", "1µF 50V", "VSYS_OR", "GND", note="Layout: at the Q1 drain. A short on VIN_EXT turns Q1 off with ~120 A reverse "
+    "(sim/oring.py): 31 V on the drain with it, 83 V without (LM74700 cathode-anode 75 V)")
 sense("R1", "R2", "C9", "VIN_EXT_P", "VIN_EXT_SENSE")
 sense("R3", "R4", "C10", "VBUS_USB", "VBUS_USB_SENSE")
 sense("R5", "R6", "C11", "POE_12V", "POE_12V_SENSE")
@@ -147,8 +148,8 @@ c.part("Q4", "Transistor_FET:FDS9435A", "AO4407A", "Package_SO:SOIC-8_3.9x4.9mm_
        "Sink switch, -30 V, 18.5 mΩ max at -4.5 V (5 V VBUS), 11.5 mΩ at -10 V: 0.17-0.22 W at 3 A. Keeps the VSYS capacitors off VBUS until the "
        "contract (inrush); its body diode only conducts toward the connector, the LM74700 blocks VSYS")
 c.R("R10", "100k", "VBUS_CONN", "VBUS_GATE", note="Gate off when VBUS_EN_SNK is released")
-c.C("C134", "100nF", "VBUS_CONN", "VBUS_GATE", note="Gate-source: Q4 turns on in ~1 ms (R11), not ~25 µs into "
-    "the VSYS capacitors. Holds Vgs at 0 on a hot plug (gate-drain would turn it on)")
+c.C("C134", "100nF", "VBUS_CONN", "VBUS_GATE", note="Gate-source: Q4 turns on ~0.7 ms after VBUS_EN_N, VSYS rises in "
+    "~140 µs, 3 A peak at 5 V (6.6 A without C134, sim/vbus_switch.py). Holds Vgs at 0 on a hot plug")
 c.R("R11", "10k", "VBUS_GATE", "VBUS_EN_N", note="Vgs = -0.91 VBUS: -18.2 V at 20 V (±25 V max), -4.5 V at 5 V")
 c.part("D3", "Device:D_Dual_CommonAnode_KKA", "ESDA25W", "Package_TO_SOT_SMD:SOT-323_SC-70", "C2935152",
        {1: "CC2", 2: "CC1", 3: "GND"}, "CC lines ESD, 25 V breakdown: above the 22 V short-to-VBUS rating")
@@ -245,7 +246,8 @@ c.C("C118", "100nF", "VSYS", "GND", note="BIAS")
 for ref in ("C119", "C120"):
     c.C(ref, "10µF 50V", "VSYS", "GND", fp=C1206, note="Boost input, against L5 and R116")
 for ref in ("C121", "C122", "C123", "C124"):
-    c.C(ref, "10µF 50V", "VIN_BUS", "GND", fp=C1206, note="Boost output: ~3 µF each at 24 V DC bias")
+    c.C(ref, "10µF 50V", "VIN_BUS", "GND", fp=C1206, note="Boost output: ~3 µF each at 24 V DC bias"
+        + ("; layout: at the Q10 drain (VIN_EXT short, sim/oring.py)" if ref == "C121" else ""))
 c.R("R120", "10k", "BOOST_EN", "BOOST_UVLO", note="3.3 V x 22/32 = 2.27 V, above the 1.5 V threshold")
 c.R("R121", "22k", "BOOST_UVLO", "GND", note="Boost off while the MCU pin is high-Z")
 c.part("Q9", "Transistor_FET:2N7002", "2N7002", "Package_TO_SOT_SMD:SOT-23", "C8545",

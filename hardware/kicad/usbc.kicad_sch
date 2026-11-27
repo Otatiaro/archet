@@ -23684,7 +23684,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" "Gate-source: Q4 turns on in ~1 ms (R11), not ~25 µs into the VSYS capacitors. Holds Vgs at 0 on a hot plug (gate-drain would turn it on)"
+		(property "Description" "Gate-source: Q4 turns on ~0.7 ms after VBUS_EN_N, VSYS rises in ~140 µs, 3 A peak at 5 V (6.6 A without C134, sim/vbus_switch.py). Holds Vgs at 0 on a hot plug"
 			(at 172.72 57.15 0)
 			(effects
 				(font

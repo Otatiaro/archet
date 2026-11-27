@@ -253,7 +253,7 @@ VIN_EXT (10.8–24 V)    ┬─ LM74700 ──┘ SMBJ24CA│  (36 V, 3 A)      
 
 - **Priority: highest voltage wins**, with no control logic: VIN_EXT 24 V > PD 15–20 V > PoE 12 V > USB 5 V in the usual cases. A forced priority would need back-to-back FETs per source (an ideal diode with EN low still conducts through the body diode of its FET); none of the cases below justifies it. The firmware identifies the active source from the ADC inputs (VIN_EXT, VBUS, PoE 12 V, VSYS) and derives the budget from it.
 - **Three ideal diodes**, USB included: the PD sink P-MOS alone would back-feed the host VBUS through its body diode as soon as VSYS exceeds 5 V.
-- **LMR33630 rather than TPS5430**: the TPS5430 needs 5.5 V and would not run on a 5 V USB port. 36 V, 1.5 × the 24 V maximum: the SMBJ24CA only clamps at 38.9 V at its full rated surge current (15.5 A), an EMC test case; on a bench it only conducts on hot-plug ringing, at low current, around 27–30 V. No basic or preferred buck fits (TPS54331: 28 V, too close to the TVS breakdown). Synchronous, it runs up to ~98 % duty: on 5 V USB, +5V ≈ 4.8 V, enough for the TLV62569 (2.5–5.5 V); 5V_OUT stays off.
+- **LMR33630 rather than TPS5430**: the TPS5430 needs 5.5 V and would not run on a 5 V USB port. 36 V, 1.5 × the 24 V maximum: the SMBJ24CA only clamps at 38.9 V at its full rated surge current (15.5 A), an EMC test case; on a bench it only conducts on hot-plug ringing, at low current, around 27–30 V. No basic or preferred buck fits (TPS54331: 28 V, too close to the TVS breakdown). Synchronous, it runs up to ~98 % duty: on 5 V USB, +5V is 4.6 V typical and 4.1 V worst case ([`hardware/sim/buck5.py`](../hardware/sim/buck5.py)), enough for the TLV62569 (2.5–5.5 V); 5V_OUT stays off.
 - **+3V3_AUX separate from +3V3**: a shield or target short never pulls the probe rail down.
 - **VIN_BUS**: VIN_EXT through a fourth ideal diode (U52 LM74700 + Q10, < 10 mW at 1 A; ~2 µA reverse leakage, where a Schottky would lift VIN_EXT_P from the boost output and fake a VIN_EXT), or the boost when VIN_EXT is absent. The boost enable is gated in hardware by VIN_EXT presence: with a 12 V VIN_EXT, the 24 V boost would otherwise take over.
 - **Boost: LM5155 controller** (3.5–45 V input), external 60 V N-MOS, Schottky and sense resistor. Fed from VSYS, it takes the whole source budget: no detour through the +5V rail. Current sense sized for ~4 A peak: ~0.5 A at 24 V from 5 V, ~1 A (the two VIN_BUS pins) from 12 V and above. 10 µH inductor FXL1040-100-M (Isat 8.5 A), 15 mΩ sense, 24.5 V out, ~430 kHz; loop and switching simulated by `hardware/sim/boost.py`. Disabled, it passes VSYS to VIN_BUS through its inductor and diode: with a 20 V PD charger and a 12 V VIN_EXT, VIN_BUS is then fed by the charger, which the VSYS INA226 counts. The integrated MT3608B and SX1308 stop at 24 V input, with no margin; the TPS55340 has too little stock.
@@ -295,7 +295,7 @@ On +5V directly: buzzer (~95 mA during a beep), negligible against the 3 A rail.
 
 Efficiencies: TLV62569 ~90 %, LMR33630 ~90 %, DP5700 ~87 % *(to check)*. **Probe: 1.4 W typical, 2.1 W max at VSYS.** Target supply: 1 A max (5.6 W at VSYS at 5 V); 300 mA (1.7 W) reserved by default, anything above is taken from the shield and VIN_BUS share by the firmware.
 
-The +5V rail is sized for 3 A (15 W, the LMR33630 rating: thermal to check at schematic, ESOP-8 with exposed pad). After the probe and the target (~3.5 W on +5V), **11.5 W remain on +5V for 5V_OUT and 3V3_OUT**. VIN_BUS does not go through it: the boost draws on VSYS.
+The +5V rail is sized for 3 A (15 W, the LMR33630 rating; ~1.25 W of losses at 3 A at maximum RDS(on), +54 °C on the JEDEC 42.9 °C/W, ESOP-8 with exposed pad). After the probe and the target (~3.5 W on +5V), **11.5 W remain on +5V for 5V_OUT and 3V3_OUT**. VIN_BUS does not go through it: the boost draws on VSYS.
 
 Remaining at VSYS after the probe and the target (3.8 W max), shared between the shield (≤ 11.5 W) and VIN_BUS:
 
@@ -307,9 +307,28 @@ Remaining at VSYS after the probe and the target (3.8 W max), shared between the
 | USB PD 15–20 V | negotiated contract, up to 60 W | contract − 3.8 W |
 | PoE af (12.95 W at the PD) | ~11 W | ~7 W |
 | PoE+ at (25.5 W at the PD) | ~22 W | ~18 W |
-| VIN_EXT | supply rating, configured | shield ≤ 11.5 W; VIN_BUS straight from VIN_EXT, 2 × 480 mA |
+| VIN_EXT | supply rating, configured | shield ≤ 11.5 W; VIN_BUS straight from VIN_EXT, 2 × 525 mA (378–672 mA at the corners) |
 
 Under an af PSE (TYP2-DET open) the probe takes the 13 W budget. This table is to be published in the shield documentation.
+
+### Power simulations
+
+Scripts in [`hardware/sim/`](../hardware/sim/), run with KiCad's Python (ngspice through `ngs.py`, or datasheet equations at the tolerance corners). Each one asserts its pass criteria.
+
+| Script | Checks | Result |
+|---|---|---|
+| `vbus_switch.py` | Q4 (AO4407A, VDMOS fitted to the datasheet) turn-on into VSYS, hot plug, PD 5 → 20 V | 3 A / 4.5 W peak at 5 V (×213 inside the SOA), 24 A at 20 V (×12.5); hot plug keeps Vgs above −0.1 V; 2.5 A on the PD step |
+| `oring.py` | LM74700 handover, PD step with PoE feeding, VIN_EXT shorted | USB-C pulled: VSYS ≥ 11.9 V on PoE; 2.2 A back into PoE for < 1 µs; short: ~120 A reverse for < 1 µs (IDM 156 A), 31 V on the drain |
+| `buck5.py` | LMR33630 ripple, peak and valley vs limits, COUT vs eq. 6, dropout | peak 3.7 A at 36 V with L −20 % (ISC 3.85 A min); 3.38 A available; 61 µF effective vs 60–65 µF; ±5 % on a 2 A step |
+| `sequence.py` | iCE40 VCC/VCCPLL → SPI_VCCIO1/VPP_2V5, USB3320 VDD18 → VDDIO | VCCPLL ≥ 0.65 V when +3V3 starts (0.5 V required); +1V8 up first |
+| `efuse.py` | TPS259531, TPS2553, TPS27S100B limits and start-up | 202 mA into 470 µF at 0.42 V/ms; +3V3_BUS charges 107 µF without limiting |
+
+Layout rules from these: **C8 at the Q1 drain** and **C121 at the Q10 drain** (without a local capacitor the drain rings to 83 V on a VIN_EXT short, LM74700 cathode–anode 75 V).
+
+Residual points:
+
+- Both shield rails at their maximum limits (2.19 A + 1.12 A) plus the probe and the default target draw 3.7 A from a buck guaranteed for 3.38 A. The 11.5 W shield share is a firmware rule, enforced on INA_ALERT.
+- The ME6211 gives no turn-on waveform. If it wakes late (CE at 1.0 V), +1V2 can step faster than the iCE40's 10 V/ms ramp limit. VCCPLL behind its RC filter ramps under 0.6 V/ms, as on Lattice's own boards.
 
 ### Safety rules for shield design
 
@@ -321,7 +340,7 @@ Under an af PSE (TYP2-DET open) the probe takes the 13 W budget. This table is t
 
 From the schematic review of 2026-11-27:
 
-- **+5V and 5V_OUT on a 5 V USB source** sit at ~4.4–5.25 V (cable drop, buck in dropout); 5V_OUT stays off there anyway.
+- **+5V and 5V_OUT on a 5 V USB source** sit at 4.1–4.6 V (cable drop, buck in dropout at 98 % duty); 5V_OUT stays off there anyway.
 - **TGT_VSUP** ceiling 5.04 V nominal, 4.90 V worst case (buffered DAC range), floor 1.65 V (translators).
 - **TVS clamp**: the SMBJ24CA clamps at 38.9 V only at its full surge current, above the 36 V of the LMR33630; accepted for a bench supply (see Sources).
 - **IMON** of the VIN_BUS switches saturates above ~1 A total; the fault level (2.15–2.45 V at PF7) stays distinct.

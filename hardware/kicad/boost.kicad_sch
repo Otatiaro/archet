@@ -25600,7 +25600,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" "Boost output: ~3 µF each at 24 V DC bias"
+		(property "Description" "Boost output: ~3 µF each at 24 V DC bias; layout: at the Q10 drain (VIN_EXT short, sim/oring.py)"
 			(at 247.65 69.85 0)
 			(effects
 				(font
