@@ -311,6 +311,8 @@ c.part("FB1", "Device:FerriteBead_Small", "600Ω@100MHz", "Inductor_SMD:L_0603_1
 c.C("C45", "1µF", "VDDA", "GND", note="VDDA/VREF+ bulk, datasheet 1 µF")
 c.C("C46", "100nF", "VDDA", "GND", note="VDDA/VREF+ HF")
 c.C("C47", "100nF", "+3V3", "GND", note="VDD33USB decoupling (internal FS PHY: ROM DFU on J5)")
+c.R("R175", "33", "PPS", "PPS_IN", note="PPS loopback PG8 -> PA0 (TIM2_ETR). Not fitted if TIM2 takes the ETH PPS "
+    "as an internal trigger (RM0468)")
 c.R("R21", "22k", "BOOT0", "GND", note="BOOT0 low: boot from flash. With 5 V on J5 or J6 through 10k: "
     "3.4 V, ROM bootloader (BOOT0 rated 9 V)")
 
@@ -519,6 +521,8 @@ for q, r, net in (("Q5", "R53", "TGT_NRST"), ("Q6", "R54", "TGT_IO0")):
     c.part(q, "Transistor_FET:2N7002", "2N7002", "Package_TO_SOT_SMD:SOT-23", "C8545",
            {1: net + "_3V3", 2: "GND", 3: net}, "Gate high = line pulled low")
     c.R(r, "10k", net + "_3V3", "GND", note="Line released while the iCE40 is unconfigured")
+c.R("R174", "10k", "TGT_NRST", "TGT_NRST_SENSE", note="nRST readback on PB4 (FT): limits injection from a "
+    "5 V target to 0.2 mA")
 # Target VCC sense: PF11 (ADC1_INP2); 200 kΩ also discharges TGT_VCC when no target is connected
 c.R("R55", "100k", "TGT_VCC", "VTREF_SENSE", note="5.5 V -> 2.75 V")
 c.R("R56", "100k", "VTREF_SENSE", "GND")

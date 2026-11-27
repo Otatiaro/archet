@@ -24562,6 +24562,54 @@
 		(uuid "bb3c37ac-26f1-5d6c-bb40-f1ae0a45d963")
 	)
 	(symbol
+		(lib_id "power:PWR_FLAG")
+		(at 134.62 50.8 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "a317e163-3402-5490-81db-cfa9950c3f04")
+		(property "Reference" "#FLGETH12"
+			(at 134.62 50.8 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "PWR_FLAG"
+			(at 134.62 46.99 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Footprint" ""
+			(at 134.62 50.8 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "188f35b1-7c41-5499-a116-4404227436a6")
+		)
+		(instances
+			(project "archet"
+				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/2cfffacd-908b-505d-9f15-9b4035a92679"
+					(reference "#FLGETH12")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "Device:C")
 		(at 129.54 54.61 0)
 		(unit 1)
@@ -24651,8 +24699,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "a317e163-3402-5490-81db-cfa9950c3f04")
-		(property "Reference" "#PWRETH12"
+		(uuid "24456001-9f84-597c-885a-b77ad4ad3bd1")
+		(property "Reference" "#PWRETH13"
 			(at 129.54 60.96 0)
 			(effects
 				(font
@@ -24679,12 +24727,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "188f35b1-7c41-5499-a116-4404227436a6")
+			(uuid "837ae753-3373-5174-a621-9617f7373ba3")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/2cfffacd-908b-505d-9f15-9b4035a92679"
-					(reference "#PWRETH12")
+					(reference "#PWRETH13")
 					(unit 1)
 				)
 			)
@@ -24780,8 +24828,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "24456001-9f84-597c-885a-b77ad4ad3bd1")
-		(property "Reference" "#PWRETH13"
+		(uuid "21421c5d-5530-5736-970a-f0a97b8e5be9")
+		(property "Reference" "#PWRETH14"
 			(at 139.7 60.96 0)
 			(effects
 				(font
@@ -24808,12 +24856,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "837ae753-3373-5174-a621-9617f7373ba3")
+			(uuid "2cf39a4e-5bfb-5eda-aad0-051c042689f1")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/2cfffacd-908b-505d-9f15-9b4035a92679"
-					(reference "#PWRETH13")
+					(reference "#PWRETH14")
 					(unit 1)
 				)
 			)
@@ -24839,8 +24887,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "21421c5d-5530-5736-970a-f0a97b8e5be9")
-		(property "Reference" "#PWRETH14"
+		(uuid "ddb9d54f-e8a8-51b6-92fe-3cbba38f7fa5")
+		(property "Reference" "#PWRETH15"
 			(at 152.4 147.32 0)
 			(effects
 				(font
@@ -24867,12 +24915,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "2cf39a4e-5bfb-5eda-aad0-051c042689f1")
+			(uuid "cbf03b9f-ea7a-5d7a-bfde-2ab67fcbd513")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/2cfffacd-908b-505d-9f15-9b4035a92679"
-					(reference "#PWRETH14")
+					(reference "#PWRETH15")
 					(unit 1)
 				)
 			)
@@ -25434,8 +25482,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "ddb9d54f-e8a8-51b6-92fe-3cbba38f7fa5")
-		(property "Reference" "#PWRETH15"
+		(uuid "d9d97262-3f4d-58ee-b98c-af8db9560b34")
+		(property "Reference" "#PWRETH16"
 			(at 177.8 33.02 0)
 			(effects
 				(font
@@ -25462,12 +25510,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "cbf03b9f-ea7a-5d7a-bfde-2ab67fcbd513")
+			(uuid "029c93d2-504c-5122-9279-a68e6cc71a5b")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/2cfffacd-908b-505d-9f15-9b4035a92679"
-					(reference "#PWRETH15")
+					(reference "#PWRETH16")
 					(unit 1)
 				)
 			)
@@ -25584,8 +25632,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "d9d97262-3f4d-58ee-b98c-af8db9560b34")
-		(property "Reference" "#PWRETH16"
+		(uuid "1916ba90-f021-55ba-91b4-fb26a5e01128")
+		(property "Reference" "#PWRETH17"
 			(at 190.5 55.88 0)
 			(effects
 				(font
@@ -25612,12 +25660,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "029c93d2-504c-5122-9279-a68e6cc71a5b")
+			(uuid "22f23a71-2fc8-509c-bb0d-04397ded3b90")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/2cfffacd-908b-505d-9f15-9b4035a92679"
-					(reference "#PWRETH16")
+					(reference "#PWRETH17")
 					(unit 1)
 				)
 			)
@@ -25723,8 +25771,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "1916ba90-f021-55ba-91b4-fb26a5e01128")
-		(property "Reference" "#PWRETH17"
+		(uuid "26fd0da9-67e4-5685-a510-e04735843e9f")
+		(property "Reference" "#PWRETH18"
 			(at 187.96 129.54 0)
 			(effects
 				(font
@@ -25751,12 +25799,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "22f23a71-2fc8-509c-bb0d-04397ded3b90")
+			(uuid "8f089b99-d34c-5193-b3dc-d266e1e75bd7")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/2cfffacd-908b-505d-9f15-9b4035a92679"
-					(reference "#PWRETH17")
+					(reference "#PWRETH18")
 					(unit 1)
 				)
 			)
@@ -26078,8 +26126,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "26fd0da9-67e4-5685-a510-e04735843e9f")
-		(property "Reference" "#PWRETH18"
+		(uuid "30c3cebb-f171-5feb-91cc-2bc70a63e66b")
+		(property "Reference" "#PWRETH19"
 			(at 185.42 157.48 0)
 			(effects
 				(font
@@ -26106,12 +26154,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "8f089b99-d34c-5193-b3dc-d266e1e75bd7")
+			(uuid "8bfece95-cbd3-507d-942e-f23b1b43beee")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/2cfffacd-908b-505d-9f15-9b4035a92679"
-					(reference "#PWRETH18")
+					(reference "#PWRETH19")
 					(unit 1)
 				)
 			)
@@ -26565,13 +26613,24 @@
 	(wire
 		(pts
 			(xy 139.7 50.8)
+			(xy 134.62 50.8)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "dc35059a-b05b-5e35-be65-4c62135c42ed")
+	)
+	(wire
+		(pts
+			(xy 134.62 50.8)
 			(xy 129.54 50.8)
 		)
 		(stroke
 			(width 0)
 			(type default)
 		)
-		(uuid "8b62f25d-0cad-5562-acf1-fd7f773ab6a0")
+		(uuid "ead372fb-6e57-5f54-af66-7497a156a556")
 	)
 	(wire
 		(pts

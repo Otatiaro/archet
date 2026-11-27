@@ -23317,6 +23317,54 @@
 			)
 		)
 	)
+	(symbol
+		(lib_id "power:PWR_FLAG")
+		(at 109.22 48.26 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "c12e2aee-1234-5bb7-9309-104cf901ea03")
+		(property "Reference" "#FLGTAR04"
+			(at 109.22 48.26 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "PWR_FLAG"
+			(at 109.22 44.45 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Footprint" ""
+			(at 109.22 48.26 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "cba4835f-19e5-5950-a45c-381c6018407f")
+		)
+		(instances
+			(project "archet"
+				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/73480f51-3b59-522d-a0bf-81f2ec177fba"
+					(reference "#FLGTAR04")
+					(unit 1)
+				)
+			)
+		)
+	)
 	(global_label "TGT_SWDIO_3V3"
 		(shape bidirectional)
 		(at 63.5 66.04 180)
@@ -23644,8 +23692,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "c12e2aee-1234-5bb7-9309-104cf901ea03")
-		(property "Reference" "#PWRTAR04"
+		(uuid "71dbedc7-5076-5138-b929-e47803bea7fe")
+		(property "Reference" "#PWRTAR05"
 			(at 78.74 81.28 0)
 			(effects
 				(font
@@ -23672,12 +23720,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "cba4835f-19e5-5950-a45c-381c6018407f")
+			(uuid "f67f3787-2f07-52e0-8673-d6a7be65f46d")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/73480f51-3b59-522d-a0bf-81f2ec177fba"
-					(reference "#PWRTAR04")
+					(reference "#PWRTAR05")
 					(unit 1)
 				)
 			)
@@ -23691,8 +23739,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "71dbedc7-5076-5138-b929-e47803bea7fe")
-		(property "Reference" "#PWRTAR05"
+		(uuid "07a3cb35-a88e-54a9-8555-e87ad90b7815")
+		(property "Reference" "#PWRTAR06"
 			(at 101.6 78.74 0)
 			(effects
 				(font
@@ -23719,12 +23767,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "f67f3787-2f07-52e0-8673-d6a7be65f46d")
+			(uuid "8b4f4d0f-718d-5675-bb37-30cf80b9b9a8")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/73480f51-3b59-522d-a0bf-81f2ec177fba"
-					(reference "#PWRTAR05")
+					(reference "#PWRTAR06")
 					(unit 1)
 				)
 			)
@@ -23838,8 +23886,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "07a3cb35-a88e-54a9-8555-e87ad90b7815")
-		(property "Reference" "#PWRTAR06"
+		(uuid "9d43d928-af54-5ed1-b0a3-6bbc2f51bb34")
+		(property "Reference" "#PWRTAR07"
 			(at 83.82 93.98 0)
 			(effects
 				(font
@@ -23866,12 +23914,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "8b4f4d0f-718d-5675-bb37-30cf80b9b9a8")
+			(uuid "6bea7200-cdd9-5eac-8980-d656bb7e8b3c")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/73480f51-3b59-522d-a0bf-81f2ec177fba"
-					(reference "#PWRTAR06")
+					(reference "#PWRTAR07")
 					(unit 1)
 				)
 			)
@@ -23988,8 +24036,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "9d43d928-af54-5ed1-b0a3-6bbc2f51bb34")
-		(property "Reference" "#PWRTAR07"
+		(uuid "42621c71-f2f2-50cb-ba5c-f6673069d295")
+		(property "Reference" "#PWRTAR08"
 			(at 88.9 104.14 0)
 			(effects
 				(font
@@ -24016,12 +24064,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "6bea7200-cdd9-5eac-8980-d656bb7e8b3c")
+			(uuid "a96681ef-58c4-5385-bc0f-7745e5082355")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/73480f51-3b59-522d-a0bf-81f2ec177fba"
-					(reference "#PWRTAR07")
+					(reference "#PWRTAR08")
 					(unit 1)
 				)
 			)
@@ -24117,8 +24165,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "42621c71-f2f2-50cb-ba5c-f6673069d295")
-		(property "Reference" "#PWRTAR08"
+		(uuid "4014ba1e-ecc6-53bb-8b4f-ba6ad910ff01")
+		(property "Reference" "#PWRTAR09"
 			(at 114.3 104.14 0)
 			(effects
 				(font
@@ -24145,12 +24193,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "a96681ef-58c4-5385-bc0f-7745e5082355")
+			(uuid "f65b969f-dac1-515b-8076-949f6eb4209b")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/73480f51-3b59-522d-a0bf-81f2ec177fba"
-					(reference "#PWRTAR08")
+					(reference "#PWRTAR09")
 					(unit 1)
 				)
 			)
@@ -24390,8 +24438,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "4014ba1e-ecc6-53bb-8b4f-ba6ad910ff01")
-		(property "Reference" "#PWRTAR09"
+		(uuid "bad549d8-7416-5ec5-8c65-fa83ce0a6762")
+		(property "Reference" "#PWRTAR10"
 			(at 86.36 121.92 0)
 			(effects
 				(font
@@ -24418,12 +24466,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "f65b969f-dac1-515b-8076-949f6eb4209b")
+			(uuid "1ef493c1-b6b1-5119-9608-c59815fc7a53")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/73480f51-3b59-522d-a0bf-81f2ec177fba"
-					(reference "#PWRTAR09")
+					(reference "#PWRTAR10")
 					(unit 1)
 				)
 			)
@@ -24437,8 +24485,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "bad549d8-7416-5ec5-8c65-fa83ce0a6762")
-		(property "Reference" "#PWRTAR10"
+		(uuid "f8672030-955d-5da0-805a-f40130b50e64")
+		(property "Reference" "#PWRTAR11"
 			(at 101.6 129.54 0)
 			(effects
 				(font
@@ -24465,12 +24513,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "1ef493c1-b6b1-5119-9608-c59815fc7a53")
+			(uuid "65c989c7-3a05-50b6-94cc-61c65bcbd38f")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/73480f51-3b59-522d-a0bf-81f2ec177fba"
-					(reference "#PWRTAR10")
+					(reference "#PWRTAR11")
 					(unit 1)
 				)
 			)
@@ -24584,8 +24632,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "f8672030-955d-5da0-805a-f40130b50e64")
-		(property "Reference" "#PWRTAR11"
+		(uuid "82fa8df0-b8ac-562f-98a1-139fc0ac7e93")
+		(property "Reference" "#PWRTAR12"
 			(at 83.82 144.78 0)
 			(effects
 				(font
@@ -24612,12 +24660,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "65c989c7-3a05-50b6-94cc-61c65bcbd38f")
+			(uuid "e2fcd344-6741-51c8-b36c-4fc0abf2415d")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/73480f51-3b59-522d-a0bf-81f2ec177fba"
-					(reference "#PWRTAR11")
+					(reference "#PWRTAR12")
 					(unit 1)
 				)
 			)
@@ -24734,8 +24782,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "82fa8df0-b8ac-562f-98a1-139fc0ac7e93")
-		(property "Reference" "#PWRTAR12"
+		(uuid "d24d5d37-e474-5185-ba18-d0a395a418e6")
+		(property "Reference" "#PWRTAR13"
 			(at 88.9 154.94 0)
 			(effects
 				(font
@@ -24762,12 +24810,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "e2fcd344-6741-51c8-b36c-4fc0abf2415d")
+			(uuid "2b60f0a6-eb2d-5ce4-b322-9d266529e55a")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/73480f51-3b59-522d-a0bf-81f2ec177fba"
-					(reference "#PWRTAR12")
+					(reference "#PWRTAR13")
 					(unit 1)
 				)
 			)
@@ -24863,8 +24911,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "d24d5d37-e474-5185-ba18-d0a395a418e6")
-		(property "Reference" "#PWRTAR13"
+		(uuid "5df4a913-fdda-5423-a0b5-5755e74fe344")
+		(property "Reference" "#PWRTAR14"
 			(at 114.3 154.94 0)
 			(effects
 				(font
@@ -24891,12 +24939,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "2b60f0a6-eb2d-5ce4-b322-9d266529e55a")
+			(uuid "fb55eaea-015e-55b2-90e9-395f0ad35806")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/73480f51-3b59-522d-a0bf-81f2ec177fba"
-					(reference "#PWRTAR13")
+					(reference "#PWRTAR14")
 					(unit 1)
 				)
 			)
@@ -25178,8 +25226,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "5df4a913-fdda-5423-a0b5-5755e74fe344")
-		(property "Reference" "#PWRTAR14"
+		(uuid "4b1cdfcc-181a-5449-a0ac-d2ef33c8014c")
+		(property "Reference" "#PWRTAR15"
 			(at 86.36 175.26 0)
 			(effects
 				(font
@@ -25206,12 +25254,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "fb55eaea-015e-55b2-90e9-395f0ad35806")
+			(uuid "2944f548-9ad3-5be8-be5b-9b5d42c6d903")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/73480f51-3b59-522d-a0bf-81f2ec177fba"
-					(reference "#PWRTAR14")
+					(reference "#PWRTAR15")
 					(unit 1)
 				)
 			)
@@ -25225,8 +25273,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "4b1cdfcc-181a-5449-a0ac-d2ef33c8014c")
-		(property "Reference" "#PWRTAR15"
+		(uuid "4961e35c-4698-5c1c-8539-b713bef2de80")
+		(property "Reference" "#PWRTAR16"
 			(at 101.6 180.34 0)
 			(effects
 				(font
@@ -25253,12 +25301,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "2944f548-9ad3-5be8-be5b-9b5d42c6d903")
+			(uuid "11ddfc63-3b73-535b-a4a2-1e1456e62751")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/73480f51-3b59-522d-a0bf-81f2ec177fba"
-					(reference "#PWRTAR15")
+					(reference "#PWRTAR16")
 					(unit 1)
 				)
 			)
@@ -25366,8 +25414,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "4961e35c-4698-5c1c-8539-b713bef2de80")
-		(property "Reference" "#PWRTAR16"
+		(uuid "fc46f94d-1527-5f18-b65a-474c2eb6b900")
+		(property "Reference" "#PWRTAR17"
 			(at 83.82 195.58 0)
 			(effects
 				(font
@@ -25394,12 +25442,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "11ddfc63-3b73-535b-a4a2-1e1456e62751")
+			(uuid "a3bea746-2e5c-5edf-868d-35b6dc5339c8")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/73480f51-3b59-522d-a0bf-81f2ec177fba"
-					(reference "#PWRTAR16")
+					(reference "#PWRTAR17")
 					(unit 1)
 				)
 			)
@@ -25516,8 +25564,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "fc46f94d-1527-5f18-b65a-474c2eb6b900")
-		(property "Reference" "#PWRTAR17"
+		(uuid "1731040c-6d10-5b92-ab38-082ae806d809")
+		(property "Reference" "#PWRTAR18"
 			(at 88.9 205.74 0)
 			(effects
 				(font
@@ -25544,12 +25592,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "a3bea746-2e5c-5edf-868d-35b6dc5339c8")
+			(uuid "43c8a443-e29e-5bb0-8df3-efc495801390")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/73480f51-3b59-522d-a0bf-81f2ec177fba"
-					(reference "#PWRTAR17")
+					(reference "#PWRTAR18")
 					(unit 1)
 				)
 			)
@@ -25645,8 +25693,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "1731040c-6d10-5b92-ab38-082ae806d809")
-		(property "Reference" "#PWRTAR18"
+		(uuid "e1c837a6-bc38-5e14-9640-0c027004872b")
+		(property "Reference" "#PWRTAR19"
 			(at 114.3 205.74 0)
 			(effects
 				(font
@@ -25673,12 +25721,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "43c8a443-e29e-5bb0-8df3-efc495801390")
+			(uuid "dbc4c4ac-c958-5a44-83bc-b99e217412b4")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/73480f51-3b59-522d-a0bf-81f2ec177fba"
-					(reference "#PWRTAR18")
+					(reference "#PWRTAR19")
 					(unit 1)
 				)
 			)
@@ -25805,8 +25853,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "e1c837a6-bc38-5e14-9640-0c027004872b")
-		(property "Reference" "#PWRTAR19"
+		(uuid "485c3589-c2d2-507f-9caf-1649fb661ef8")
+		(property "Reference" "#PWRTAR20"
 			(at 86.36 218.44 0)
 			(effects
 				(font
@@ -25833,12 +25881,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "dbc4c4ac-c958-5a44-83bc-b99e217412b4")
+			(uuid "5505e960-bf68-5ed1-a4be-127f5fa11e7c")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/73480f51-3b59-522d-a0bf-81f2ec177fba"
-					(reference "#PWRTAR19")
+					(reference "#PWRTAR20")
 					(unit 1)
 				)
 			)
@@ -25852,8 +25900,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "485c3589-c2d2-507f-9caf-1649fb661ef8")
-		(property "Reference" "#PWRTAR20"
+		(uuid "4ef8d32b-4fa5-5b69-88f0-6bf35e59c65f")
+		(property "Reference" "#PWRTAR21"
 			(at 101.6 226.06 0)
 			(effects
 				(font
@@ -25880,12 +25928,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "5505e960-bf68-5ed1-a4be-127f5fa11e7c")
+			(uuid "e07ab20d-73d4-5dfb-9a72-8284acdbc94f")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/73480f51-3b59-522d-a0bf-81f2ec177fba"
-					(reference "#PWRTAR20")
+					(reference "#PWRTAR21")
 					(unit 1)
 				)
 			)
@@ -26087,8 +26135,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "4ef8d32b-4fa5-5b69-88f0-6bf35e59c65f")
-		(property "Reference" "#PWRTAR21"
+		(uuid "63b28566-6ac4-55cc-9803-8c22ad3c2a68")
+		(property "Reference" "#PWRTAR22"
 			(at 78.74 256.54 0)
 			(effects
 				(font
@@ -26115,12 +26163,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "e07ab20d-73d4-5dfb-9a72-8284acdbc94f")
+			(uuid "719e1279-e23d-5b02-91e0-dc0fc98071ee")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/73480f51-3b59-522d-a0bf-81f2ec177fba"
-					(reference "#PWRTAR21")
+					(reference "#PWRTAR22")
 					(unit 1)
 				)
 			)
@@ -26144,8 +26192,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "63b28566-6ac4-55cc-9803-8c22ad3c2a68")
-		(property "Reference" "#PWRTAR22"
+		(uuid "c87ec3d9-348e-5762-8168-d753c003635b")
+		(property "Reference" "#PWRTAR23"
 			(at 104.14 254 0)
 			(effects
 				(font
@@ -26172,12 +26220,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "719e1279-e23d-5b02-91e0-dc0fc98071ee")
+			(uuid "6b468d59-d117-57d9-ae1a-52ac42bbb75d")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/73480f51-3b59-522d-a0bf-81f2ec177fba"
-					(reference "#PWRTAR22")
+					(reference "#PWRTAR23")
 					(unit 1)
 				)
 			)
@@ -26379,8 +26427,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "c87ec3d9-348e-5762-8168-d753c003635b")
-		(property "Reference" "#PWRTAR23"
+		(uuid "ee5b78e3-1228-5624-ba08-32b5fa57e9d9")
+		(property "Reference" "#PWRTAR24"
 			(at 78.74 281.94 0)
 			(effects
 				(font
@@ -26407,12 +26455,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "6b468d59-d117-57d9-ae1a-52ac42bbb75d")
+			(uuid "4d51d2d5-4bb9-5db4-b186-83137198c947")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/73480f51-3b59-522d-a0bf-81f2ec177fba"
-					(reference "#PWRTAR23")
+					(reference "#PWRTAR24")
 					(unit 1)
 				)
 			)
@@ -26436,8 +26484,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "ee5b78e3-1228-5624-ba08-32b5fa57e9d9")
-		(property "Reference" "#PWRTAR24"
+		(uuid "6251ef74-9812-5066-8f03-c8b32987e1b3")
+		(property "Reference" "#PWRTAR25"
 			(at 104.14 279.4 0)
 			(effects
 				(font
@@ -26464,12 +26512,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "4d51d2d5-4bb9-5db4-b186-83137198c947")
+			(uuid "416cbb5f-0ba9-5ce8-804c-82c44f066f06")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/73480f51-3b59-522d-a0bf-81f2ec177fba"
-					(reference "#PWRTAR24")
+					(reference "#PWRTAR25")
 					(unit 1)
 				)
 			)
@@ -26486,6 +26534,131 @@
 			(justify left top)
 		)
 		(uuid "eb38c40c-2ee9-53d8-9bae-3ec2b16dba47")
+	)
+	(label "TGT_NRST"
+		(at 180.34 238.76 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "acaa66b4-7828-5907-93e4-d8c29299cded")
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 193.04 238.76 90)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "709faae8-e03d-57de-8692-8a85920eebc7")
+		(property "Reference" "R174"
+			(at 193.04 233.68 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "10k"
+			(at 193.04 236.22 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
+			(at 193.04 238.76 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 193.04 238.76 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Description" "nRST readback on PB4 (FT): limits injection from a 5 V target to 0.2 mA"
+			(at 193.04 238.76 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C25744"
+			(at 193.04 238.76 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "3c9f0c3f-2199-567e-947e-95fb453972ef")
+		)
+		(pin "2"
+			(uuid "a02de22b-5820-522f-b45d-34b0ada0e064")
+		)
+		(instances
+			(project "archet"
+				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/73480f51-3b59-522d-a0bf-81f2ec177fba"
+					(reference "R174")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(global_label "TGT_NRST_SENSE"
+		(shape output)
+		(at 205.74 238.76 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "d2460507-732b-566f-8a91-b55a3f62801c")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 205.74 238.76 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+	)
+	(text "nRST readback on PB4 (5 V tolerant)."
+		(exclude_from_sim no)
+		(at 180.34 243.84 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+				(bold no)
+			)
+			(justify left top)
+		)
+		(uuid "f19cd10e-8481-5bfc-af84-967296a8f58a")
 	)
 	(symbol
 		(lib_id "74xGxx:SN74LVC1G125DBV")
@@ -26607,8 +26780,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "6251ef74-9812-5066-8f03-c8b32987e1b3")
-		(property "Reference" "#PWRTAR25"
+		(uuid "2cfcff65-c0b3-5990-addb-edc3ee1e1484")
+		(property "Reference" "#PWRTAR26"
 			(at 223.52 53.34 0)
 			(effects
 				(font
@@ -26635,12 +26808,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "416cbb5f-0ba9-5ce8-804c-82c44f066f06")
+			(uuid "277fc4be-cfb4-5292-8fd8-27b393631c7e")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/73480f51-3b59-522d-a0bf-81f2ec177fba"
-					(reference "#PWRTAR25")
+					(reference "#PWRTAR26")
 					(unit 1)
 				)
 			)
@@ -26654,8 +26827,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "2cfcff65-c0b3-5990-addb-edc3ee1e1484")
-		(property "Reference" "#PWRTAR26"
+		(uuid "6e5e00e3-98a8-5d8f-bc62-3bc5461a387b")
+		(property "Reference" "#PWRTAR27"
 			(at 198.12 48.26 0)
 			(effects
 				(font
@@ -26682,12 +26855,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "277fc4be-cfb4-5292-8fd8-27b393631c7e")
+			(uuid "0e845aca-69a0-52d7-b754-a1d47f3846de")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/73480f51-3b59-522d-a0bf-81f2ec177fba"
-					(reference "#PWRTAR26")
+					(reference "#PWRTAR27")
 					(unit 1)
 				)
 			)
@@ -26783,8 +26956,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "6e5e00e3-98a8-5d8f-bc62-3bc5461a387b")
-		(property "Reference" "#PWRTAR27"
+		(uuid "27b3603f-8cc4-5551-b758-984b39d9f865")
+		(property "Reference" "#PWRTAR28"
 			(at 203.2 58.42 0)
 			(effects
 				(font
@@ -26811,12 +26984,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "0e845aca-69a0-52d7-b754-a1d47f3846de")
+			(uuid "550a8573-72ee-5001-a83a-e8820c9cd743")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/73480f51-3b59-522d-a0bf-81f2ec177fba"
-					(reference "#PWRTAR27")
+					(reference "#PWRTAR28")
 					(unit 1)
 				)
 			)
@@ -26830,8 +27003,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "27b3603f-8cc4-5551-b758-984b39d9f865")
-		(property "Reference" "#PWRTAR28"
+		(uuid "ae79a2d3-81c7-5a2c-b39f-325c3a23a41c")
+		(property "Reference" "#PWRTAR29"
 			(at 210.82 78.74 0)
 			(effects
 				(font
@@ -26858,12 +27031,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "550a8573-72ee-5001-a83a-e8820c9cd743")
+			(uuid "b6dd6d8a-304b-5035-a6d7-857750294348")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/73480f51-3b59-522d-a0bf-81f2ec177fba"
-					(reference "#PWRTAR28")
+					(reference "#PWRTAR29")
 					(unit 1)
 				)
 			)
@@ -27166,8 +27339,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "ae79a2d3-81c7-5a2c-b39f-325c3a23a41c")
-		(property "Reference" "#PWRTAR29"
+		(uuid "ba88fd97-ab9f-5be8-bc99-cc38820d6058")
+		(property "Reference" "#PWRTAR30"
 			(at 203.2 129.54 0)
 			(effects
 				(font
@@ -27194,12 +27367,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "b6dd6d8a-304b-5035-a6d7-857750294348")
+			(uuid "a91af2f3-6e1a-5470-b1ca-7dfa39c84c90")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/73480f51-3b59-522d-a0bf-81f2ec177fba"
-					(reference "#PWRTAR29")
+					(reference "#PWRTAR30")
 					(unit 1)
 				)
 			)
@@ -27316,8 +27489,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "ba88fd97-ab9f-5be8-bc99-cc38820d6058")
-		(property "Reference" "#PWRTAR30"
+		(uuid "6f9d5298-26e7-5466-8e38-eaa73bba0db2")
+		(property "Reference" "#PWRTAR31"
 			(at 213.36 129.54 0)
 			(effects
 				(font
@@ -27344,12 +27517,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "a91af2f3-6e1a-5470-b1ca-7dfa39c84c90")
+			(uuid "37f723e5-bf37-522a-a0fa-9d36a6ccad1f")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/73480f51-3b59-522d-a0bf-81f2ec177fba"
-					(reference "#PWRTAR30")
+					(reference "#PWRTAR31")
 					(unit 1)
 				)
 			)
@@ -27521,8 +27694,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "6f9d5298-26e7-5466-8e38-eaa73bba0db2")
-		(property "Reference" "#PWRTAR31"
+		(uuid "d98b5e72-0c25-540a-a94d-692bb246867d")
+		(property "Reference" "#PWRTAR32"
 			(at 215.9 180.34 0)
 			(effects
 				(font
@@ -27549,12 +27722,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "37f723e5-bf37-522a-a0fa-9d36a6ccad1f")
+			(uuid "b9da6d18-7325-56e2-a1b7-9e711880aff1")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/73480f51-3b59-522d-a0bf-81f2ec177fba"
-					(reference "#PWRTAR31")
+					(reference "#PWRTAR32")
 					(unit 1)
 				)
 			)
@@ -27714,8 +27887,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "d98b5e72-0c25-540a-a94d-692bb246867d")
-		(property "Reference" "#PWRTAR32"
+		(uuid "6edbf742-93dc-5149-a0fa-d5fd8d80d36a")
+		(property "Reference" "#PWRTAR33"
 			(at 215.9 220.98 0)
 			(effects
 				(font
@@ -27742,12 +27915,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "b9da6d18-7325-56e2-a1b7-9e711880aff1")
+			(uuid "d829c290-97ef-5046-894d-c9fa71c762e3")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/73480f51-3b59-522d-a0bf-81f2ec177fba"
-					(reference "#PWRTAR32")
+					(reference "#PWRTAR33")
 					(unit 1)
 				)
 			)
@@ -28001,8 +28174,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "6edbf742-93dc-5149-a0fa-d5fd8d80d36a")
-		(property "Reference" "#PWRTAR33"
+		(uuid "ba816c40-5b87-56ce-bebc-eb5f987b73e3")
+		(property "Reference" "#PWRTAR34"
 			(at 299.72 129.54 0)
 			(effects
 				(font
@@ -28029,12 +28202,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "d829c290-97ef-5046-894d-c9fa71c762e3")
+			(uuid "3ed7220f-9fe7-56b5-abbb-15fae4aababe")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/73480f51-3b59-522d-a0bf-81f2ec177fba"
-					(reference "#PWRTAR33")
+					(reference "#PWRTAR34")
 					(unit 1)
 				)
 			)
@@ -28215,8 +28388,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "ba816c40-5b87-56ce-bebc-eb5f987b73e3")
-		(property "Reference" "#PWRTAR34"
+		(uuid "283dfcd7-43fb-5360-ab70-a627c02f4db6")
+		(property "Reference" "#PWRTAR35"
 			(at 345.44 182.88 0)
 			(effects
 				(font
@@ -28243,12 +28416,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "3ed7220f-9fe7-56b5-abbb-15fae4aababe")
+			(uuid "f2905c14-f457-5b1a-a973-25d35ae1ddc2")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/73480f51-3b59-522d-a0bf-81f2ec177fba"
-					(reference "#PWRTAR34")
+					(reference "#PWRTAR35")
 					(unit 1)
 				)
 			)
@@ -28361,13 +28534,24 @@
 	(wire
 		(pts
 			(xy 104.14 48.26)
+			(xy 109.22 48.26)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "df3e6b35-b9f5-5c77-a0f3-f542cd6f650d")
+	)
+	(wire
+		(pts
+			(xy 109.22 48.26)
 			(xy 114.3 48.26)
 		)
 		(stroke
 			(width 0)
 			(type default)
 		)
-		(uuid "fb16ee28-6410-5a44-94c8-828033ebf4a7")
+		(uuid "0b660a12-6e23-50f7-8217-f7869b594616")
 	)
 	(wire
 		(pts
@@ -29160,6 +29344,28 @@
 			(type default)
 		)
 		(uuid "aad2f0bb-9e36-5997-a47e-782a95a4a863")
+	)
+	(wire
+		(pts
+			(xy 180.34 238.76)
+			(xy 189.23 238.76)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "5fcca1d8-cf38-5be5-8463-0a0b3c14ef23")
+	)
+	(wire
+		(pts
+			(xy 196.85 238.76)
+			(xy 205.74 238.76)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "44d18b32-5295-5a82-9bec-6dd19d834f93")
 	)
 	(wire
 		(pts

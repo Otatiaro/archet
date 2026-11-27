@@ -18,8 +18,8 @@ from kicadgen.check import check  # noqa: E402
 
 KICAD = os.path.join(HERE, "..", "kicad")
 
-# ERC kinds tolerated while some sheets are still missing: global labels with a single end.
-PENDING_ERC = ("global_label_dangling", "isolated_pin_label", "pin_not_driven", "power_pin_not_driven")
+# ERC kinds tolerated while some sheets are still missing: none since all sheets are drawn.
+PENDING_ERC = ()
 # VCAP1 and VCAP2 are both LDO outputs ("power output"): ST ties them, each with its 2.2 µF (NUCLEO-H723ZG, AN5419).
 # USB_B_Micro declares its GND pin "power output" (KiCad library): it meets the GND PWR_FLAG.
 WAIVED_ERC = (("pin_to_pin", "VCAP"), ("pin_to_pin", "Symbol J5 Pin 5"))
@@ -663,6 +663,18 @@ def mcu(prj):
     for ref, x in (("C45", ax + 25.4), ("C46", ax + 35.56)):
         vpart(s, ref, x, yv)
         s.rail("GND", *s.P(ref, 2))
+    s.power("PWR_FLAG", ax + 30.48, yv, 0)
+
+    # PPS loopback: PG8 (ETH_PPS_OUT) to PA0 (TIM2_ETR)
+    lx, ly = 431.8, 279.4
+    s.text("PPS loopback", lx, ly - 10.16, 1.8, True)
+    s.place("R175", lx + 12.7, ly, rot=90, ref_at=(lx + 12.7, ly - 4.57), val_at=(lx + 12.7, ly - 2.54))
+    s.w("PPS", (lx, ly), s.P("R175", 1))
+    s.glabel("PPS", lx, ly, 180, "bidirectional", "loop")
+    s.w("PPS_IN", s.P("R175", 2), (lx + 25.4, ly))
+    s.glabel("PPS_IN", lx + 25.4, ly, 0, "bidirectional", "loop")
+    s.text("PG8 (ETH_PPS_OUT) to PA0 (TIM2_ETR): TIM2 restarts on the PTP second,\n"
+           "LATCH follows it. R175 not fitted if TIM2 has an internal ETH PPS trigger.", lx, ly + 7.62)
 
     # left column: NRST, BOOT0, VREF+, PDR_ON
     nx, ny = s.P("U11", "25")
@@ -1074,6 +1086,7 @@ def rmii(prj):
     cx, cy = s.P("U17", "6")
     s.w("ETH_VDDCR", (cx, cy), (cx, ycr), (129.54, ycr))
     s.label("ETH_VDDCR", 141.0, ycr, 0)
+    s.power("PWR_FLAG", 134.62, ycr, 0)
     for ref, x in (("C73", 129.54), ("C72", 139.7)):
         vpart(s, ref, x, ycr)
         s.rail("GND", *s.P(ref, 2))
@@ -1179,6 +1192,7 @@ def target(prj):
     # --- SWDIO: U18, direction from the iCE40 ---
     s.place("U18", xu, 66.04, ref_at=(xu + 3.81, 78.74), val_at=(xu + 3.81, 81.28))
     xlate_power(s, "U18", "C79", "C80", 55.88)
+    s.power("PWR_FLAG", s.P("U18", "6")[0] + 5.08, 55.88 - 7.62, 0)   # TGT_VCC: the target's rail, J7 pin 3
     line("TGT_SWDIO_3V3", "3", "U18")
     y = line(None, "4", "U18", "TGT_SWDIO", "R45")
     pullup("R49", 142.24, y)
@@ -1234,6 +1248,13 @@ def target(prj):
         s.rail("GND", *s.P(q, 2))
     s.text("Gate high: line pulled low.\nR53/R54 keep the lines released\nwhile the iCE40 is unconfigured.",
            119.38, 254.0)
+    ny = s.P("Q5", 3)[1] - 2.54
+    s.label("TGT_NRST", 180.34, ny, 0, tag="sense")
+    s.place("R174", 193.04, ny, rot=90, ref_at=(193.04, ny - 4.57), val_at=(193.04, ny - 2.54))
+    s.w("TGT_NRST", (180.34, ny), s.P("R174", 1))
+    s.w("TGT_NRST_SENSE", s.P("R174", 2), (205.74, ny))
+    s.glabel("TGT_NRST_SENSE", 205.74, ny, 0, "output")
+    s.text("nRST readback on PB4 (5 V tolerant).", 180.34, ny + 5.08)
 
     # --- STDC14 pin 2: copy of the SWDIO direction ---
     bx, by = 215.9, 66.04

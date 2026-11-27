@@ -27772,6 +27772,202 @@
 		)
 	)
 	(symbol
+		(lib_id "power:PWR_FLAG")
+		(at 353.06 93.98 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "77e1812e-dbd9-515c-a68e-dd8028ecb698")
+		(property "Reference" "#FLGMCU18"
+			(at 353.06 93.98 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "PWR_FLAG"
+			(at 353.06 90.17 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Footprint" ""
+			(at 353.06 93.98 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "09cf7255-4ae0-5508-b945-8bb6bcec469d")
+		)
+		(instances
+			(project "archet"
+				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/39edc9fc-3dfd-56a0-a3cc-73de24f6514a"
+					(reference "#FLGMCU18")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(text "PPS loopback"
+		(exclude_from_sim no)
+		(at 431.8 269.24 0)
+		(effects
+			(font
+				(size 1.8 1.8)
+				(bold yes)
+			)
+			(justify left top)
+		)
+		(uuid "19682c9b-ef71-527c-9d59-bb4cdac056d4")
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 444.5 279.4 90)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "48c5dda9-8ad2-5350-873d-4554e40c3935")
+		(property "Reference" "R175"
+			(at 444.5 274.32 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "33"
+			(at 444.5 276.86 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
+			(at 444.5 279.4 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 444.5 279.4 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Description" "PPS loopback PG8 -> PA0 (TIM2_ETR). Not fitted if TIM2 takes the ETH PPS as an internal trigger (RM0468)"
+			(at 444.5 279.4 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C25105"
+			(at 444.5 279.4 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "af746ebe-576b-556b-868c-3a7c3f252f8d")
+		)
+		(pin "2"
+			(uuid "01c6a4b8-8406-57c8-82cf-1cd03b25e0e1")
+		)
+		(instances
+			(project "archet"
+				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/39edc9fc-3dfd-56a0-a3cc-73de24f6514a"
+					(reference "R175")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(global_label "PPS"
+		(shape bidirectional)
+		(at 431.8 279.4 180)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "9f7052cb-031f-5cce-8503-21e87a378fc9")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 431.8 279.4 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+	)
+	(global_label "PPS_IN"
+		(shape bidirectional)
+		(at 457.2 279.4 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "c83a3525-b636-58d2-9bca-8f6a93f3abbc")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 457.2 279.4 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+	)
+	(text "PG8 (ETH_PPS_OUT) to PA0 (TIM2_ETR): TIM2 restarts on the PTP second,\nLATCH follows it. R175 not fitted if TIM2 has an internal ETH PPS trigger."
+		(exclude_from_sim no)
+		(at 431.8 287.02 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+				(bold no)
+			)
+			(justify left top)
+		)
+		(uuid "41893aff-dc83-56f8-8cc4-16838460eefc")
+	)
+	(symbol
 		(lib_id "Device:C")
 		(at 203.2 123.19 0)
 		(unit 1)
@@ -27861,8 +28057,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "77e1812e-dbd9-515c-a68e-dd8028ecb698")
-		(property "Reference" "#PWRMCU18"
+		(uuid "e7597eb5-ca18-5f0b-912a-45edf2350dda")
+		(property "Reference" "#PWRMCU19"
 			(at 203.2 129.54 0)
 			(effects
 				(font
@@ -27889,12 +28085,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "09cf7255-4ae0-5508-b945-8bb6bcec469d")
+			(uuid "e0097fdd-33e5-5eb5-8ae3-74fb304ffd98")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/39edc9fc-3dfd-56a0-a3cc-73de24f6514a"
-					(reference "#PWRMCU18")
+					(reference "#PWRMCU19")
 					(unit 1)
 				)
 			)
@@ -28000,8 +28196,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "e7597eb5-ca18-5f0b-912a-45edf2350dda")
-		(property "Reference" "#PWRMCU19"
+		(uuid "b713d965-4333-5130-8ce8-66372cc478ba")
+		(property "Reference" "#PWRMCU20"
 			(at 215.9 134.62 0)
 			(effects
 				(font
@@ -28028,12 +28224,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "e0097fdd-33e5-5eb5-8ae3-74fb304ffd98")
+			(uuid "fadf8c09-8f6f-5687-b0f0-7cab9bb7ec31")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/39edc9fc-3dfd-56a0-a3cc-73de24f6514a"
-					(reference "#PWRMCU19")
+					(reference "#PWRMCU20")
 					(unit 1)
 				)
 			)
@@ -28067,8 +28263,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "b713d965-4333-5130-8ce8-66372cc478ba")
-		(property "Reference" "#PWRMCU20"
+		(uuid "82a34095-35e0-5a2e-82ab-543b7daa5361")
+		(property "Reference" "#PWRMCU21"
 			(at 243.84 132.08 0)
 			(effects
 				(font
@@ -28095,12 +28291,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "fadf8c09-8f6f-5687-b0f0-7cab9bb7ec31")
+			(uuid "3166abd9-1226-538b-b86c-54b7a1ffefe4")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/39edc9fc-3dfd-56a0-a3cc-73de24f6514a"
-					(reference "#PWRMCU20")
+					(reference "#PWRMCU21")
 					(unit 1)
 				)
 			)
@@ -28202,8 +28398,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "82a34095-35e0-5a2e-82ab-543b7daa5361")
-		(property "Reference" "#PWRMCU21"
+		(uuid "7e52f500-6a7f-55ab-bef4-2e0755f83ed0")
+		(property "Reference" "#PWRMCU22"
 			(at 227.33 172.72 0)
 			(effects
 				(font
@@ -28230,12 +28426,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "3166abd9-1226-538b-b86c-54b7a1ffefe4")
+			(uuid "36e46184-fc5d-5163-825b-19ac44d0e09a")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/39edc9fc-3dfd-56a0-a3cc-73de24f6514a"
-					(reference "#PWRMCU21")
+					(reference "#PWRMCU22")
 					(unit 1)
 				)
 			)
@@ -28331,8 +28527,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "7e52f500-6a7f-55ab-bef4-2e0755f83ed0")
-		(property "Reference" "#PWRMCU22"
+		(uuid "ce40cced-8d97-50ee-ac2a-181fb79b0227")
+		(property "Reference" "#PWRMCU23"
 			(at 208.28 175.26 0)
 			(effects
 				(font
@@ -28359,12 +28555,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "36e46184-fc5d-5163-825b-19ac44d0e09a")
+			(uuid "77693555-b58d-5c9b-ac22-d2a427c68328")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/39edc9fc-3dfd-56a0-a3cc-73de24f6514a"
-					(reference "#PWRMCU22")
+					(reference "#PWRMCU23")
 					(unit 1)
 				)
 			)
@@ -28460,8 +28656,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "ce40cced-8d97-50ee-ac2a-181fb79b0227")
-		(property "Reference" "#PWRMCU23"
+		(uuid "d5e805e5-a086-578a-90f0-21023867346b")
+		(property "Reference" "#PWRMCU24"
 			(at 246.38 175.26 0)
 			(effects
 				(font
@@ -28488,12 +28684,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "77693555-b58d-5c9b-ac22-d2a427c68328")
+			(uuid "d81bcb25-35ce-5ed6-8bc5-4c5b375b0acf")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/39edc9fc-3dfd-56a0-a3cc-73de24f6514a"
-					(reference "#PWRMCU23")
+					(reference "#PWRMCU24")
 					(unit 1)
 				)
 			)
@@ -28589,8 +28785,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "d5e805e5-a086-578a-90f0-21023867346b")
-		(property "Reference" "#PWRMCU24"
+		(uuid "6a3516e6-87b3-5c40-baa6-70e4f32bb865")
+		(property "Reference" "#PWRMCU25"
 			(at 238.76 287.02 0)
 			(effects
 				(font
@@ -28617,12 +28813,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "d81bcb25-35ce-5ed6-8bc5-4c5b375b0acf")
+			(uuid "3ed31268-8eba-5559-a2b7-320dc9dcb9a8")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/39edc9fc-3dfd-56a0-a3cc-73de24f6514a"
-					(reference "#PWRMCU24")
+					(reference "#PWRMCU25")
 					(unit 1)
 				)
 			)
@@ -28718,8 +28914,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "6a3516e6-87b3-5c40-baa6-70e4f32bb865")
-		(property "Reference" "#PWRMCU25"
+		(uuid "2afb31e5-cbbb-5399-b719-46be61b8ffc4")
+		(property "Reference" "#PWRMCU26"
 			(at 228.6 287.02 0)
 			(effects
 				(font
@@ -28746,12 +28942,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "3ed31268-8eba-5559-a2b7-320dc9dcb9a8")
+			(uuid "a73ea6fb-40be-569c-b521-577dd0c71cd9")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/39edc9fc-3dfd-56a0-a3cc-73de24f6514a"
-					(reference "#PWRMCU25")
+					(reference "#PWRMCU26")
 					(unit 1)
 				)
 			)
@@ -28765,8 +28961,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "2afb31e5-cbbb-5399-b719-46be61b8ffc4")
-		(property "Reference" "#PWRMCU26"
+		(uuid "98eea865-a3dd-506a-8741-6b1ef9e7e0ef")
+		(property "Reference" "#PWRMCU27"
 			(at 304.8 302.26 0)
 			(effects
 				(font
@@ -28793,12 +28989,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "a73ea6fb-40be-569c-b521-577dd0c71cd9")
+			(uuid "b23d08ab-b279-5588-b8db-1aa6d5ae1639")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/39edc9fc-3dfd-56a0-a3cc-73de24f6514a"
-					(reference "#PWRMCU26")
+					(reference "#PWRMCU27")
 					(unit 1)
 				)
 			)
@@ -28906,8 +29102,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "98eea865-a3dd-506a-8741-6b1ef9e7e0ef")
-		(property "Reference" "#PWRMCU27"
+		(uuid "a0490baa-1b32-5e0d-935e-0fc02e54a438")
+		(property "Reference" "#PWRMCU28"
 			(at 416.56 152.4 0)
 			(effects
 				(font
@@ -28934,12 +29130,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "b23d08ab-b279-5588-b8db-1aa6d5ae1639")
+			(uuid "fee2cf04-f39e-5fdc-a318-8bf3b9e9578b")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/39edc9fc-3dfd-56a0-a3cc-73de24f6514a"
-					(reference "#PWRMCU27")
+					(reference "#PWRMCU28")
 					(unit 1)
 				)
 			)
@@ -28953,8 +29149,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "a0490baa-1b32-5e0d-935e-0fc02e54a438")
-		(property "Reference" "#PWRMCU28"
+		(uuid "e29a3f7f-5cf7-546d-b45d-98ecd1f7d23c")
+		(property "Reference" "#PWRMCU29"
 			(at 416.56 177.8 0)
 			(effects
 				(font
@@ -28981,12 +29177,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "fee2cf04-f39e-5fdc-a318-8bf3b9e9578b")
+			(uuid "572b07dd-b589-52d4-900d-b710dc548439")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/39edc9fc-3dfd-56a0-a3cc-73de24f6514a"
-					(reference "#PWRMCU28")
+					(reference "#PWRMCU29")
 					(unit 1)
 				)
 			)
@@ -29158,8 +29354,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "e29a3f7f-5cf7-546d-b45d-98ecd1f7d23c")
-		(property "Reference" "#PWRMCU29"
+		(uuid "3ab4e722-f867-5ea9-98f1-f91f585a6075")
+		(property "Reference" "#PWRMCU30"
 			(at 449.58 142.24 0)
 			(effects
 				(font
@@ -29186,12 +29382,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "572b07dd-b589-52d4-900d-b710dc548439")
+			(uuid "ec4f10d3-cae9-5e81-89cd-484f3d889d3d")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/39edc9fc-3dfd-56a0-a3cc-73de24f6514a"
-					(reference "#PWRMCU29")
+					(reference "#PWRMCU30")
 					(unit 1)
 				)
 			)
@@ -29504,8 +29700,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "3ab4e722-f867-5ea9-98f1-f91f585a6075")
-		(property "Reference" "#PWRMCU30"
+		(uuid "6e70580a-112a-5913-8066-e1d821e36da4")
+		(property "Reference" "#PWRMCU31"
 			(at 474.98 121.92 0)
 			(effects
 				(font
@@ -29532,12 +29728,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "ec4f10d3-cae9-5e81-89cd-484f3d889d3d")
+			(uuid "01049ca9-8697-5b53-957d-234a5a27855f")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/39edc9fc-3dfd-56a0-a3cc-73de24f6514a"
-					(reference "#PWRMCU30")
+					(reference "#PWRMCU31")
 					(unit 1)
 				)
 			)
@@ -29551,8 +29747,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "6e70580a-112a-5913-8066-e1d821e36da4")
-		(property "Reference" "#PWRMCU31"
+		(uuid "b8b2dda2-eec5-5d49-924e-8688455af0f3")
+		(property "Reference" "#PWRMCU32"
 			(at 474.98 139.7 0)
 			(effects
 				(font
@@ -29579,12 +29775,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "01049ca9-8697-5b53-957d-234a5a27855f")
+			(uuid "7a1fdc31-00a6-5c90-8500-1cde0ccf3632")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/39edc9fc-3dfd-56a0-a3cc-73de24f6514a"
-					(reference "#PWRMCU31")
+					(reference "#PWRMCU32")
 					(unit 1)
 				)
 			)
@@ -29690,8 +29886,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "b8b2dda2-eec5-5d49-924e-8688455af0f3")
-		(property "Reference" "#PWRMCU32"
+		(uuid "877f1355-30ae-5d2b-a62a-63de52a0a36c")
+		(property "Reference" "#PWRMCU33"
 			(at 500.38 139.7 0)
 			(effects
 				(font
@@ -29718,12 +29914,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "7a1fdc31-00a6-5c90-8500-1cde0ccf3632")
+			(uuid "d9a4a7a8-f3f8-5243-abfe-b88e4cacf67e")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/39edc9fc-3dfd-56a0-a3cc-73de24f6514a"
-					(reference "#PWRMCU32")
+					(reference "#PWRMCU33")
 					(unit 1)
 				)
 			)
@@ -29829,8 +30025,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "877f1355-30ae-5d2b-a62a-63de52a0a36c")
-		(property "Reference" "#PWRMCU33"
+		(uuid "008c3464-9a52-5a1e-8521-5991a39e64e0")
+		(property "Reference" "#PWRMCU34"
 			(at 495.3 157.48 0)
 			(effects
 				(font
@@ -29857,12 +30053,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "d9a4a7a8-f3f8-5243-abfe-b88e4cacf67e")
+			(uuid "90f8dff8-0501-5191-a90a-3baeb348c372")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/39edc9fc-3dfd-56a0-a3cc-73de24f6514a"
-					(reference "#PWRMCU33")
+					(reference "#PWRMCU34")
 					(unit 1)
 				)
 			)
@@ -29983,8 +30179,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "008c3464-9a52-5a1e-8521-5991a39e64e0")
-		(property "Reference" "#PWRMCU34"
+		(uuid "9baafd77-37c1-5693-9c03-b5bf7d54e8f0")
+		(property "Reference" "#PWRMCU35"
 			(at 454.66 200.66 0)
 			(effects
 				(font
@@ -30012,12 +30208,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "90f8dff8-0501-5191-a90a-3baeb348c372")
+			(uuid "47f4d296-e3f3-5a0e-be68-f8cefbc171fe")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/39edc9fc-3dfd-56a0-a3cc-73de24f6514a"
-					(reference "#PWRMCU34")
+					(reference "#PWRMCU35")
 					(unit 1)
 				)
 			)
@@ -30123,8 +30319,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "9baafd77-37c1-5693-9c03-b5bf7d54e8f0")
-		(property "Reference" "#PWRMCU35"
+		(uuid "1996d538-cf47-554a-be0e-3443d4721ed2")
+		(property "Reference" "#PWRMCU36"
 			(at 500.38 177.8 0)
 			(effects
 				(font
@@ -30151,12 +30347,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "47f4d296-e3f3-5a0e-be68-f8cefbc171fe")
+			(uuid "3d902253-40b4-52ac-8eff-5adcc5c35cc8")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/39edc9fc-3dfd-56a0-a3cc-73de24f6514a"
-					(reference "#PWRMCU35")
+					(reference "#PWRMCU36")
 					(unit 1)
 				)
 			)
@@ -31172,13 +31368,24 @@
 	(wire
 		(pts
 			(xy 347.98 93.98)
+			(xy 353.06 93.98)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "7d552521-d5df-57b2-8566-e50209ca5b6f")
+	)
+	(wire
+		(pts
+			(xy 353.06 93.98)
 			(xy 358.14 93.98)
 		)
 		(stroke
 			(width 0)
 			(type default)
 		)
-		(uuid "dbb5ad98-9c1d-5dc9-8e06-747034cc3940")
+		(uuid "2022570f-4dd8-5bea-9eef-7dc3837ab24a")
 	)
 	(wire
 		(pts
@@ -31212,6 +31419,28 @@
 			(type default)
 		)
 		(uuid "01dad249-80e4-5c03-a74d-e2645f730d9f")
+	)
+	(wire
+		(pts
+			(xy 431.8 279.4)
+			(xy 440.69 279.4)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "fcfc0755-208d-5af9-8f24-0c47defa15db")
+	)
+	(wire
+		(pts
+			(xy 448.31 279.4)
+			(xy 457.2 279.4)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "6b66c9d7-452c-501b-a3df-b64429361822")
 	)
 	(wire
 		(pts
