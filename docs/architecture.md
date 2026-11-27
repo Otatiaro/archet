@@ -206,6 +206,10 @@ Adaptation to the probe:
   - pulling a CS low without SPI clock must not trigger anything on the module (beware of ADCs starting a conversion on the CS edge);
 - the Bornier schematic block (`bus.py`, `kicadgen` generator) is reused: same pinout, terminations, pulls and ESD grouping (sheet "Local bus", block of the same name in `hardware/gen/circuit.py`).
 
+### Board
+
+**4 layers** (JLCPCB, standard JLC04161H-7628 stack-up), decision of 2026-11-27: USB HS 90 Ω and Ethernet 100 Ω differential pairs, ULPI and QSPI at 50–60 MHz over a continuous ground plane, 432 parts on ~150 cm².
+
 ### Shield connectors
 
 **Two IDC 2 × 17 headers, the same part as the Bornier bus** (shrouded and keyed, C20920): one part for the three connectors, a 34-way ribbon or a direct plug. A simple shield can be built on perfboard. Pinout of all three: [`hardware/connectors.csv`](../hardware/connectors.csv).
