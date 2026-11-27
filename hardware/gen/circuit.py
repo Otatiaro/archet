@@ -22,12 +22,12 @@ R1206 = "Resistor_SMD:R_1206_3216Metric"
 SMB = "Diode_SMD:D_SMB"
 
 # Passive palette: every resistor and capacitor of the board is one of these lines (one feeder each
-# on the pick-and-place). JLCPCB basic parts; 0402 by default.
+# on the pick-and-place). JLCPCB basic parts; 0402 by default. Values are pooled to keep the line count low:
+# a new value or size needs a reason (datasheet, simulation, rating).
 PALETTE = {
     ("R", "10k", R0402): "C25744",
     ("R", "100k", R0402): "C25741",
     ("R", "1k", R0402): "C11702",
-    ("R", "2.2k", R0402): "C25879",        # basic: I2C5 pull-ups
     ("R", "47k", R0805): "C17713",         # 150 V: on the 57 V PoE input
     ("R", "1k", R1206): "C4410",           # 250 mW: PoE module minimum load
     ("C", "100nF", C0402): "C307331",      # 50 V X7R
@@ -35,19 +35,14 @@ PALETTE = {
     ("C", "10µF 25V", C0805): "C15850",
     ("C", "10µF 50V", C1206): "C13585",
     ("C", "22µF 25V", C1206): "C12891",
-    ("C", "22µF 25V", C0805): "C45783",
     ("R", "22k", R0402): "C25768",
-    ("R", "24.9k", R0402): "C25874",       # ext: 5.02 V exactly, no basic pair gives better than 4.92 V
-    ("C", "4.7µF", C0603): "C19666",       # 16 V X5R
     ("C", "2.2µF", C0402): "C12530",       # 6.3 V X5R: VCAP (1.2 V)
-    ("C", "1µF", C0402): "C52923",         # 25 V X5R
     ("C", "15pF", C0402): "C1548",         # 50 V C0G
     ("R", "100", R0402): "C25076",         # VCCPLL filter
-    ("R", "8.06k", R0402): "C25923",       # ext, 1 %: USB3320 RBIAS (value imposed by the datasheet)
+    ("R", "8.06k", R0402): "C25923",       # ext, 1 %: USB3320 RBIAS (value imposed by the datasheet), LMR33630 FB top
     ("R", "1M", R0402): "C26083",          # USB3320 crystal bias
     ("R", "12.1k", R0402): "C25852",       # ext, 1 %: LAN8742A RBIAS (value imposed by the datasheet)
     ("R", "49.9", R0402): "C25120",        # 1 %: Ethernet line termination
-    ("R", "330", R0402): "C25104",         # RJ45 LEDs
     ("R", "33", R0402): "C25105",          # series termination: target lines, shield IOs
     ("C", "470pF", C0402): "C1537",        # preferred, X7R: LAN8742A VDDCR (datasheet 1 µF // 470 pF)
     ("R", "150k", R0402): "C25755",        # preferred: TPS63020 FB top
@@ -55,10 +50,9 @@ PALETTE = {
     ("R", "120k", R0402): "C25750",        # preferred: TPS63020 DAC injection (hardware/sim/tgt_vsup.py)
     ("R", "50m", R1206): "C844686",        # ext, Vishay WSL1206R0500FEA 75 ppm/°C: INA226 shunts
     ("R", "22", R1206): "C17958",          # 250 mW: buzzer series resistor
-    ("R", "120", R0402): "C25079",         # field bus termination (~33 mW with a 2 V differential)
-    ("R", "2k", R0402): "C4109",           # TPS2595 ILM: 1.04 A
-    ("R", "20m", R1206): "C844895",        # ext, Vishay WSL1206R0200FEA 75 ppm/°C: 5V_OUT shunt (2 A)
-    ("R", "15m", R1206): "C844483",        # ext, Vishay WSL1206R0150FEA: boost sense, VSYS shunt
+    ("R", "120", R0402): "C25079",         # field bus termination (~33 mW with a 2 V differential), RJ45 LEDs
+    ("R", "2k", R0402): "C4109",           # TPS2595 ILM: 1.04 A; I2C pull-ups; LMR33630 FB bottom
+    ("R", "15m", R1206): "C844483",        # ext, Vishay WSL1206R0150FEA: boost sense, VSYS and 5V_OUT shunts
     ("R", "51k", R0402): "C25794",         # LM5155 RT: 425 kHz
     ("R", "47k", R0402): "C25792",
     ("R", "470", R0402): "C25117",         # LM5155 slope resistor
@@ -208,8 +202,8 @@ c.part("L1", "Device:L", "10µH", "Inductor_SMD:L_Changjiang_FXL0630", "C167223"
        "(~35 % of 3 A); peak 3.6 A, under the LMR33630 high-side limit and the saturation current")
 for ref in ("C24", "C25", "C26"):
     c.C(ref, "22µF 25V", "+5V", "GND", fp=C1206, note="Output, X5R: ~13 µF each at 5 V DC bias")
-c.R("R15", "100k", "+5V", "BUCK5_FB", note="Feedback top, datasheet 100 kΩ")
-c.R("R16", "24.9k", "BUCK5_FB", "GND", note="Feedback bottom: 1.0 V x (1 + 100/24.9) = 5.02 V")
+c.R("R15", "8.06k", "+5V", "BUCK5_FB", note="Feedback top: palette value (datasheet 100 kΩ), divider 0.5 mA")
+c.R("R16", "2k", "BUCK5_FB", "GND", note="Feedback bottom: 1.0 V x (1 + 8.06/2) = 5.03 V")
 
 # --------------------------------------------------------------------------------------------
 c.block("VIN_BUS: LM5155 24.5 V boost from VSYS, or VIN_EXT through a Schottky")
@@ -239,7 +233,7 @@ c.C("C114", "100nF", "BOOST_CZ", "GND", note="Compensation zero")
 c.C("C115", "470pF", "BOOST_COMP", "GND", note="Compensation high-frequency pole")
 c.R("R114", "47k", "VIN_BUS", "BOOST_FB", note="1.0 V x (1 + 47/2) = 24.5 V; OVP 27 V")
 c.R("R115", "2k", "BOOST_FB", "GND")
-c.C("C117", "1µF", "BOOST_VCC", "GND", note="VCC regulator, 1 µF minimum")
+c.C("C117", "1µF 50V", "BOOST_VCC", "GND", note="VCC regulator, 1 µF minimum")
 c.C("C118", "100nF", "VSYS", "GND", note="BIAS")
 for ref in ("C119", "C120"):
     c.C(ref, "10µF 50V", "VSYS", "GND", fp=C1206, note="Boost input, against L5 and R116")
@@ -268,7 +262,7 @@ for u, l, cin, cout, rt, rb, out, tag in (("U9", "L2", "C27", "C28", "R17", "R18
     c.C(cin, "10µF 25V", "+5V", "GND", fp=C0805, note="Input, datasheet 4.7 µF minimum")
     c.part(l, "Device:L", "2.2µH", "Inductor_SMD:L_Changjiang_FXL0420", "C167206", {1: f"{tag}_SW", 2: out},
            "FXL0420-2R2-M: Isat 5 A, Irms 4.5 A, 58 mΩ. Datasheet standard pair: 2.2 µH with 10-22 µF")
-    c.C(cout, "22µF 25V", out, "GND", fp=C0805, note="Output, X5R: ~12 µF at 3.3 V DC bias, within 10-47 µF")
+    c.C(cout, "22µF 25V", out, "GND", fp=C1206, note="Output, X5R: ~15 µF at 3.3 V DC bias, within 10-47 µF")
     c.R(rt, "100k", out, f"{tag}_FB", note="Feedback top")
     c.R(rb, "22k", f"{tag}_FB", "GND", note="Feedback bottom: 0.6 V x (1 + 100/22) = 3.33 V; R2 under 200 kΩ")
 
@@ -303,12 +297,12 @@ c.part("U11", MCU_SYM, "STM32H723ZGT6", "Package_QFP:LQFP-144_20x20mm_P0.5mm", "
        "unconnected (analog-capable inputs, reset state). PDR_ON high: internal power-on reset")
 for i in range(31, 42):
     c.C(f"C{i}", "100nF", "+3V3", "GND", note="VDD decoupling, one per VDD pin (11), against the pin")
-c.C("C42", "4.7µF", "+3V3", "GND", fp=C0603, note="VDD bulk, datasheet 4.7 µF")
+c.C("C42", "10µF 25V", "+3V3", "GND", fp=C0805, note="VDD bulk, datasheet 4.7 µF")
 c.C("C43", "2.2µF", "VCAP", "GND", note="VCAP1, datasheet 2.2 µF ESR < 100 mΩ per pin (LDO supply)")
 c.C("C44", "2.2µF", "VCAP", "GND", note="VCAP2")
 c.part("FB1", "Device:FerriteBead_Small", "600Ω@100MHz", "Inductor_SMD:L_0603_1608Metric", "C1002",
        {1: "+3V3", 2: "VDDA"}, "GZ1608D601TF: 200 mA, 0.45 Ω. Separates VDDA/VREF+ (ADC, DAC) from VDD noise")
-c.C("C45", "1µF", "VDDA", "GND", note="VDDA/VREF+ bulk, datasheet 1 µF")
+c.C("C45", "1µF 50V", "VDDA", "GND", note="VDDA/VREF+ bulk, datasheet 1 µF")
 c.C("C46", "100nF", "VDDA", "GND", note="VDDA/VREF+ HF")
 c.C("C47", "100nF", "+3V3", "GND", note="VDD33USB decoupling (internal FS PHY: ROM DFU on J5)")
 c.R("R175", "33", "PPS", "PPS_IN", note="PPS loopback PG8 -> PA0 (TIM2_ETR). Not fitted if TIM2 takes the ETH PPS "
@@ -341,8 +335,8 @@ c.part("D8", *SCHOTTKY[:3], SCHOTTKY[3], {1: "VSYS", 2: "J6_VCC"}, "J6 VCC power
 c.R("R25", "10k", "BOOT0", "J6_VCC", note="J6 VCC enters the ROM bootloader, as R24")
 c.part("D9", *SCHOTTKY[:3], SCHOTTKY[3], {1: "J6_RST", 2: "NRST"},
        "RTS low pulls NRST low; RTS high (5 V on a 5 V cable) is blocked: NRST is not 5 V tolerant")
-c.part("SW1", "Switch:SW_Push", "BOOT0", "Button_Switch_SMD:SW_SPST_TS-1088-xR020", "C720477",
-       {1: "+3V3", 2: "BOOT0"}, "TS-1088-AR02016: hold at power-up or reset to enter the ROM bootloader")
+c.part("SW1", "Switch:SW_Push", "BOOT0", "Archet:SW_Push_1P1T_XKB_TS-1187A", "C318884",
+       {1: "+3V3", 2: "BOOT0"}, "TS-1187A-B-A-B, as GO and STOP: hold at power-up or reset to enter the ROM bootloader")
 c.C("C48", "100nF", "NRST", "GND", note="NRST filter, datasheet 100 nF; internal pull-up")
 c.part("Y1", "Device:Crystal_GND24", "25MHz", "Crystal:Crystal_SMD_3225-4Pin_3.2x2.5mm", "C9006",
        {1: "HSE_IN", 3: "HSE_OUT", 2: "GND", 4: "GND"},
@@ -379,8 +373,8 @@ c.part("U13", FPGA_SYM, "iCE40UP5K-SG48I", "Archet:QFN-48-1EP_7x7mm_P0.5mm_EP5.3
 c.part("U14", "Regulator_Linear:ME6211C12M5", "ME6211C12M5G-N", "Package_TO_SOT_SMD:SOT-23-5", "C236672",
        {1: "+3V3", 2: "GND", 3: "+3V3", 5: "+1V2"},
        "1.2 V core, 500 mA (UP5K core: a few mA to tens of mA). No basic 1.2 V LDO at JLCPCB")
-c.C("C51", "1µF", "+3V3", "GND", note="LDO input, datasheet 1 µF")
-c.C("C52", "1µF", "+1V2", "GND", note="LDO output, datasheet 1 µF ceramic")
+c.C("C51", "1µF 50V", "+3V3", "GND", note="LDO input, datasheet 1 µF")
+c.C("C52", "1µF 50V", "+1V2", "GND", note="LDO output, datasheet 1 µF ceramic")
 c.C("C53", "100nF", "+1V2", "GND", note="VCC pin 5")
 c.C("C54", "100nF", "+1V2", "GND", note="VCC pin 30")
 c.R("R26", "100", "+1V2", "VCCPLL", note="VCCPLL filter, Lattice UltraPlus development platform: 100 Ω, 10 µF, "
@@ -413,12 +407,12 @@ c.part("U16", "Regulator_Linear:ME6211C18M5", "ME6211C18M5G-N", "Package_TO_SOT_
        {1: "+5V", 2: "GND", 3: "+5V", 5: "+1V8"},
        "From +5V, not +3V3: 1.8 V is up before VDDIO (3.3 V), as the absolute maximum ratings require "
        "(VDDIO 0.7 V max while VDD18 = 0). 30 mA: 0.1 W")
-c.C("C61", "1µF", "+5V", "GND", note="LDO input, datasheet 1 µF")
-c.C("C62", "1µF", "+1V8", "GND", note="LDO output, datasheet 1 µF ceramic")
+c.C("C61", "1µF 50V", "+5V", "GND", note="LDO input, datasheet 1 µF")
+c.C("C62", "1µF 50V", "+1V8", "GND", note="LDO output, datasheet 1 µF ceramic")
 c.C("C63", "100nF", "+1V8", "GND", note="VDD18 pin 28")
 c.C("C64", "100nF", "+1V8", "GND", note="VDD18 pin 30")
-c.C("C65", "4.7µF", "+3V3", "GND", fp=C0603, note="COUT: VDD33 pin 20, datasheet 2.2 µF < 1 Ω ESR; 0603 16 V "
-    "keeps above 2.2 µF at 3.3 V DC bias")
+c.C("C65", "10µF 25V", "+3V3", "GND", fp=C0805, note="COUT: VDD33 pin 20, datasheet 2.2 µF < 1 Ω ESR; 0805 25 V "
+    "keeps well above 2.2 µF at 3.3 V DC bias")
 c.C("C66", "100nF", "+3V3", "GND", note="CBYP: VBAT pin 21")
 c.C("C67", "100nF", "+3V3", "GND", note="CBYP: VDDIO pin 32")
 c.R("R30", "10k", "VBUS_CONN", "PHY_VBUS", note="RVBUS, device mode 10 kΩ (table 5-7). Works with the internal "
@@ -452,12 +446,12 @@ c.part("Y3", "Device:Crystal_GND24", "25MHz", "Crystal:Crystal_SMD_3225-4Pin_3.2
        "X322525MOB4SI, as Y1: ±10 ppm, CL 12 pF (PHY budget ±50 ppm)")
 c.C("C70", "15pF", "ETH_XTAL1", "GND", note="Load: 2 x (12 pF - 3 pF pin - ~2 pF stray) = 14 pF")
 c.C("C71", "15pF", "ETH_XTAL2", "GND", note="Load, second")
-c.C("C72", "1µF", "ETH_VDDCR", "GND", note="VDDCR (internal regulator output), datasheet 1 µF // 470 pF")
+c.C("C72", "1µF 50V", "ETH_VDDCR", "GND", note="VDDCR (internal regulator output), datasheet 1 µF // 470 pF")
 c.C("C73", "470pF", "ETH_VDDCR", "GND", note="VDDCR, second")
 c.C("C74", "100nF", "+3V3", "GND", note="VDDIO pin 9")
 c.C("C75", "100nF", "+3V3", "GND", note="VDD1A pin 19")
 c.C("C76", "100nF", "+3V3", "GND", note="VDD2A pin 1 (also feeds the 1.2 V regulator)")
-c.C("C77", "4.7µF", "+3V3", "GND", fp=C0603, note="PHY bulk")
+c.C("C77", "10µF 25V", "+3V3", "GND", fp=C0805, note="PHY bulk")
 c.R("R34", "12.1k", "ETH_RBIAS", "GND", note="RBIAS 12.1 kΩ 1 %, close to the pin")
 c.part("FB2", "Device:FerriteBead_Small", "600Ω@100MHz", "Inductor_SMD:L_0603_1608Metric", "C1002",
        {1: "+3V3", 2: "ETH_CT"}, "GZ1608D601TF, as FB1: 3.3 V to the magnetics centre tap and terminations")
@@ -466,9 +460,9 @@ c.R("R35", "49.9", "ETH_TXP", "ETH_CT", note="Line termination 49.9 Ω 1 % to th
 c.R("R36", "49.9", "ETH_CT", "ETH_TXN", note="Line termination")
 c.R("R37", "49.9", "ETH_RXP", "ETH_CT", note="Line termination")
 c.R("R38", "49.9", "ETH_CT", "ETH_RXN", note="Line termination")
-c.R("R39", "330", "ETH_LED1", "ETH_LEDL_A", note="Green LED (left), cathode to GND: LED1 active high, "
+c.R("R39", "120", "ETH_LED1", "ETH_LEDL_A", note="Green LED (left), cathode to GND: LED1 active high (O12, 12 mA): ~9 mA, 11.7 mA worst case; "
     "also pulls REGOFF low (regulator on)")
-c.R("R40", "330", "ETH_LED2", "ETH_LEDR_A", note="Yellow LED (right): LED2 active high once nINTSEL is low")
+c.R("R40", "120", "ETH_LED2", "ETH_LEDR_A", note="Yellow LED (right): LED2 active high once nINTSEL is low")
 c.R("R41", "10k", "ETH_LED2", "GND", note="nINTSEL low: REF_CLK Out mode (figure 3-15)")
 c.R("R42", "10k", "ETH_PHY_RST", "GND", note="PHY held in reset until the firmware drives PG6 high. Internal "
     "pull-up 50 µA: 0.5 V, below the 1.15 V threshold. Straps are latched at the release")
@@ -567,10 +561,10 @@ c.part("U26", "Sensor_Energy:INA226", "INA226AIDGSR", "Package_SO:TSSOP-10_3x3mm
        "I2C5 address 0x45 (A1 = A0 = VS). Alert: overcurrent or bus over/undervoltage, set by the firmware")
 c.C("C96", "100nF", "+3V3", "GND", note="U26")
 c.R("R62", "10k", "+3V3", "INA_ALERT", note="Single pull-up of the wired-OR INA226 alert line (PG1)")
-# I2C5 (STUSB4500, INA226s): one pair of pull-ups for the bus. 2.2 kΩ: ~110 ns rise with ~60 pF, inside the
-# 300 ns of 400 kHz Fm; 1.5 mA sink, under the 3 mA of the spec.
-c.R("R63", "2.2k", "+3V3", "SYS_SDA", note="I2C5 SDA pull-up")
-c.R("R64", "2.2k", "+3V3", "SYS_SCL", note="I2C5 SCL pull-up")
+# I2C5 (STUSB4500, INA226s): one pair of pull-ups for the bus. 2 kΩ: ~100 ns rise with ~60 pF, inside the
+# 300 ns of 400 kHz Fm; 1.65 mA sink, under the 3 mA of the spec.
+c.R("R63", "2k", "+3V3", "SYS_SDA", note="I2C5 SDA pull-up")
+c.R("R64", "2k", "+3V3", "SYS_SCL", note="I2C5 SCL pull-up")
 c.C("C97", "100nF", "TGT_VSUP", "GND", note="At STDC14 pin 1")
 
 # --------------------------------------------------------------------------------------------
@@ -614,8 +608,7 @@ c.part("D14", *LED_Y, {1: "LED_SPARE", 2: "+3V3"}, "Spare, yellow: iCE40 RGB2 (p
 c.part("BZ1", "Device:Buzzer", "MLT-8530", "Archet:Buzzer_HNDZ_MLT-8530", "C94599", {1: "BUZ_P", 2: "BUZ_N"},
        "Passive magnetic transducer, 2.7 kHz resonance, 8.5 x 8.5 mm")
 c.R("R73", "22", "+5V", "BUZ_P", fp=R1206, note="Coil to ~3.6 Vo-p from +5V")
-c.part("D15", "Device:D", "1N4148WS", "Diode_SMD:D_SOD-323", "C2128", {1: "BUZ_P", 2: "BUZ_N"},
-       "Flyback across the coil")
+c.part("D15", *SCHOTTKY[:3], SCHOTTKY[3], {1: "BUZ_P", 2: "BUZ_N"}, "Flyback across the coil")
 c.part("Q7", "Transistor_FET:2N7002", "2N7002", "Package_TO_SOT_SMD:SOT-23", "C8545",
        {1: "BUZZER", 2: "GND", 3: "BUZ_N"}, "Low-side switch, TIM17_CH1 (PB9)")
 c.R("R74", "10k", "BUZZER", "GND", note="Silent while PB9 is I2C1 SDA in the ROM bootloader")
@@ -667,8 +660,8 @@ c.part("J11", IDC34[0], "SHIELD SVC", IDC34[1], IDC34[2], SVC,
        "Shrouded IDC 2 x 17, keyed. Services, then +3V3_OUT, +5V_OUT and VIN_EXT, rail groups split by grounds")
 for r, n in enumerate(SHIELD_IOS + SVC_SERIES, 78):           # R78-R100
     c.R(f"R{r}", "33", n, n + "_J", note="Series termination at the header" if r == 78 else "")
-c.R("R101", "2.2k", "+3V3", "SHIELD_SCL", note="I2C4 pull-ups, as I2C5")
-c.R("R102", "2.2k", "+3V3", "SHIELD_SDA")
+c.R("R101", "2k", "+3V3", "SHIELD_SCL", note="I2C4 pull-ups, as I2C5")
+c.R("R102", "2k", "+3V3", "SHIELD_SDA")
 c.R("R103", "10k", "+3V3", "SHIELD_RESET_N", note="Shield out of reset unless PG10 (open drain) pulls it low")
 c.R("R104", "10k", "+3V3", "SHIELD_PRESENT_N", note="High with no shield; the shield ties it to ground")
 ESD_LINES = [n + "_J" for n in SHIELD_IOS + SVC_SERIES] + ["SHIELD_SCL", "SHIELD_SDA", "SHIELD_RESET_N",
@@ -689,14 +682,14 @@ EFUSE = ("Archet:TPS2595x1", "TPS259531DSGR", "Archet:Texas_DSG0008A_WSON-8-1EP_
          "C2155674")
 INA = ("Sensor_Energy:INA226", "INA226AIDGSR", "Package_SO:TSSOP-10_3x3mm_P0.5mm", "C49851")
 for (u, ina, src, raw, out, tag, rilm, ilim, shunt, fs, rs, cdv, ren, rflt, cin, cout, cina, a1, a0, addr) in (
-        ("U38", "U39", "+5V", "SH5V_RAW", "+5V_OUT", "5V", "R106", "1k", "20m", "4.1 A", "R105",
+        ("U38", "U39", "+5V", "SH5V_RAW", "+5V_OUT", "5V", "R106", "1k", "15m", "5.46 A", "R105",
          "C105", "R107", "R108", "C106", "C107", "C108", "GND", "GND", "0x40"),
         ("U40", "U41", "+3V3_AUX", "SH3V3_RAW", "+3V3_OUT", "3V3", "R110", "2k", "50m", "1.64 A", "R109",
          "C109", "R111", "R112", "C110", "C111", "C112", "+3V3", "GND", "0x44")):
     c.part(u, *EFUSE, {3: src, 4: src, 2: f"EFUSE_{tag}_EN", 1: f"EFUSE_{tag}_DVDT", 5: raw,
                        6: f"EFUSE_{tag}_FLT", 7: f"EFUSE_{tag}_ILM", 8: "GND", 9: "GND"},
            f"{out} eFuse, {'2.04' if tag == '5V' else '1.04'} A ceiling. EN driven by the MCU (VIH 1.2 V)")
-    c.C(cin, "1µF", src, "GND", note="Input")
+    c.C(cin, "1µF 50V", src, "GND", note="Input")
     c.R(rilm, ilim, f"EFUSE_{tag}_ILM", "GND", note="Current limit (eq. 4)")
     c.C(cdv, "100nF", f"EFUSE_{tag}_DVDT", "GND", note="Slew rate 0.42 V/ms (eq. 3)")
     c.R(ren, "100k", f"EFUSE_{tag}_EN", "GND", note="Off while the MCU pin is high-Z (reset, bootloader)")
@@ -761,8 +754,8 @@ c.R(f"R{r}", "10k", "BUS_IRQ", "+3V3", note="IRQ: wired-OR of open-drain outputs
 c.R(f"R{r + 1}", "100k", "BUS_MISO", "GND", note="MISO is tri-stated when no module is selected")
 c.R(f"R{r + 2}", "100k", "BUS_SCK", "GND", note="SCK low while the MCU pin is not configured: mode 0 idle")
 c.R(f"R{r + 3}", "100k", "BUS_MOSI", "GND", note="MOSI defined while the MCU pin is not configured")
-c.R(f"R{r + 4}", "2.2k", "BUS_SDA", "+3V3", note="I2C1 at 100 kHz, ribbon and 12 modules: rise < 1 µs")
-c.R(f"R{r + 5}", "2.2k", "BUS_SCL", "+3V3")
+c.R(f"R{r + 4}", "2k", "BUS_SDA", "+3V3", note="I2C1 at 100 kHz, ribbon and 12 modules: rise < 1 µs")
+c.R(f"R{r + 5}", "2k", "BUS_SCL", "+3V3")
 assert r + 5 == 173, r
 # ESD of every ribbon signal, at the header (order of the lines on the channels as on Bornier)
 for k, group in enumerate((("RB_CS2", "RB_CS1", "RB_CS3", "RB_CS0"), ("RB_CS7", "RB_CS5", "RB_CS4", "RB_CS6"),

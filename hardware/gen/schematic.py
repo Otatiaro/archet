@@ -1717,7 +1717,7 @@ def shield(prj):
         s.glabel(net, xl, y, 0, SHIELD_SHAPE.get(net, "bidirectional"), "out")
         vpart(s, r, xr, y - 7.62)
         s.rail("+3V3", *s.P(r, 1))
-    s.text("I2C4 pull-ups 2.2 kΩ (as I2C5); reset and presence 10 kΩ.\nThe shield ties PRESENT_N to ground.",
+    s.text("I2C4 pull-ups 2 kΩ (as I2C5); reset and presence 10 kΩ.\nThe shield ties PRESENT_N to ground.",
            xg - 20.32, 259.08)
 
     # --- ESD, flow-through at the headers ---
@@ -1933,7 +1933,7 @@ def local_bus(prj):
                 s.w(f"RB_{sig}", s.P(r1, 2), s.P(r2[0], 2))
             s.label(f"RB_{sig}", 93.98, y)
     s.text("Pull-ups 10 kΩ to +3V3 on CS0-CS11, LATCH, OE, IRQ (R135-R148, R168);\n"
-           "2.2 kΩ on SDA, SCL (R172-R173). Pull-downs 100 kΩ on SCK, MOSI, MISO\n"
+           "2 kΩ on SDA, SCL (R172-R173). Pull-downs 100 kΩ on SCK, MOSI, MISO\n"
            "(R169-R171): SPI mode 0 idle; MISO tri-stated with no module selected.\n"
            "Series 49.9 Ω R149-R164; SCK, MOSI, LATCH: second 49.9 Ω in parallel\n"
            "(R165-R167), 25 Ω for the multipoint edges.", 20.32, y0 + pitch * len(rows) + 2.54)

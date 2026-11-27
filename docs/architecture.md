@@ -481,17 +481,15 @@ Unit price for 1 to 9 parts (first runs of 2 to 5 boards). Type: BASIC and PREF 
 | Function | Part | Code | Type | Price |
 |---|---|---|---|---|
 | EEPROM | M24C02-WMN6TP | C7562 | PREF | $0.12 |
-| Schottky (×3: J5 and J6 VBUS to VSYS, J6 RTS to NRST) | 1N5819WS | C191023 | BASIC | $0.01 |
-| BOOT0 button | TS-1088-AR02016 | C720477 | BASIC | $0.05 |
+| Schottky (×4: J5 and J6 VBUS to VSYS, J6 RTS to NRST, buzzer flyback) | 1N5819WS | C191023 | BASIC | $0.01 |
 | 25 MHz crystal, ×2 (Y1 HSE, Y3 RMII PHY) | X322525MOB4SI | C9006 | BASIC | $0.09 |
-| GO and STOP buttons | TS-1187A-B-A-B | C318884 | BASIC | $0.02 |
+| BOOT0, GO and STOP buttons | TS-1187A-B-A-B | C318884 | BASIC | $0.02 |
 | Green LEDs (PASS, LINK) | KT-0805G | C2297 | BASIC | $0.02 |
 | Yellow LEDs (STATUS, spare) | KT-0805Y | C2296 | BASIC | $0.02 |
 | Red LED (FAIL) | NCD0805R1 | C84256 | BASIC | $0.01 |
-| Buzzer flyback diode | 1N4148WS | C2128 | BASIC | $0.01 |
 | Buzzer driver | 2N7002 | C8545 | BASIC | $0.02 |
 | Buzzer series resistor, 22 Ω 1206 | 1206W4F220JT5E | C17958 | BASIC | $0.01 |
-| Field bus termination, 120 Ω | 0402WGF1200TCE | C25079 | BASIC | $0.01 |
+| Field bus termination and RJ45 LEDs, 120 Ω | 0402WGF1200TCE | C25079 | BASIC | $0.01 |
 
 The basic/preferred library (≈ 1,600 parts, mostly passives) has nothing for: PHY, ULPI, PoE, PD, USB-C, RJ45, variable-voltage translators (only the LVC4245A, with fixed port voltages), ideal diode, eFuse, load switch, current measurement, high-side switch. Discrete substitutes (AO3401A P-MOS rated 30 V with no margin, Schottky dissipating ~1 W at 2 A, LM358 + shunt) cost more in quality than they save.
 
@@ -503,13 +501,14 @@ Out of stock on 2026-11-25: DP9700-AT, DP83825IRMQR, CH224K.
 |---|---|---|
 | Active parts | ~$70 | ~$70 |
 | Passives and small connectors | ~$10 | ~$10 |
-| Extended-part fees (~26 parts × $3 = $78 per order) | ~$39 | ~$16 |
-| **Total** | **~$116** | **~$95** |
+| Extended-part fees (~24 parts × $3 = $72 per order) | ~$36 | ~$14 |
+| **Total** | **~$113** | **~$93** |
 
 Fixed costs (PCB, assembly setup, stencil) are also divided by the run size. Consequences:
 
 - order 5 boards: JLCPCB makes at least 5 PCBs, the extra 3 cost ~$200 in parts;
 - hand-solder through-hole parts (RJ45, three IDC headers): no through-hole assembly to pay for;
+- passives are pooled into a short palette (`hardware/gen/circuit.py`, 97 BOM lines): a new value or size needs a reason;
 - each extended part removed saves $1.50 per board on a run of 2: take the alternatives above, without bending the design;
 - reserve the PoE module, PoE RJ45 and iCE40 (stock < 160) in JLCPCB parts inventory as soon as the schematic is frozen.
 
