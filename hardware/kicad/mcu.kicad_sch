@@ -29402,6 +29402,135 @@
 		)
 		(uuid "3cea7d28-f43f-580c-aaba-f5ef1e7bf686")
 	)
+	(symbol
+		(lib_id "Device:R")
+		(at 462.28 113.03 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "f8f0f03d-ae31-5b9c-89d8-32a0ddffedf6")
+		(property "Reference" "R176"
+			(at 454.66 111.76 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "1k"
+			(at 454.66 114.3 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
+			(at 462.28 113.03 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 462.28 113.03 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Description" "Sinks the D7 reverse leakage (VSYS up to 24 V, hot) with J5 unplugged, so it cannot lift BOOT0; 5 mA from the cable"
+			(at 462.28 113.03 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C11702"
+			(at 462.28 113.03 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "03b04b55-55fc-51df-8ea3-1621d1fda954")
+		)
+		(pin "2"
+			(uuid "cee97b4f-1d52-517e-bd5f-8dfbd8e9c752")
+		)
+		(instances
+			(project "archet"
+				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/39edc9fc-3dfd-56a0-a3cc-73de24f6514a"
+					(reference "R176")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:GND")
+		(at 462.28 119.38 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "6e70580a-112a-5913-8066-e1d821e36da4")
+		(property "Reference" "#PWRMCU31"
+			(at 462.28 119.38 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "GND"
+			(at 462.28 123.19 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 462.28 119.38 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "01049ca9-8697-5b53-957d-234a5a27855f")
+		)
+		(instances
+			(project "archet"
+				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/39edc9fc-3dfd-56a0-a3cc-73de24f6514a"
+					(reference "#PWRMCU31")
+					(unit 1)
+				)
+			)
+		)
+	)
 	(global_label "VSYS"
 		(shape bidirectional)
 		(at 497.84 109.22 0)
@@ -29525,8 +29654,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "6e70580a-112a-5913-8066-e1d821e36da4")
-		(property "Reference" "#PWRMCU31"
+		(uuid "b8b2dda2-eec5-5d49-924e-8688455af0f3")
+		(property "Reference" "#PWRMCU32"
 			(at 474.98 121.92 0)
 			(effects
 				(font
@@ -29553,12 +29682,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "01049ca9-8697-5b53-957d-234a5a27855f")
+			(uuid "7a1fdc31-00a6-5c90-8500-1cde0ccf3632")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/39edc9fc-3dfd-56a0-a3cc-73de24f6514a"
-					(reference "#PWRMCU31")
+					(reference "#PWRMCU32")
 					(unit 1)
 				)
 			)
@@ -29572,8 +29701,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "b8b2dda2-eec5-5d49-924e-8688455af0f3")
-		(property "Reference" "#PWRMCU32"
+		(uuid "877f1355-30ae-5d2b-a62a-63de52a0a36c")
+		(property "Reference" "#PWRMCU33"
 			(at 474.98 139.7 0)
 			(effects
 				(font
@@ -29600,12 +29729,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "7a1fdc31-00a6-5c90-8500-1cde0ccf3632")
+			(uuid "d9a4a7a8-f3f8-5243-abfe-b88e4cacf67e")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/39edc9fc-3dfd-56a0-a3cc-73de24f6514a"
-					(reference "#PWRMCU32")
+					(reference "#PWRMCU33")
 					(unit 1)
 				)
 			)
@@ -29711,8 +29840,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "877f1355-30ae-5d2b-a62a-63de52a0a36c")
-		(property "Reference" "#PWRMCU33"
+		(uuid "008c3464-9a52-5a1e-8521-5991a39e64e0")
+		(property "Reference" "#PWRMCU34"
 			(at 500.38 139.7 0)
 			(effects
 				(font
@@ -29739,12 +29868,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "d9a4a7a8-f3f8-5243-abfe-b88e4cacf67e")
+			(uuid "90f8dff8-0501-5191-a90a-3baeb348c372")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/39edc9fc-3dfd-56a0-a3cc-73de24f6514a"
-					(reference "#PWRMCU33")
+					(reference "#PWRMCU34")
 					(unit 1)
 				)
 			)
@@ -29850,8 +29979,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "008c3464-9a52-5a1e-8521-5991a39e64e0")
-		(property "Reference" "#PWRMCU34"
+		(uuid "9baafd77-37c1-5693-9c03-b5bf7d54e8f0")
+		(property "Reference" "#PWRMCU35"
 			(at 495.3 157.48 0)
 			(effects
 				(font
@@ -29878,12 +30007,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "90f8dff8-0501-5191-a90a-3baeb348c372")
+			(uuid "47f4d296-e3f3-5a0e-be68-f8cefbc171fe")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/39edc9fc-3dfd-56a0-a3cc-73de24f6514a"
-					(reference "#PWRMCU34")
+					(reference "#PWRMCU35")
 					(unit 1)
 				)
 			)
@@ -30004,8 +30133,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "9baafd77-37c1-5693-9c03-b5bf7d54e8f0")
-		(property "Reference" "#PWRMCU35"
+		(uuid "1996d538-cf47-554a-be0e-3443d4721ed2")
+		(property "Reference" "#PWRMCU36"
 			(at 454.66 200.66 0)
 			(effects
 				(font
@@ -30033,12 +30162,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "47f4d296-e3f3-5a0e-be68-f8cefbc171fe")
+			(uuid "3d902253-40b4-52ac-8eff-5adcc5c35cc8")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/39edc9fc-3dfd-56a0-a3cc-73de24f6514a"
-					(reference "#PWRMCU35")
+					(reference "#PWRMCU36")
 					(unit 1)
 				)
 			)
@@ -30144,8 +30273,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "1996d538-cf47-554a-be0e-3443d4721ed2")
-		(property "Reference" "#PWRMCU36"
+		(uuid "24c36502-5725-58c0-9e5c-7977c48fb058")
+		(property "Reference" "#PWRMCU37"
 			(at 500.38 177.8 0)
 			(effects
 				(font
@@ -30172,12 +30301,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "3d902253-40b4-52ac-8eff-5adcc5c35cc8")
+			(uuid "9fb9eeb5-284a-54b8-b275-9890e2c7f76f")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/39edc9fc-3dfd-56a0-a3cc-73de24f6514a"
-					(reference "#PWRMCU36")
+					(reference "#PWRMCU37")
 					(unit 1)
 				)
 			)
@@ -30275,7 +30404,7 @@
 		(dnp no)
 		(uuid "75653fae-55c4-5b3c-b843-8f935c2ac115")
 		(property "Reference" "D8"
-			(at 487.68 200.66 0)
+			(at 495.3 198.12 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -30284,7 +30413,7 @@
 			)
 		)
 		(property "Value" "1N5819WS"
-			(at 487.68 203.2 0)
+			(at 495.3 200.66 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -30356,6 +30485,135 @@
 			(justify left bottom)
 		)
 		(uuid "46679d60-e1b4-5bff-8d56-9cc56bae7b0e")
+	)
+	(symbol
+		(lib_id "Device:R")
+		(at 483.87 201.93 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "bdf143cf-379f-54a6-a86c-e3249d7d3acc")
+		(property "Reference" "R177"
+			(at 476.25 200.66 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "1k"
+			(at 476.25 203.2 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
+			(at 483.87 201.93 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 483.87 201.93 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Description" "Sinks the D8 reverse leakage, as R176"
+			(at 483.87 201.93 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C11702"
+			(at 483.87 201.93 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "1d7c1c3f-8466-5846-ac80-b140ec63049a")
+		)
+		(pin "2"
+			(uuid "0078b76b-0b5e-5a51-8545-1a2c8b241126")
+		)
+		(instances
+			(project "archet"
+				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/39edc9fc-3dfd-56a0-a3cc-73de24f6514a"
+					(reference "R177")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:GND")
+		(at 483.87 195.58 180)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "34770642-eeea-5bb7-bb93-0771cc409906")
+		(property "Reference" "#PWRMCU38"
+			(at 483.87 195.58 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "GND"
+			(at 483.87 199.39 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 483.87 195.58 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "e856dfec-654b-5c28-929c-d7307162c435")
+		)
+		(instances
+			(project "archet"
+				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/39edc9fc-3dfd-56a0-a3cc-73de24f6514a"
+					(reference "#PWRMCU38")
+					(unit 1)
+				)
+			)
+		)
 	)
 	(global_label "VSYS"
 		(shape bidirectional)
@@ -31633,13 +31891,24 @@
 	(wire
 		(pts
 			(xy 457.2 109.22)
+			(xy 462.28 109.22)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "74df69b6-e12e-5657-9805-7b866dc6895a")
+	)
+	(wire
+		(pts
+			(xy 462.28 109.22)
 			(xy 467.36 109.22)
 		)
 		(stroke
 			(width 0)
 			(type default)
 		)
-		(uuid "d1380c87-680f-5ea7-b30e-a14def71e389")
+		(uuid "3f9dfae0-b05b-5127-a620-66998b74c64e")
 	)
 	(wire
 		(pts
@@ -31651,6 +31920,17 @@
 			(type default)
 		)
 		(uuid "3fad885d-7f73-54ce-8c74-4eee3449b90f")
+	)
+	(wire
+		(pts
+			(xy 462.28 116.84)
+			(xy 462.28 119.38)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "5d3a033f-e74f-513c-9209-98735e9a32e0")
 	)
 	(wire
 		(pts
@@ -31886,13 +32166,24 @@
 	(wire
 		(pts
 			(xy 474.98 205.74)
+			(xy 483.87 205.74)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "b9f6417a-a5e6-5d7f-89a6-2fd7d089af7c")
+	)
+	(wire
+		(pts
+			(xy 483.87 205.74)
 			(xy 486.41 205.74)
 		)
 		(stroke
 			(width 0)
 			(type default)
 		)
-		(uuid "3278c7ed-937a-5692-9900-cd988ce60a86")
+		(uuid "0ddd711f-8917-5834-85ab-22e471692dfb")
 	)
 	(wire
 		(pts
@@ -31904,6 +32195,17 @@
 			(type default)
 		)
 		(uuid "bbbe1d73-53e0-516d-8121-5f0857779a87")
+	)
+	(wire
+		(pts
+			(xy 483.87 198.12)
+			(xy 483.87 195.58)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "d71f9da0-0353-51ab-87c7-f92b22262e31")
 	)
 	(wire
 		(pts
@@ -32175,6 +32477,12 @@
 		(uuid "2d319142-bfb1-5e01-bd3b-8a551cd81d4d")
 	)
 	(junction
+		(at 462.28 109.22)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "1b716a98-99e8-5d63-a4e7-822838876d8f")
+	)
+	(junction
 		(at 467.36 109.22)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -32191,6 +32499,12 @@
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "13a989fe-ca45-5230-8fab-8b737e367afa")
+	)
+	(junction
+		(at 483.87 205.74)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "62c10ac9-ebc0-516a-8d11-1d589194b352")
 	)
 	(junction
 		(at 495.3 147.32)

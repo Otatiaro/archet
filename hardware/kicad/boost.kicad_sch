@@ -22710,7 +22710,7 @@
 		)
 		(uuid "29427888-db29-52f1-b358-143e1be63d43")
 	)
-	(text "VIN_BUS = the higher of the boost (24.5 V) and VIN_EXT through D18. With VIN_EXT present, Q9 holds UVLO\nlow: a 12 V VIN_EXT is passed through, never boosted. On USB or PoE the firmware enables the boost\n(BOOST_EN) within the source budget. Values simulated in hardware/sim/boost.py.\nLayout: C119/C120, Q8, R116 and D17 in one tight loop on the PGND side; CS and FB tracks away from SW."
+	(text "VIN_BUS = the higher of the boost (24.5 V) and VIN_EXT through U52/Q10. With VIN_EXT present, Q9 holds UVLO\nlow: a 12 V VIN_EXT is passed through, never boosted. On USB or PoE the firmware enables the boost\n(BOOST_EN) within the source budget. Values simulated in hardware/sim/boost.py.\nLayout: C119/C120, Q8, R116 and D17 in one tight loop on the PGND side; CS and FB tracks away from SW."
 		(exclude_from_sim no)
 		(at 20.32 25.4 0)
 		(effects
@@ -26070,16 +26070,17 @@
 		)
 	)
 	(symbol
-		(lib_id "Device:D_Schottky")
-		(at 300.99 59.69 90)
+		(lib_id "Transistor_FET:CSD18543Q3A")
+		(at 275.59 185.42 270)
+		(mirror x)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "e5760b89-5846-56cd-b7ae-0b9cfda2e0be")
-		(property "Reference" "D18"
-			(at 306.07 57.15 90)
+		(uuid "8490d014-66be-5ac9-8202-75f88415b7d2")
+		(property "Reference" "Q10"
+			(at 278.13 176.53 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -26087,8 +26088,8 @@
 				(justify left)
 			)
 		)
-		(property "Value" "SS54"
-			(at 306.07 59.69 90)
+		(property "Value" "CSD18543Q3A"
+			(at 278.13 179.07 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -26096,8 +26097,8 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Diode_SMD:D_SMA"
-			(at 300.99 59.69 90)
+		(property "Footprint" "Package_SON:VSON-8_3.3x3.3mm_P0.65mm_NexFET"
+			(at 275.59 185.42 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -26107,7 +26108,7 @@
 			)
 		)
 		(property "Datasheet" "~"
-			(at 300.99 59.69 90)
+			(at 275.59 185.42 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -26116,8 +26117,8 @@
 				(hide yes)
 			)
 		)
-		(property "Description" "VIN_EXT straight to VIN_BUS: 0.5 W at 1 A"
-			(at 300.99 59.69 90)
+		(property "Description" "Ideal diode 4 switch; 60 V, 8.1 mΩ at 10 V: 73 mW at 3 A"
+			(at 275.59 185.42 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -26126,8 +26127,8 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C22452"
-			(at 300.99 59.69 90)
+		(property "LCSC" "C840100"
+			(at 275.59 185.42 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -26137,33 +26138,134 @@
 			)
 		)
 		(pin "1"
-			(uuid "f10f0661-5a20-5731-9830-793542a144bd")
+			(uuid "592581d5-0b6e-5d7a-9069-297c03dab599")
 		)
 		(pin "2"
-			(uuid "5ec456d6-bf87-5d50-a1aa-80c3c5589bcd")
+			(uuid "624facdf-596a-5a1d-bbb9-744e1de96f4a")
+		)
+		(pin "3"
+			(uuid "91ea8cc4-60c3-5d4d-99c7-d1f9c5135746")
+		)
+		(pin "4"
+			(uuid "02038384-4162-5af0-9d81-7740d9127f24")
+		)
+		(pin "5"
+			(uuid "a0c9eed5-f40b-5e96-a14f-690e600080ac")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/8ed5b44f-eea6-5fd2-b940-4d701ef890ef"
-					(reference "D18")
+					(reference "Q10")
 					(unit 1)
 				)
 			)
 		)
 	)
-	(global_label "VIN_EXT_P"
-		(shape input)
-		(at 300.99 50.8 90)
-		(fields_autoplaced yes)
-		(effects
-			(font
-				(size 1.27 1.27)
+	(symbol
+		(lib_id "Power_Management:LM74700")
+		(at 275.59 208.28 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "8c219928-1eba-56e1-8e30-91e82a564f39")
+		(property "Reference" "U52"
+			(at 285.75 212.09 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
 			)
-			(justify left)
 		)
-		(uuid "a9608e1b-5f4a-5a45-947c-bda433aebb8b")
-		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 300.99 50.8 0)
+		(property "Value" "LM74700QDBVRQ1"
+			(at 285.75 214.63 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Package_TO_SOT_SMD:SOT-23-6"
+			(at 275.59 208.28 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 275.59 208.28 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Description" "VIN_EXT straight to VIN_BUS, < 10 mW at 1 A. Blocks the boost output: ~2 µA cathode leakage (a Schottky would lift VIN_EXT_P, turn Q9 on and fake a VIN_EXT); a reversed VIN_EXT with the boost running puts 48.5 V across Q10 (60 V) and cathode to anode (75 V). Input decoupling: C2"
+			(at 275.59 208.28 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C2941042"
+			(at 275.59 208.28 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "87eb2f55-80d2-59fb-a55c-13f2d512ad64")
+		)
+		(pin "2"
+			(uuid "e46cf559-958c-5a83-8224-5f0d92c433ff")
+		)
+		(pin "3"
+			(uuid "92493001-8eb8-5e23-a533-4d92f33cfe42")
+		)
+		(pin "4"
+			(uuid "d0b5b911-3d1e-5a5b-ac40-cca137e15d6e")
+		)
+		(pin "5"
+			(uuid "ff5e16b8-6d24-5b7c-a72f-fbf98bb60a8d")
+		)
+		(pin "6"
+			(uuid "9143067b-fc78-5188-b6bb-9361a99e9502")
+		)
+		(instances
+			(project "archet"
+				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/8ed5b44f-eea6-5fd2-b940-4d701ef890ef"
+					(reference "U52")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:GND")
+		(at 275.59 220.98 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "26817642-a0a6-5422-844a-d3f30a8ecf1b")
+		(property "Reference" "#PWRVIN22"
+			(at 275.59 220.98 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -26171,6 +26273,149 @@
 				(hide yes)
 			)
 		)
+		(property "Value" "GND"
+			(at 275.59 224.79 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 275.59 220.98 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "f71e3d1f-e491-5183-9ac5-00158c6c3a7e")
+		)
+		(instances
+			(project "archet"
+				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/8ed5b44f-eea6-5fd2-b940-4d701ef890ef"
+					(reference "#PWRVIN22")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Device:C")
+		(at 250.19 207.01 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "492235de-a699-5468-a2db-638b5813e958")
+		(property "Reference" "C135"
+			(at 252.73 205.74 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "100nF"
+			(at 252.73 208.28 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Capacitor_SMD:C_0402_1005Metric"
+			(at 250.19 207.01 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 250.19 207.01 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Description" "Charge pump, 0.1 µF minimum between VCAP and ANODE"
+			(at 250.19 207.01 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C307331"
+			(at 250.19 207.01 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "cae738a4-7a68-587c-8154-41425f261282")
+		)
+		(pin "2"
+			(uuid "62ceca7f-4c59-5fa4-883e-93d9af0bd16a")
+		)
+		(instances
+			(project "archet"
+				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/8ed5b44f-eea6-5fd2-b940-4d701ef890ef"
+					(reference "C135")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(global_label "VIN_EXT_P"
+		(shape input)
+		(at 224.79 182.88 180)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right)
+		)
+		(uuid "a9608e1b-5f4a-5a45-947c-bda433aebb8b")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 224.79 182.88 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+	)
+	(text "VIN_EXT path: LM74700 ideal diode, as on the Sources sheet.\nBlocks the boost output (no leakage into VIN_EXT_P, which drives Q9),\nand a reversed VIN_EXT with the boost running."
+		(exclude_from_sim no)
+		(at 224.79 223.52 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+				(bold no)
+			)
+			(justify left top)
+		)
+		(uuid "7fde7eba-b536-5bf5-88b1-3c54473b66f1")
 	)
 	(symbol
 		(lib_id "Device:R")
@@ -26344,8 +26589,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "26817642-a0a6-5422-844a-d3f30a8ecf1b")
-		(property "Reference" "#PWRVIN22"
+		(uuid "ab3f9beb-0c37-5934-b651-6546ead22eb8")
+		(property "Reference" "#PWRVIN23"
 			(at 316.23 88.9 0)
 			(effects
 				(font
@@ -26372,12 +26617,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "f71e3d1f-e491-5183-9ac5-00158c6c3a7e")
+			(uuid "258d4e60-c528-55f8-bca1-b5e22cdfd88e")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/8ed5b44f-eea6-5fd2-b940-4d701ef890ef"
-					(reference "#PWRVIN22")
+					(reference "#PWRVIN23")
 					(unit 1)
 				)
 			)
@@ -26565,8 +26810,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "ab3f9beb-0c37-5934-b651-6546ead22eb8")
-		(property "Reference" "#PWRVIN23"
+		(uuid "ca985387-38f4-5214-baa2-b52fb50de2f6")
+		(property "Reference" "#PWRVIN24"
 			(at 344.17 88.9 0)
 			(effects
 				(font
@@ -26593,12 +26838,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "258d4e60-c528-55f8-bca1-b5e22cdfd88e")
+			(uuid "958422c7-6537-51f6-afda-956df419b403")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/8ed5b44f-eea6-5fd2-b940-4d701ef890ef"
-					(reference "#PWRVIN23")
+					(reference "#PWRVIN24")
 					(unit 1)
 				)
 			)
@@ -26694,8 +26939,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "ca985387-38f4-5214-baa2-b52fb50de2f6")
-		(property "Reference" "#PWRVIN24"
+		(uuid "bbd1f90c-6af5-505a-af37-6e9ab5eca580")
+		(property "Reference" "#PWRVIN25"
 			(at 354.33 86.36 0)
 			(effects
 				(font
@@ -26722,12 +26967,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "958422c7-6537-51f6-afda-956df419b403")
+			(uuid "5baa4555-2e92-50f3-b882-da34161958b0")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/8ed5b44f-eea6-5fd2-b940-4d701ef890ef"
-					(reference "#PWRVIN24")
+					(reference "#PWRVIN25")
 					(unit 1)
 				)
 			)
@@ -26849,6 +27094,26 @@
 			(justify left bottom)
 		)
 		(uuid "1f699166-8056-5044-a727-8204369f9b3b")
+	)
+	(label "GATE4"
+		(at 275.59 194.31 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "78e06932-fa0e-5ad3-9374-11f9c63a1216")
+	)
+	(label "VCAP4"
+		(at 256.54 210.82 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "342e812e-5087-511e-9c0b-187d1e2392ee")
 	)
 	(wire
 		(pts
@@ -27644,14 +27909,168 @@
 	)
 	(wire
 		(pts
-			(xy 300.99 55.88)
-			(xy 300.99 50.8)
+			(xy 275.59 190.5)
+			(xy 275.59 198.12)
 		)
 		(stroke
 			(width 0)
 			(type default)
 		)
-		(uuid "d52f05ee-e13c-5067-8af4-3a3e45b17c72")
+		(uuid "87f26500-c6ac-58fe-8534-28d0bd3c468c")
+	)
+	(wire
+		(pts
+			(xy 267.97 198.12)
+			(xy 267.97 182.88)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "e83b7e8b-11f9-5759-9920-d614089d7257")
+	)
+	(wire
+		(pts
+			(xy 283.21 198.12)
+			(xy 283.21 182.88)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "05e235cb-1ab4-55be-8615-0d1915b509ee")
+	)
+	(wire
+		(pts
+			(xy 280.67 182.88)
+			(xy 283.21 182.88)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "0ca2ccc7-a1bc-5774-a0d4-dca2caf88f7e")
+	)
+	(wire
+		(pts
+			(xy 283.21 182.88)
+			(xy 300.99 182.88)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "754baaea-9653-5ca3-a386-5bae20745e98")
+	)
+	(wire
+		(pts
+			(xy 275.59 218.44)
+			(xy 275.59 220.98)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "9a3f34e4-8d32-599b-8284-8f06ce59f6f7")
+	)
+	(wire
+		(pts
+			(xy 262.89 210.82)
+			(xy 250.19 210.82)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "d7a69371-363c-51de-9bf6-03e28e2d529e")
+	)
+	(wire
+		(pts
+			(xy 250.19 203.2)
+			(xy 250.19 182.88)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "533aa436-0e2e-55e3-a4b1-95c1b001ec10")
+	)
+	(wire
+		(pts
+			(xy 262.89 213.36)
+			(xy 242.57 213.36)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "1c82cbca-aca5-5e69-8885-f5c6b47bac25")
+	)
+	(wire
+		(pts
+			(xy 242.57 213.36)
+			(xy 242.57 182.88)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "b4b7458b-f9ca-59ae-83ca-ec0c30192345")
+	)
+	(wire
+		(pts
+			(xy 224.79 182.88)
+			(xy 242.57 182.88)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "51ec60de-c1cc-5afe-a05b-2204d73ad9d1")
+	)
+	(wire
+		(pts
+			(xy 242.57 182.88)
+			(xy 250.19 182.88)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "b5cb11d3-7e19-5994-be49-db698fa35f88")
+	)
+	(wire
+		(pts
+			(xy 250.19 182.88)
+			(xy 267.97 182.88)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "9766d56d-a2ea-55d4-965a-6f0fffcb6d71")
+	)
+	(wire
+		(pts
+			(xy 267.97 182.88)
+			(xy 270.51 182.88)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "37bda39e-6028-527f-86e8-779c6776d988")
+	)
+	(wire
+		(pts
+			(xy 300.99 182.88)
+			(xy 300.99 63.5)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "a1d98ef4-9e37-5bd5-8a11-d759a2380820")
 	)
 	(wire
 		(pts
@@ -27852,10 +28271,22 @@
 		(uuid "eb005ca4-4c67-56e1-8800-4c4dbc67331a")
 	)
 	(junction
+		(at 242.57 182.88)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "ed9954a2-cc37-51dd-8e48-057873a6d0ae")
+	)
+	(junction
 		(at 247.65 63.5)
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "050af401-2630-5dbf-ba6d-506cd1d2b2bf")
+	)
+	(junction
+		(at 250.19 182.88)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "fb0a9ae3-9aa1-5053-8b05-e6beb823b13d")
 	)
 	(junction
 		(at 260.35 63.5)
@@ -27864,10 +28295,22 @@
 		(uuid "f749e627-8d7f-5a0f-8088-6acd87f90e27")
 	)
 	(junction
+		(at 267.97 182.88)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "02cf7692-707e-5262-8839-bcf3fc1b58f9")
+	)
+	(junction
 		(at 273.05 63.5)
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "b8ea5a13-e82e-59bc-96aa-bbe000b13738")
+	)
+	(junction
+		(at 283.21 182.88)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "a5d2bb3e-ee54-5bb1-bcce-f95c9085c123")
 	)
 	(junction
 		(at 285.75 63.5)

@@ -143,9 +143,9 @@ Two connectors, both industry standards, no in-house adapter. Pinouts in [`hardw
 - **J_TARGET: STDC14** (2 × 7, 1.27 mm). SWD/JTAG, SWO, nRST, T_VCC and the UART (T_VCP_RX on pin 13 is a probe output, to the target RX). A 10-pin Cortex target plugs on the centre pins 3–12. Pin 9 (RTCK) is left unconnected: no IO left on the iCE40.
 - **Pins 1–2, reserved by ST, used as on the STLINK-V3SET**: there, pin 1 carries USB 5 V when jumper JP2 is fitted (default; UM2448: "provides 5 V power on connectors, required for SWIM usage, B-STLINK-VOLT and B-STLINK-ISOL boards": ST's own add-on boards are powered from it), and pin 2 the SWDIO direction (3.3 V, high when the probe drives; community measurement, not in ST's manual). ST still asks targets to leave them unconnected. Archet: **pin 1 = TGT_VSUP**, **pin 2 = SWDIO_DIR**, the iCE40 signal that already drives our SWDIO translator, copied through a 74LVC1G125 buffer and a series resistor. A board made for a STLINK-V3SET (5 V on pin 1, translator on pin 2) works on Archet. nTRST is not provided (old ARM7/9 only).
 - **J_PROG: ESP-Prog PROG pinout** (2 × 3, 2.54 mm): EN, VDD, TXD, GND, RXD, IO0. An ESP32 board with this header plugs in directly; also takes Dupont wires for any board. EN is the same line as nRST, TXD/RXD the same UART as STDC14: one connector in use at a time.
-- **Target supply: adjustable 1.4–5.2 V out, the target logic voltage comes back**, as with the J-Link pin 19 (fixed 5 V there): the probe sends **TGT_VSUP** (STDC14 pin 1), set by the firmware to what the target expects (1.8, 3.3 or 5 V, 5 V for a STLINK-V3SET board, or its regulator input), and the target returns its logic rail on T_VCC. **TGT_VCC** (T_VCC and PROG VDD) is a sense input only (ADC PF11), the reference of the translators.
+- **Target supply: adjustable 1.65–5.04 V out (translator floor, DAC buffer range), the target logic voltage comes back**, as with the J-Link pin 19 (fixed 5 V there): the probe sends **TGT_VSUP** (STDC14 pin 1), set by the firmware to what the target expects (1.8, 3.3 or 5 V, 5 V for a STLINK-V3SET board, or its regulator input), and the target returns its logic rail on T_VCC. **TGT_VCC** (T_VCC and PROG VDD) is a sense input only (ADC PF11), the reference of the translators.
   - **TPS63020 buck-boost** fed from +5V: 1.2–5.5 V out, 3 A switch, true 5 V even when +5V is in dropout on a 5 V USB port. Output disconnected in shutdown: no back-feed from a target that has its own supply. **PS/SYNC low** (power save): the converter never sinks current from a target that holds the rail higher. 1.5 µH inductor (FXL0420, Isat 6 A; 1.9 A peak at 1 A out). PG unused (no MCU pin left): the INA226 reads the output.
-  - **Set** by DAC1_OUT1 (PA4) injecting into the FB divider (150 kΩ / 18 kΩ, 120 kΩ from the DAC, all preferred 0402): Vout = 0.5 + 150 kΩ × (0.5 / 18 kΩ + (0.5 − VSET) / 120 kΩ). DAC at 0 V gives 5.29 V (5.44 V worst case, under the 5.5 V rating), 3.3 V gives 1.17 V; ~1 mV per 12-bit step. The 120 kΩ loads the DAC (~15 kΩ with its buffer off), so the firmware runs it buffered: 0.2–3.1 V gives 1.42–5.04 V; for the top it drops the buffer at 0 V (5.22 V). The INA226 bus voltage trims the setpoint. DAC pin in high-Z (reset, bootloader): 4.67 V, but EN on PC8 is pulled low (100 kΩ), so the converter stays off until the firmware has set the DAC. 100 nF on the DAC node: the output ramps in ~3 ms with the DAC buffer off. Simulated in [`hardware/sim/tgt_vsup.py`](../hardware/sim/tgt_vsup.py) at the tolerance corners (1 % resistors, VFB 0.495–0.505 V).
+  - **Set** by DAC1_OUT1 (PA4) injecting into the FB divider (150 kΩ / 18 kΩ, 120 kΩ from the DAC, all preferred 0402): Vout = 0.5 + 150 kΩ × (0.5 / 18 kΩ + (0.5 − VSET) / 120 kΩ). DAC at 0 V gives 5.29 V (5.44 V worst case, under the 5.5 V rating), 3.3 V gives 1.17 V; ~1 mV per 12-bit step. The 120 kΩ loads the DAC (~15 kΩ with its buffer off), so the firmware runs it buffered: 0.2–3.1 V gives 1.42–5.04 V, and **5.04 V is the ceiling** (no unbuffered 0 V setting). R178 1 kΩ isolates the buffer from the 100 nF node (50 pF maximum load), 0.8 % gain error trimmed through the INA226. The INA226 bus voltage trims the setpoint. DAC pin in high-Z (reset, bootloader): 4.67 V, but EN on PC8 is pulled low (100 kΩ), so the converter stays off until the firmware has set the DAC. 100 nF on the DAC node: the output ramps in ~3 ms with the DAC buffer off. Simulated in [`hardware/sim/tgt_vsup.py`](../hardware/sim/tgt_vsup.py) at the tolerance corners (1 % resistors, VFB 0.495–0.505 V).
   - **Monitored** by a fourth INA226 (I2C5, address **0x45**, A1 = A0 = VS) on a 50 mΩ shunt after the output capacitors (81.9 mV full scale = 1.64 A): voltage and current, alert on overcurrent or undervoltage, limit enforced by firmware: **1 A max** (one supply pin on STDC14, 1.27 mm ribbon ~1 A per conductor), set lower per target; the TPS63020 can deliver more, the limit is software. The firmware enables TGT_VSUP only when T_VCC reads zero, and cuts it if T_VCC exceeds the setpoint (target powered from elsewhere).
 - **nRST readback** (PB4, through 10 kΩ): the firmware sees a target that resets itself (watchdog, brown-out) or a reset button, and checks that its own nRST pulse reached the connector.
 
@@ -168,8 +168,8 @@ Archet also works without a host, as a production flasher: firmware images and t
 One 3-point pluggable terminal (J_FIELD, 3.81 mm, same family as VIN_EXT): H, L, GND. CAN FD and RS-485 are both a differential pair with a 120 Ω termination, so they share the terminal, the termination and the ESD; one is active at a time.
 
 - **Uses**: drive Archet from a host or a PLC over the field bus, sniff or send frames to other devices of a HIL bench, and reach the **STM32 ROM bootloader over CAN** (FDCAN1 on PD0/PD1).
-- **Transceivers**: TJA1051T/3 (CAN FD, 5 Mbit/s, 5 V supply from +5V, VIO at 3.3 V) and XL3485 (RS-485 half duplex, 3.3 V). Both TX inputs on PD1 (FDCAN1_TX or UART4_TX); RX back to PD0 through a 74LVC1G157 mux.
-- **Mode: FIELD_SEL_485 (PB2), pulled down: CAN by default**, the state the ROM bootloader and an unprogrammed board see. High: mux on the RS-485 receiver and TJA1051 in silent mode (S pin on the same net), so the CAN driver never fights the RS-485 driver.
+- **Transceivers**: TCAN3413 (CAN FD, 5 Mbit/s, 3.3 V supply, ISO 11898-2: mixes with 5 V nodes; independent of +5V, which sags on a 5 V USB source) and XL3485 (RS-485 half duplex, 3.3 V, no fail-safe bias on the probe: the bus terminations provide it). Both TX inputs on PD1 (FDCAN1_TX or UART4_TX); RX back to PD0 through a 74LVC1G157 mux.
+- **Mode: FIELD_SEL_485 (PB2), pulled down: CAN by default**, the state the ROM bootloader and an unprogrammed board see. High: mux on the RS-485 receiver and TCAN3413 in standby (STB pin on the same net), so the CAN driver never fights the RS-485 driver.
 - **RS-485 direction**: DE on PG15, pulled down (driver off); receiver always on (RE tied low). CAN listen-only (sniffing) uses the FDCAN bus monitoring mode, no extra pin.
 - **Termination**: 120 Ω through a slide switch (MSK-12C02), off when Archet sits in the middle of a bus. ESD: NUP2105L (24 V working voltage, covers both CAN and RS-485 common-mode range).
 
@@ -243,10 +243,10 @@ Three sources ORed by ideal diodes into VSYS (4.5–24 V). A single wide-input b
 USB-C VBUS (5–20 V)    ── LM74700 ──┐
 PoE module (12 V)      ── LM74700 ──┼── VSYS ─┬─ LMR33630 ── +5V ───┬── TLV62569 ── +3V3      (probe)
 VIN_EXT (10.8–24 V)    ┬─ LM74700 ──┘ SMBJ24CA│  (36 V, 3 A)        ├── TLV62569 ── +3V3_AUX ─── eFuse ── 3V3_OUT (shield)
-                       │                      │                     ├── TPS63020 ── TGT_VSUP 1.4–5.2 V (target, STDC14 pin 1)
+                       │                      │                     ├── TPS63020 ── TGT_VSUP 1.65–5.04 V (target, STDC14 pin 1)
                        │                      │                     └── eFuse ── 5V_OUT (shield, if VSYS ≥ 6 V)
                        │                      └─ LM5155 boost ── 24 V ──┐  (disabled in hardware
-                       └── Schottky ────────────────────────────────────┴── VIN_BUS switches     when VIN_EXT is present)
+                       └── LM74700 ─────────────────────────────────────┴── VIN_BUS switches     when VIN_EXT is present)
 ```
 
 **VIN_EXT is limited to 24 V** (Archet runs on a bench, from a stable supply; 12 or 24 V nominal as on Bornier). A 5 A fuse (12H1500C) then the SMBJ24CA TVS protect it. The TVS is bidirectional: a reversed supply only meets the LM74700 (−65 V) instead of conducting through the TVS. It starts conducting at 26.7 V and clamps at 38.9 V: below the 40 V of the TPS27S100 and the 45 V of the LM5155.
@@ -255,7 +255,7 @@ VIN_EXT (10.8–24 V)    ┬─ LM74700 ──┘ SMBJ24CA│  (36 V, 3 A)      
 - **Three ideal diodes**, USB included: the PD sink P-MOS alone would back-feed the host VBUS through its body diode as soon as VSYS exceeds 5 V.
 - **LMR33630 rather than TPS5430**: the TPS5430 needs 5.5 V and would not run on a 5 V USB port. 36 V, 1.5 × the 24 V maximum: the SMBJ24CA only clamps at 38.9 V at its full rated surge current (15.5 A), an EMC test case; on a bench it only conducts on hot-plug ringing, at low current, around 27–30 V. No basic or preferred buck fits (TPS54331: 28 V, too close to the TVS breakdown). Synchronous, it runs up to ~98 % duty: on 5 V USB, +5V ≈ 4.8 V, enough for the TLV62569 (2.5–5.5 V); 5V_OUT stays off.
 - **+3V3_AUX separate from +3V3**: a shield or target short never pulls the probe rail down.
-- **VIN_BUS**: VIN_EXT through a Schottky (0.5 W at 1 A; an ideal diode if that heat is too much), or the boost when VIN_EXT is absent. The boost enable is gated in hardware by VIN_EXT presence: with a 12 V VIN_EXT, the 24 V boost would otherwise take over.
+- **VIN_BUS**: VIN_EXT through a fourth ideal diode (U52 LM74700 + Q10, < 10 mW at 1 A; ~2 µA reverse leakage, where a Schottky would lift VIN_EXT_P from the boost output and fake a VIN_EXT), or the boost when VIN_EXT is absent. The boost enable is gated in hardware by VIN_EXT presence: with a 12 V VIN_EXT, the 24 V boost would otherwise take over.
 - **Boost: LM5155 controller** (3.5–45 V input), external 60 V N-MOS, Schottky and sense resistor. Fed from VSYS, it takes the whole source budget: no detour through the +5V rail. Current sense sized for ~4 A peak: ~0.5 A at 24 V from 5 V, ~1 A (the two VIN_BUS pins) from 12 V and above. 10 µH inductor FXL1040-100-M (Isat 8.5 A), 15 mΩ sense, 24.5 V out, ~430 kHz; loop and switching simulated by `hardware/sim/boost.py`. Disabled, it passes VSYS to VIN_BUS through its inductor and diode: with a 20 V PD charger and a 12 V VIN_EXT, VIN_BUS is then fed by the charger, which the VSYS INA226 counts. The integrated MT3608B and SX1308 stop at 24 V input, with no margin; the TPS55340 has too little stock.
 - **Switchover**: losing the active source falls back to the next one with no interruption, but the budget may collapse (VIN_EXT unplugged with a 10 W shield, fallback on a 500 mA USB port). The firmware watches the active source on the ADC and cuts 5V_OUT, 3V3_OUT and VIN_BUS within milliseconds; the host port's own protection covers the rest.
 
@@ -291,7 +291,7 @@ Probe +3V3 rail, estimates to be confirmed against datasheets and on the prototy
 | Crystals, INA226, EEPROM, translators (MCU side), pull-ups | 10 | 20 |
 | **Total +3V3** | **345 (1.1 W)** | **550 (1.8 W)** |
 
-On +5V directly: TJA1051 (70 mA max, dominant state), buzzer (~95 mA during a beep), both negligible against the 3 A rail.
+On +5V directly: buzzer (~95 mA during a beep), negligible against the 3 A rail.
 
 Efficiencies: TLV62569 ~90 %, LMR33630 ~90 %, DP5700 ~87 % *(to check)*. **Probe: 1.4 W typical, 2.1 W max at VSYS.** Target supply: 1 A max (5.6 W at VSYS at 5 V); 300 mA (1.7 W) reserved by default, anything above is taken from the shield and VIN_BUS share by the firmware.
 
@@ -316,6 +316,18 @@ Without a "PSE at" signal from the PoE module, the probe assumes af. This table 
 - The probe puts all shield IOs in high impedance at power-up, on reset and when the host goes silent. The shield guarantees its safe state with pull resistors.
 - Overcurrent shutdown is **local and in hardware** on the shield. It never depends on the link with the probe.
 - The ≤ 10 µs shutdown on a real-time rule is commanded by the FPGA rule engine, through a raw IO.
+
+### Accepted limits and firmware rules
+
+From the schematic review of 2026-11-27:
+
+- **+5V and 5V_OUT on a 5 V USB source** sit at ~4.4–5.25 V (cable drop, buck in dropout); 5V_OUT stays off there anyway.
+- **TGT_VSUP** ceiling 5.04 V (buffered DAC range), floor 1.65 V (translators).
+- **TVS clamp**: the SMBJ24CA clamps at 38.9 V only at its full surge current, above the 36 V of the LMR33630; accepted for a bench supply (see Sources).
+- **IMON** of the VIN_BUS switches saturates above ~1 A total; the fault level (2.15–2.45 V at PF7) stays distinct.
+- **SWCLK, TDI and UART_TX** are always driven by their translators once TGT_VCC is present, also with the probe idle.
+- **RS-485**: no fail-safe bias on the probe; the bus terminations or a biased node provide it.
+- **Back-powering rule**: the firmware keeps every line to the Bornier bus low or high-Z while +3V3_BUS is off, and every shield line while +3V3_OUT is off. The pull-ups already go to those rails, not to +3V3.
 
 ## Software principle
 
@@ -383,7 +395,7 @@ No spare MCU pin. The LINK LED moved to the iCE40 (RGB1): it only means somethin
 Choices made at assignment:
 
 - **iCE40 configured through the OCTOSPI2 pins** (single-line indirect write: CLK → SPI_SCK, NCS → SPI_SS, IO0 → SPI_SI, IO1 → SPI_SO), no separate configuration SPI. NCS and CLK switch to GPIO for the 8 clocks with SS high that precede the bitstream. The FPGA QSPI pins are therefore its configuration pins, and only CRESET_B and CDONE remain dedicated. No configuration flash. Pin numbers (SI 17, SO 14, SCK 15, SS 16) match the KiCad symbol `ICE40UP5K-SG48ITR`.
-- **iCE40 supplies**: core 1.2 V from an ME6211C12 LDO on +3V3; VCCPLL through 100 Ω + 10 µF + 100 nF as on the Lattice UltraPlus development platform, even with the PLL unused; VPP_2V5 on +3V3 (NVCM unused); CRESET_B pulled down, CDONE and SHIELD_OE_N (RGB0, open drain) pulled up.
+- **iCE40 supplies**: core 1.2 V from an ME6211C12 LDO on **+5V**, so VCC and VCCPLL reach 0.5 V before SPI_VCCIO1 and VPP_2V5 (UltraPlus datasheet §4.5; to confirm on the prototype); VCCPLL through 100 Ω + 10 µF + 100 nF as on the Lattice UltraPlus development platform, even with the PLL unused; VPP_2V5 on +3V3 (NVCM unused); CRESET_B pulled down, CDONE and SHIELD_OE_N (RGB0, open drain) pulled up.
 - **USB3320C**: the C variant (not the USB3300) because RESETB low suspends it with every ULPI output high-Z, CLKOUT included (PA5 is SPI1_SCK of the ROM bootloader); RESETB has no internal pull, R33 holds it low. External 1.8 V from an ME6211C18 LDO on **+5V**, so VDD18 rises before +3V3 (absolute maximum: VDDIO 0.7 V while VDD18 is off). 24 MHz crystal, REFSEL[2:0] tied high; VBUS sensed through RVBUS 10 kΩ (up to 20 V on VBUS_CONN); ID tied to +3V3 (device only).
 - **LAN8742A**: REF_CLK Out mode (nINTSEL low through 10 kΩ): its own 25 MHz crystal, 50 MHz REF_CLK driven to PA1, since MCO1 (PA8) is taken. nINT is then unavailable, so PG7 is free and the link state is polled over MDIO. R42 (10 kΩ) holds nRST low until PG6 drives it; the straps are latched at that edge and left to the internal pulls (MODE = 111, PHYAD = 0, REGOFF low: internal 1.2 V regulator). 49.9 Ω terminations to the centre tap, fed from +3V3 through a ferrite bead; RBIAS 12.1 kΩ 1 %; MDIO pull-up 1 kΩ. RJ45 LEDs: anodes driven by LED1/LED2 through 330 Ω, cathodes to GND.
 - **Three I²C buses**: internal (I2C5: STUSB4500, INA226), Bornier (I2C1), shield (I2C4). An external bus fault (ribbon cable, unknown shield) never cuts the power management.
@@ -410,13 +422,13 @@ Goal: someone who receives an Archet and owns no debug probe can still program i
 | USART2 | PA3 RX (pull-up), PA2 TX | ULPI_D0, RMII_MDIO | **ULPI PHY held in reset** by default (ULPI_RST pull), so D0 stays quiet |
 | USART3 | PB11 RX, PB10 TX (pull-down) | ULPI_D4, ULPI_D3 | same: PHY in reset |
 | USART3 | PD9 RX, PD8 TX (pull-down) | CONSOLE_RX/TX (J6) | wanted interface; without a cable the ROM pull-down holds RX low |
-| I²C1 | PB6 SCL, PB9 SDA | BUS_SCL, BUZZER | no other master on BUS_SCL: no address match; buzzer gate pull-down, silent |
+| I²C1 | PB6 SCL, PB9 SDA | BUS_SCL, BUZZER | no other master on BUS_SCL: no address match; PB9 held low by the buzzer gate pull-down (R74), so a floating PB6 cannot form a start condition; silent |
 | I²C2 | PF1, PF0 | FPGA_QSPI_IO1/IO0 | **FPGA held in reset** (CRESET_B pull-down): pins high-Z |
 | I²C3 | PA8, PC9 | EFUSE_5V_FLT, FPGA_REFCLK | no master: no match |
 | SPI1 | PA5 SCK, PA7 MOSI, PA4 NSS, PA6 MISO (output) | ULPI_CK, RMII_CRS_DV, TGT_VSET, VSYS_SENSE | **both PHYs in reset**: no clock on ULPI_CK, CRS_DV weakly high (MODE2 strap pull-up). MISO drives the VSYS divider node (0.3 mA, harmless) |
 | SPI3 | PC10 SCK, PC12 MOSI, PA15 NSS, PC11 MISO (output) | SYS_SDA, SHIELD_UART_TX, BUS_LATCH, SYS_SCL | SYS_SDA held high by its pull-up, no clock. MISO drives SYS_SCL: I²C slaves only, idle |
 | SPI4 | PE12 SCK, PE14 MOSI, PE11 NSS, PE13 MISO (output) | SHIELD_SWCLK, LED_PASS, FLASH_NCS, SHIELD_SWDIO | nothing drives SHIELD_SWCLK. NSS pulled up: flash deselected. MISO drives SHIELD_SWDIO: a target only drives it in an SWD read |
-| FDCAN1 | PD0 RX, PD1 TX (output, recessive high) | **FIELD_RX/TX, wanted interface** | FIELD_SEL_485 pulled down: TJA1051 active, RX mux on CAN. A host on J_FIELD reaches the bootloader over CAN (bitrates: AN5405). PD1 also reaches the XL3485 DI, harmless with DE pulled down |
+| FDCAN1 | PD0 RX, PD1 TX (output, recessive high) | **FIELD_RX/TX, wanted interface** | FIELD_SEL_485 pulled down: TCAN3413 active, RX mux on CAN. A host on J_FIELD reaches the bootloader over CAN (bitrates: AN5405). PD1 also reaches the XL3485 DI, harmless with DE pulled down |
 | DFU | PA11/PA12 | USB_FS_DM/DP (J5) | 100 kΩ pull-downs on D+/D−: known level when J5 is absent or unplugged |
 
 Rules that follow, for every later sheet:
@@ -438,12 +450,12 @@ Unit price for 1 to 9 parts (first runs of 2 to 5 boards). Type: BASIC and PREF 
 | PoE at module, 12 V | DP5700-12V2A | C22358555 | ext | 66 | $6.85 |
 | PoE RJ45 (magnetics, centre taps) | ARJM11C7-114-BA-EW2 (through-hole) | C6578967 | ext | 79 | $5.97 |
 | PD controller | STUSB4500QTR | C2678061 | ext | 5,587 | $2.84 |
-| 65 V ideal diode (×3: USB, PoE, VIN_EXT) | LM74700QDBVRQ1 | C2941042 | ext | 7,741 | $2.61 |
+| 65 V ideal diode (×4: USB, PoE, VIN_EXT, VIN_EXT to VIN_BUS) | LM74700QDBVRQ1 | C2941042 | ext | 7,741 | $2.61 |
 | VSYS → +5V synchronous buck (3.8–36 V, 3 A) | LMR33630ADDAR | C841384 | ext | 22,086 | $0.52 |
 | +5V → +3V3 and +3V3_AUX bucks (×2) | TLV62569DBVR | C141836 | ext | 486,606 | $0.07 |
 | 24 V boost controller for VIN_BUS (external FET) | LM5155DSSR | C545416 | ext | 11,468 | $1.62 |
 | VIN_EXT input TVS, bidirectional | SMBJ24CA | C78416 | ext | 50,587 | $0.06 |
-| 60 V N-MOS (×4: three ideal diodes, VIN_BUS boost), 8.1 mΩ | CSD18543Q3A | C840100 | ext | 2,253 | $1.03 |
+| 60 V N-MOS (×5: four ideal diodes, VIN_BUS boost), 8.1 mΩ | CSD18543Q3A | C840100 | ext | 2,253 | $1.03 |
 | VIN_EXT terminal block, pluggable 3.81 mm, 8 A (plug C440858) | KF2EDGR-3.81-2P | C441182 | ext | 36,336 | $0.05 |
 | ULPI PHY | USB3320C-EZK-TR | C132156 | ext | 9,766 | $1.52 |
 | VIN_BUS switch (40 V, 4 A) | TPS27S100BRRKR | C1849486 | ext | 3,448 | $1.57 |
@@ -466,7 +478,7 @@ Unit price for 1 to 9 parts (first runs of 2 to 5 boards). Type: BASIC and PREF 
 | 1.8 V LDO (USB3320C VDD18, from +5V) | ME6211C18M5G-N | C236671 | ext | 26,442 | $0.06 |
 | USB3320C RBIAS 8.06 kΩ 1 % (0402) | 0402WGF8061TCE | C25923 | ext | 32,211 | $0.001 |
 | Vertical micro-B (J5, ROM DFU) | Molex 105133-0001 | C782257 | ext | 8,299 | $0.55 |
-| CAN FD transceiver | TJA1051T/3/1J | C38695 | ext | 137,918 | $0.45 |
+| CAN FD transceiver (3.3 V supply) | TCAN3413DR | C22433320 | ext | 1,806 | $0.94 |
 | RS-485 transceiver, 3.3 V half duplex | XL3485 | C609753 | ext | 40,090 | $0.15 |
 | Field bus RX mux (CAN / RS-485) | 74LVC1G157GW,125 | C135822 | ext | 10,352 | $0.21 |
 | Field bus ESD | NUP2105LT1G | C14486 | ext | 124,230 | $0.08 |
@@ -508,7 +520,7 @@ Fixed costs (PCB, assembly setup, stencil) are also divided by the run size. Con
 
 - order 5 boards: JLCPCB makes at least 5 PCBs, the extra 3 cost ~$200 in parts;
 - hand-solder through-hole parts (RJ45, three IDC headers): no through-hole assembly to pay for;
-- passives are pooled into a short palette (`hardware/gen/circuit.py`, 97 BOM lines): a new value or size needs a reason;
+- passives are pooled into a short palette (`hardware/gen/circuit.py`, 101 BOM lines): a new value or size needs a reason;
 - each extended part removed saves $1.50 per board on a run of 2: take the alternatives above, without bending the design;
 - reserve the PoE module, PoE RJ45 and iCE40 (stock < 160) in JLCPCB parts inventory as soon as the schematic is frozen.
 

@@ -22710,7 +22710,7 @@
 		)
 		(uuid "170f3c9a-8023-58e0-848a-d1c27eb32136")
 	)
-	(text "+5V -> TGT_VSUP 1.4-5.2 V (5.44 V worst case), 1 A limit enforced by the firmware from the INA226.\nTGT_VSET (DAC1_OUT1) injects into the FB node: 0 V -> 5.29 V, 3.3 V -> 1.17 V, ~1 mV per step (hardware/sim/tgt_vsup.py).\nFirmware: set the DAC before EN, DAC buffer on, ramp the setpoint, stay above 1.6 V; DAC pin high-Z -> 4.67 V. PS/SYNC low: power save,\nthe converter never sinks current from a back-driving target. PG unused. INA226 at 0x45 on I2C5.\nLayout: input capacitors against VIN/PGND, FB divider next to pin 2 (GND), shunt with Kelvin traces."
+	(text "+5V -> TGT_VSUP 1.4-5.2 V (5.44 V worst case), 1 A limit enforced by the firmware from the INA226.\nTGT_VSET (DAC1_OUT1) injects into the FB node: 0 V -> 5.29 V, 3.3 V -> 1.17 V, ~1 mV per step (hardware/sim/tgt_vsup.py).\nFirmware: set the DAC before EN, DAC buffer on, ramp the setpoint, stay within 1.65-5.04 V; DAC pin high-Z -> 4.67 V. PS/SYNC low: power save,\nthe converter never sinks current from a back-driving target. PG unused. INA226 at 0x45 on I2C5.\nLayout: input capacitors against VIN/PGND, FB divider next to pin 2 (GND), shunt with Kelvin traces."
 		(exclude_from_sim no)
 		(at 20.32 25.4 0)
 		(effects
@@ -24476,6 +24476,88 @@
 		)
 	)
 	(symbol
+		(lib_id "Device:R")
+		(at 53.34 116.84 90)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "1591cfd6-2652-5bcc-9eda-2dd24da265c0")
+		(property "Reference" "R178"
+			(at 50.8 114.3 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "1k"
+			(at 55.88 114.3 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0402_1005Metric"
+			(at 53.34 116.84 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 53.34 116.84 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Description" "Isolates the DAC buffer from C95 (50 pF maximum load buffered); 0.8 % gain error, trimmed through the INA226"
+			(at 53.34 116.84 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C11702"
+			(at 53.34 116.84 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "b9334f65-e668-500c-a0ee-6e6972315f98")
+		)
+		(pin "2"
+			(uuid "6d213cf2-660f-5d7f-9f4f-ac0f3d01fc46")
+		)
+		(instances
+			(project "archet"
+				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/c6ed6be0-ec73-5e48-9bbb-b55da59c07c6"
+					(reference "R178")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "Device:C")
 		(at 66.04 123.19 0)
 		(unit 1)
@@ -25661,6 +25743,16 @@
 		)
 		(uuid "5616e815-a369-52ba-a078-8bea365a4a04")
 	)
+	(label "TGT_VSET_F"
+		(at 78.74 116.84 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "086a3751-d5be-5c19-b1f3-0c61063c8c21")
+	)
 	(wire
 		(pts
 			(xy 40.64 58.42)
@@ -26269,13 +26361,24 @@
 	(wire
 		(pts
 			(xy 40.64 116.84)
+			(xy 49.53 116.84)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "cffdcbe9-d3b9-5329-91c5-e815782e1121")
+	)
+	(wire
+		(pts
+			(xy 57.15 116.84)
 			(xy 66.04 116.84)
 		)
 		(stroke
 			(width 0)
 			(type default)
 		)
-		(uuid "17e2c33d-44f4-5d71-a7ee-47e02671d895")
+		(uuid "22859b3a-f778-53b0-8d23-1382d39bb722")
 	)
 	(wire
 		(pts

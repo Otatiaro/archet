@@ -22792,7 +22792,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" "Inactive (high) while the MCU pin is not configured"
+		(property "Description" "Inactive (high) while the MCU pin is not configured; on +3V3_BUS, as the IRQ and I2C1 pulls: nothing back-powers the modules with the ribbon rail off"
 			(at 57.15 53.34 90)
 			(effects
 				(font
@@ -22827,53 +22827,15 @@
 			)
 		)
 	)
-	(symbol
-		(lib_id "power:+3V3")
-		(at 60.96 53.34 270)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "4347a3f4-0753-595e-9b5a-2a8bd33eae95")
-		(property "Reference" "#PWRLOC01"
-			(at 60.96 53.34 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
+	(label "+3V3_BUS"
+		(at 63.5 53.34 0)
+		(effects
+			(font
+				(size 1.27 1.27)
 			)
+			(justify left bottom)
 		)
-		(property "Value" "+3V3"
-			(at 60.96 49.53 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Footprint" ""
-			(at 60.96 53.34 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "df9143e6-6e24-5064-8a47-00e5490facd4")
-		)
-		(instances
-			(project "archet"
-				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/abf657c3-085f-5a19-8843-645cd7576022"
-					(reference "#PWRLOC01")
-					(unit 1)
-				)
-			)
-		)
+		(uuid "fa06f5e7-a90d-581e-972e-b95f0f0f9dcb")
 	)
 	(symbol
 		(lib_id "Device:R")
@@ -23074,53 +23036,15 @@
 			)
 		)
 	)
-	(symbol
-		(lib_id "power:+3V3")
-		(at 60.96 58.42 270)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "7aa6f3d2-8df7-567f-931a-2e317720750d")
-		(property "Reference" "#PWRLOC02"
-			(at 60.96 58.42 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
+	(label "+3V3_BUS"
+		(at 63.5 58.42 0)
+		(effects
+			(font
+				(size 1.27 1.27)
 			)
+			(justify left bottom)
 		)
-		(property "Value" "+3V3"
-			(at 60.96 54.61 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Footprint" ""
-			(at 60.96 58.42 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "1a682cf7-a816-557e-8643-cf2f2f0167fd")
-		)
-		(instances
-			(project "archet"
-				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/abf657c3-085f-5a19-8843-645cd7576022"
-					(reference "#PWRLOC02")
-					(unit 1)
-				)
-			)
-		)
+		(uuid "0c9567c3-c3db-59d3-86fc-5922b47beb93")
 	)
 	(symbol
 		(lib_id "Device:R")
@@ -23321,53 +23245,15 @@
 			)
 		)
 	)
-	(symbol
-		(lib_id "power:+3V3")
-		(at 60.96 63.5 270)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "552a8417-0ba1-52d1-ac46-a2367cabd10c")
-		(property "Reference" "#PWRLOC03"
-			(at 60.96 63.5 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
+	(label "+3V3_BUS"
+		(at 63.5 63.5 0)
+		(effects
+			(font
+				(size 1.27 1.27)
 			)
+			(justify left bottom)
 		)
-		(property "Value" "+3V3"
-			(at 60.96 59.69 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Footprint" ""
-			(at 60.96 63.5 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "6f7e7d0d-a468-5ffc-a4e2-af3eccc59c4e")
-		)
-		(instances
-			(project "archet"
-				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/abf657c3-085f-5a19-8843-645cd7576022"
-					(reference "#PWRLOC03")
-					(unit 1)
-				)
-			)
-		)
+		(uuid "83e022b2-d348-5667-ac06-d99dd63f569f")
 	)
 	(symbol
 		(lib_id "Device:R")
@@ -23568,53 +23454,15 @@
 			)
 		)
 	)
-	(symbol
-		(lib_id "power:+3V3")
-		(at 60.96 68.58 270)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "fab92aba-808f-5624-903c-27161ccfd1e7")
-		(property "Reference" "#PWRLOC04"
-			(at 60.96 68.58 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
+	(label "+3V3_BUS"
+		(at 63.5 68.58 0)
+		(effects
+			(font
+				(size 1.27 1.27)
 			)
+			(justify left bottom)
 		)
-		(property "Value" "+3V3"
-			(at 60.96 64.77 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Footprint" ""
-			(at 60.96 68.58 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "fae05ca9-bdf6-54ab-b732-b6f6592feb95")
-		)
-		(instances
-			(project "archet"
-				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/abf657c3-085f-5a19-8843-645cd7576022"
-					(reference "#PWRLOC04")
-					(unit 1)
-				)
-			)
-		)
+		(uuid "999f2c50-5199-5376-a152-72d71b0ca4f2")
 	)
 	(symbol
 		(lib_id "Device:R")
@@ -23815,53 +23663,15 @@
 			)
 		)
 	)
-	(symbol
-		(lib_id "power:+3V3")
-		(at 60.96 73.66 270)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "21eebc0e-684c-51b3-ad91-72b9a6f9b5af")
-		(property "Reference" "#PWRLOC05"
-			(at 60.96 73.66 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
+	(label "+3V3_BUS"
+		(at 63.5 73.66 0)
+		(effects
+			(font
+				(size 1.27 1.27)
 			)
+			(justify left bottom)
 		)
-		(property "Value" "+3V3"
-			(at 60.96 69.85 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Footprint" ""
-			(at 60.96 73.66 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "9b57c63c-5df4-560e-9cc3-ba1a3bdab3d5")
-		)
-		(instances
-			(project "archet"
-				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/abf657c3-085f-5a19-8843-645cd7576022"
-					(reference "#PWRLOC05")
-					(unit 1)
-				)
-			)
-		)
+		(uuid "edb76b45-5a51-59a1-9336-2bb028dfd2f6")
 	)
 	(symbol
 		(lib_id "Device:R")
@@ -24062,53 +23872,15 @@
 			)
 		)
 	)
-	(symbol
-		(lib_id "power:+3V3")
-		(at 60.96 78.74 270)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "171dd729-de91-5c21-a15e-ce556eabb1c9")
-		(property "Reference" "#PWRLOC06"
-			(at 60.96 78.74 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
+	(label "+3V3_BUS"
+		(at 63.5 78.74 0)
+		(effects
+			(font
+				(size 1.27 1.27)
 			)
+			(justify left bottom)
 		)
-		(property "Value" "+3V3"
-			(at 60.96 74.93 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Footprint" ""
-			(at 60.96 78.74 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "da11c9c9-7463-5714-bcb0-6022de940aec")
-		)
-		(instances
-			(project "archet"
-				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/abf657c3-085f-5a19-8843-645cd7576022"
-					(reference "#PWRLOC06")
-					(unit 1)
-				)
-			)
-		)
+		(uuid "fc98c2c3-bfb7-56ea-a258-1a4d2230b903")
 	)
 	(symbol
 		(lib_id "Device:R")
@@ -24309,53 +24081,15 @@
 			)
 		)
 	)
-	(symbol
-		(lib_id "power:+3V3")
-		(at 60.96 83.82 270)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "1ed6650f-9291-564c-8463-ac0805576f5a")
-		(property "Reference" "#PWRLOC07"
-			(at 60.96 83.82 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
+	(label "+3V3_BUS"
+		(at 63.5 83.82 0)
+		(effects
+			(font
+				(size 1.27 1.27)
 			)
+			(justify left bottom)
 		)
-		(property "Value" "+3V3"
-			(at 60.96 80.01 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Footprint" ""
-			(at 60.96 83.82 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "9601b6f1-2e56-5915-b6a8-140339fa8d03")
-		)
-		(instances
-			(project "archet"
-				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/abf657c3-085f-5a19-8843-645cd7576022"
-					(reference "#PWRLOC07")
-					(unit 1)
-				)
-			)
-		)
+		(uuid "1d63d0f9-adb6-5a23-ad75-ec0746fb0514")
 	)
 	(symbol
 		(lib_id "Device:R")
@@ -24556,53 +24290,15 @@
 			)
 		)
 	)
-	(symbol
-		(lib_id "power:+3V3")
-		(at 60.96 88.9 270)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "a989c518-92ad-5929-ac4e-a03d0163e0a3")
-		(property "Reference" "#PWRLOC08"
-			(at 60.96 88.9 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
+	(label "+3V3_BUS"
+		(at 63.5 88.9 0)
+		(effects
+			(font
+				(size 1.27 1.27)
 			)
+			(justify left bottom)
 		)
-		(property "Value" "+3V3"
-			(at 60.96 85.09 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Footprint" ""
-			(at 60.96 88.9 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "b02d1732-1c84-5478-879d-d04340d9a8d8")
-		)
-		(instances
-			(project "archet"
-				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/abf657c3-085f-5a19-8843-645cd7576022"
-					(reference "#PWRLOC08")
-					(unit 1)
-				)
-			)
-		)
+		(uuid "872116c8-3f12-588c-97a2-0a6d58579e2c")
 	)
 	(symbol
 		(lib_id "Device:R")
@@ -24803,53 +24499,15 @@
 			)
 		)
 	)
-	(symbol
-		(lib_id "power:+3V3")
-		(at 60.96 93.98 270)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "1df8e538-c0dc-5d6c-8b03-bacbdfba6cd8")
-		(property "Reference" "#PWRLOC09"
-			(at 60.96 93.98 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
+	(label "+3V3_BUS"
+		(at 63.5 93.98 0)
+		(effects
+			(font
+				(size 1.27 1.27)
 			)
+			(justify left bottom)
 		)
-		(property "Value" "+3V3"
-			(at 60.96 90.17 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Footprint" ""
-			(at 60.96 93.98 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "b4a82bba-d701-5ff9-a1d2-ad63b211ce6f")
-		)
-		(instances
-			(project "archet"
-				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/abf657c3-085f-5a19-8843-645cd7576022"
-					(reference "#PWRLOC09")
-					(unit 1)
-				)
-			)
-		)
+		(uuid "309388ad-497f-5d03-a85c-48d6ea288fa6")
 	)
 	(symbol
 		(lib_id "Device:R")
@@ -25050,53 +24708,15 @@
 			)
 		)
 	)
-	(symbol
-		(lib_id "power:+3V3")
-		(at 60.96 99.06 270)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "a4e886b8-11d1-5ff9-8706-dbc596a42913")
-		(property "Reference" "#PWRLOC10"
-			(at 60.96 99.06 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
+	(label "+3V3_BUS"
+		(at 63.5 99.06 0)
+		(effects
+			(font
+				(size 1.27 1.27)
 			)
+			(justify left bottom)
 		)
-		(property "Value" "+3V3"
-			(at 60.96 95.25 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Footprint" ""
-			(at 60.96 99.06 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "31bf9689-3f14-53d0-8bc7-5589951f810f")
-		)
-		(instances
-			(project "archet"
-				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/abf657c3-085f-5a19-8843-645cd7576022"
-					(reference "#PWRLOC10")
-					(unit 1)
-				)
-			)
-		)
+		(uuid "0e75c9ed-6911-518e-8443-2aef94c2f7e9")
 	)
 	(symbol
 		(lib_id "Device:R")
@@ -25297,53 +24917,15 @@
 			)
 		)
 	)
-	(symbol
-		(lib_id "power:+3V3")
-		(at 60.96 104.14 270)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "8eed13f9-e9a4-5eeb-8e00-65529672e957")
-		(property "Reference" "#PWRLOC11"
-			(at 60.96 104.14 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
+	(label "+3V3_BUS"
+		(at 63.5 104.14 0)
+		(effects
+			(font
+				(size 1.27 1.27)
 			)
+			(justify left bottom)
 		)
-		(property "Value" "+3V3"
-			(at 60.96 100.33 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Footprint" ""
-			(at 60.96 104.14 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "78f07c09-2ad0-51c8-b46c-9a53d81d988c")
-		)
-		(instances
-			(project "archet"
-				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/abf657c3-085f-5a19-8843-645cd7576022"
-					(reference "#PWRLOC11")
-					(unit 1)
-				)
-			)
-		)
+		(uuid "b6118b1c-e8be-5596-ad6c-4ff879036ff3")
 	)
 	(symbol
 		(lib_id "Device:R")
@@ -25544,53 +25126,15 @@
 			)
 		)
 	)
-	(symbol
-		(lib_id "power:+3V3")
-		(at 60.96 109.22 270)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "d3cbde6b-1ff1-5caf-a7e1-1b1de64d0018")
-		(property "Reference" "#PWRLOC12"
-			(at 60.96 109.22 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
+	(label "+3V3_BUS"
+		(at 63.5 109.22 0)
+		(effects
+			(font
+				(size 1.27 1.27)
 			)
+			(justify left bottom)
 		)
-		(property "Value" "+3V3"
-			(at 60.96 105.41 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Footprint" ""
-			(at 60.96 109.22 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "979b8c9a-74d4-5551-a333-4d7e24b8d6df")
-		)
-		(instances
-			(project "archet"
-				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/abf657c3-085f-5a19-8843-645cd7576022"
-					(reference "#PWRLOC12")
-					(unit 1)
-				)
-			)
-		)
+		(uuid "dd1882b1-c6b8-5808-a500-706aec837f9b")
 	)
 	(symbol
 		(lib_id "Device:R")
@@ -25791,53 +25335,15 @@
 			)
 		)
 	)
-	(symbol
-		(lib_id "power:+3V3")
-		(at 60.96 114.3 270)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "a2fa365c-ee98-5898-99b2-1c7df569d9ea")
-		(property "Reference" "#PWRLOC13"
-			(at 60.96 114.3 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
+	(label "+3V3_BUS"
+		(at 63.5 114.3 0)
+		(effects
+			(font
+				(size 1.27 1.27)
 			)
+			(justify left bottom)
 		)
-		(property "Value" "+3V3"
-			(at 60.96 110.49 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Footprint" ""
-			(at 60.96 114.3 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "3889de91-9cd6-5ed5-a52e-756fadfb19e0")
-		)
-		(instances
-			(project "archet"
-				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/abf657c3-085f-5a19-8843-645cd7576022"
-					(reference "#PWRLOC13")
-					(unit 1)
-				)
-			)
-		)
+		(uuid "d76df890-1917-5020-9f8c-04d8cc791f19")
 	)
 	(symbol
 		(lib_id "Device:R")
@@ -26122,53 +25628,15 @@
 			)
 		)
 	)
-	(symbol
-		(lib_id "power:+3V3")
-		(at 60.96 119.38 270)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "5c0f6afe-ae7b-5f30-ba64-a04d8d6f3f25")
-		(property "Reference" "#PWRLOC14"
-			(at 60.96 119.38 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
+	(label "+3V3_BUS"
+		(at 63.5 119.38 0)
+		(effects
+			(font
+				(size 1.27 1.27)
 			)
+			(justify left bottom)
 		)
-		(property "Value" "+3V3"
-			(at 60.96 115.57 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Footprint" ""
-			(at 60.96 119.38 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "835d9e65-cc75-56c3-b671-8088951e1c76")
-		)
-		(instances
-			(project "archet"
-				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/abf657c3-085f-5a19-8843-645cd7576022"
-					(reference "#PWRLOC14")
-					(unit 1)
-				)
-			)
-		)
+		(uuid "0955fc7b-39d3-5a23-8398-5e42317c257d")
 	)
 	(symbol
 		(lib_id "Device:R")
@@ -26377,8 +25845,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "cb071514-51d8-57cf-ace3-8a046e075baa")
-		(property "Reference" "#PWRLOC15"
+		(uuid "4347a3f4-0753-595e-9b5a-2a8bd33eae95")
+		(property "Reference" "#PWRLOC01"
 			(at 60.96 124.46 0)
 			(effects
 				(font
@@ -26406,12 +25874,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "b0a9d639-cf59-5778-ba16-f2354a6dbfd7")
+			(uuid "df9143e6-6e24-5064-8a47-00e5490facd4")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/abf657c3-085f-5a19-8843-645cd7576022"
-					(reference "#PWRLOC15")
+					(reference "#PWRLOC01")
 					(unit 1)
 				)
 			)
@@ -26708,8 +26176,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "3ae83d8d-decd-5d3d-aaca-c9c925049b8f")
-		(property "Reference" "#PWRLOC16"
+		(uuid "7aa6f3d2-8df7-567f-931a-2e317720750d")
+		(property "Reference" "#PWRLOC02"
 			(at 60.96 129.54 0)
 			(effects
 				(font
@@ -26737,12 +26205,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "c2e0ad69-e6ad-5c6b-bfeb-0b683a2d9de1")
+			(uuid "1a682cf7-a816-557e-8643-cf2f2f0167fd")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/abf657c3-085f-5a19-8843-645cd7576022"
-					(reference "#PWRLOC16")
+					(reference "#PWRLOC02")
 					(unit 1)
 				)
 			)
@@ -26996,7 +26464,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" "IRQ: wired-OR of open-drain outputs"
+		(property "Description" "IRQ: wired-OR of open-drain outputs (low with the rail off: the firmware ignores it then)"
 			(at 57.15 134.62 90)
 			(effects
 				(font
@@ -27031,53 +26499,15 @@
 			)
 		)
 	)
-	(symbol
-		(lib_id "power:+3V3")
-		(at 60.96 134.62 270)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "b67587fe-76fb-52df-b6d7-2b1cd6109bd0")
-		(property "Reference" "#PWRLOC17"
-			(at 60.96 134.62 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
+	(label "+3V3_BUS"
+		(at 63.5 134.62 0)
+		(effects
+			(font
+				(size 1.27 1.27)
 			)
+			(justify left bottom)
 		)
-		(property "Value" "+3V3"
-			(at 60.96 130.81 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Footprint" ""
-			(at 60.96 134.62 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "00cdf1b7-967e-50b1-a787-9e7928efe8b3")
-		)
-		(instances
-			(project "archet"
-				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/abf657c3-085f-5a19-8843-645cd7576022"
-					(reference "#PWRLOC17")
-					(unit 1)
-				)
-			)
-		)
+		(uuid "1dc3d9d0-5920-51a3-8ef6-e62a49377c56")
 	)
 	(global_label "BUS_SDA"
 		(shape bidirectional)
@@ -27184,53 +26614,15 @@
 			)
 		)
 	)
-	(symbol
-		(lib_id "power:+3V3")
-		(at 60.96 139.7 270)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "9931cece-007b-553b-8e65-50f75d380f85")
-		(property "Reference" "#PWRLOC18"
-			(at 60.96 139.7 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
+	(label "+3V3_BUS"
+		(at 63.5 139.7 0)
+		(effects
+			(font
+				(size 1.27 1.27)
 			)
+			(justify left bottom)
 		)
-		(property "Value" "+3V3"
-			(at 60.96 135.89 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Footprint" ""
-			(at 60.96 139.7 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "6e03c178-52fb-509b-b1c4-bbc7835a41f4")
-		)
-		(instances
-			(project "archet"
-				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/abf657c3-085f-5a19-8843-645cd7576022"
-					(reference "#PWRLOC18")
-					(unit 1)
-				)
-			)
-		)
+		(uuid "f1f115fe-971f-5442-85b3-e626a5166f36")
 	)
 	(global_label "BUS_SCL"
 		(shape input)
@@ -27337,53 +26729,15 @@
 			)
 		)
 	)
-	(symbol
-		(lib_id "power:+3V3")
-		(at 60.96 144.78 270)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "50a2067e-769c-5fd3-9313-7ee22d22e5d5")
-		(property "Reference" "#PWRLOC19"
-			(at 60.96 144.78 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
+	(label "+3V3_BUS"
+		(at 63.5 144.78 0)
+		(effects
+			(font
+				(size 1.27 1.27)
 			)
+			(justify left bottom)
 		)
-		(property "Value" "+3V3"
-			(at 60.96 140.97 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Footprint" ""
-			(at 60.96 144.78 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "84dc0b22-752c-5e54-a900-72a718c8447c")
-		)
-		(instances
-			(project "archet"
-				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/abf657c3-085f-5a19-8843-645cd7576022"
-					(reference "#PWRLOC19")
-					(unit 1)
-				)
-			)
-		)
+		(uuid "fc82bc23-6073-5912-a03d-9dc03eeb5532")
 	)
 	(global_label "BUS_MISO"
 		(shape output)
@@ -27498,8 +26852,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "ac074a86-5c0b-509a-8481-c180870beba5")
-		(property "Reference" "#PWRLOC20"
+		(uuid "552a8417-0ba1-52d1-ac46-a2367cabd10c")
+		(property "Reference" "#PWRLOC03"
 			(at 60.96 149.86 0)
 			(effects
 				(font
@@ -27527,18 +26881,18 @@
 			)
 		)
 		(pin "1"
-			(uuid "e9856b6a-d6a9-50b1-9172-23e80102672c")
+			(uuid "6f7e7d0d-a468-5ffc-a4e2-af3eccc59c4e")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/abf657c3-085f-5a19-8843-645cd7576022"
-					(reference "#PWRLOC20")
+					(reference "#PWRLOC03")
 					(unit 1)
 				)
 			)
 		)
 	)
-	(text "Pull-ups 10 kΩ to +3V3 on CS0-CS11, LATCH, OE, IRQ (R135-R148, R168);\n2 kΩ on SDA, SCL (R172-R173). Pull-downs 100 kΩ on SCK, MOSI, MISO\n(R169-R171): SPI mode 0 idle; MISO tri-stated with no module selected.\nSeries 49.9 Ω R149-R164; SCK, MOSI, LATCH: second 49.9 Ω in parallel\n(R165-R167), 25 Ω for the multipoint edges."
+	(text "Pull-ups 10 kΩ to +3V3_BUS on CS0-CS11, LATCH, OE, IRQ (R135-R148, R168);\n2 kΩ on SDA, SCL (R172-R173): no back-power into the modules with the rail off.\nPull-downs 100 kΩ on SCK, MOSI, MISO (R169-R171): SPI mode 0 idle;\n MISO tri-stated with no module selected.\nSeries 49.9 Ω R149-R164; SCK, MOSI, LATCH: second 49.9 Ω in parallel\n(R165-R167), 25 Ω for the multipoint edges."
 		(exclude_from_sim no)
 		(at 20.32 154.94 0)
 		(effects
@@ -27716,8 +27070,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "54961c60-4165-55df-aae2-7c60b96d046d")
-		(property "Reference" "#PWRLOC21"
+		(uuid "fab92aba-808f-5624-903c-27161ccfd1e7")
+		(property "Reference" "#PWRLOC04"
 			(at 147.32 81.28 0)
 			(effects
 				(font
@@ -27744,12 +27098,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "0ea56521-ac9c-50db-9489-cc05f305cefd")
+			(uuid "fae05ca9-bdf6-54ab-b732-b6f6592feb95")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/abf657c3-085f-5a19-8843-645cd7576022"
-					(reference "#PWRLOC21")
+					(reference "#PWRLOC04")
 					(unit 1)
 				)
 			)
@@ -27909,8 +27263,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "6c6f2806-1226-5aa7-add8-f3c1a0145db0")
-		(property "Reference" "#PWRLOC22"
+		(uuid "21eebc0e-684c-51b3-ad91-72b9a6f9b5af")
+		(property "Reference" "#PWRLOC05"
 			(at 147.32 111.76 0)
 			(effects
 				(font
@@ -27937,12 +27291,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "094856d9-bb6d-5195-804f-ba212cb791f2")
+			(uuid "9b57c63c-5df4-560e-9cc3-ba1a3bdab3d5")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/abf657c3-085f-5a19-8843-645cd7576022"
-					(reference "#PWRLOC22")
+					(reference "#PWRLOC05")
 					(unit 1)
 				)
 			)
@@ -28102,8 +27456,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "078291d4-d4b6-522d-8f46-a15f83ff8f89")
-		(property "Reference" "#PWRLOC23"
+		(uuid "171dd729-de91-5c21-a15e-ce556eabb1c9")
+		(property "Reference" "#PWRLOC06"
 			(at 147.32 142.24 0)
 			(effects
 				(font
@@ -28130,12 +27484,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "832ac7c4-077b-5a80-a2ec-07232169c1ba")
+			(uuid "da11c9c9-7463-5714-bcb0-6022de940aec")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/abf657c3-085f-5a19-8843-645cd7576022"
-					(reference "#PWRLOC23")
+					(reference "#PWRLOC06")
 					(unit 1)
 				)
 			)
@@ -28317,8 +27671,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "87959ba1-bf0f-5eb6-a8f5-9abeddbb8207")
-		(property "Reference" "#PWRLOC24"
+		(uuid "1ed6650f-9291-564c-8463-ac0805576f5a")
+		(property "Reference" "#PWRLOC07"
 			(at 147.32 172.72 0)
 			(effects
 				(font
@@ -28345,12 +27699,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "fbc52f65-cc8b-5603-ad5a-76cd2ef39b5a")
+			(uuid "9601b6f1-2e56-5915-b6a8-140339fa8d03")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/abf657c3-085f-5a19-8843-645cd7576022"
-					(reference "#PWRLOC24")
+					(reference "#PWRLOC07")
 					(unit 1)
 				)
 			)
@@ -28532,8 +27886,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "5e57a645-fe42-5f18-a767-e7a237315ee7")
-		(property "Reference" "#PWRLOC25"
+		(uuid "a989c518-92ad-5929-ac4e-a03d0163e0a3")
+		(property "Reference" "#PWRLOC08"
 			(at 147.32 203.2 0)
 			(effects
 				(font
@@ -28560,12 +27914,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "3d3480da-b5ca-5e39-8deb-434bf3c1d9a5")
+			(uuid "b02d1732-1c84-5478-879d-d04340d9a8d8")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/abf657c3-085f-5a19-8843-645cd7576022"
-					(reference "#PWRLOC25")
+					(reference "#PWRLOC08")
 					(unit 1)
 				)
 			)
@@ -28877,8 +28231,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "67f41bb2-8d76-5a24-8250-6512fd071d4d")
-		(property "Reference" "#PWRLOC26"
+		(uuid "1df8e538-c0dc-5d6c-8b03-bacbdfba6cd8")
+		(property "Reference" "#PWRLOC09"
 			(at 210.82 104.14 0)
 			(effects
 				(font
@@ -28906,12 +28260,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "99999bc7-fcfe-5973-b73c-cba2b74c9ca9")
+			(uuid "b4a82bba-d701-5ff9-a1d2-ad63b211ce6f")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/abf657c3-085f-5a19-8843-645cd7576022"
-					(reference "#PWRLOC26")
+					(reference "#PWRLOC09")
 					(unit 1)
 				)
 			)
@@ -28935,8 +28289,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "03ccc45d-e013-58b6-a425-86160bbf5b79")
-		(property "Reference" "#PWRLOC27"
+		(uuid "a4e886b8-11d1-5ff9-8706-dbc596a42913")
+		(property "Reference" "#PWRLOC10"
 			(at 210.82 106.68 0)
 			(effects
 				(font
@@ -28964,12 +28318,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "2b4fa5a0-c080-5fe9-8d6b-5ce2d65c6fe5")
+			(uuid "31bf9689-3f14-53d0-8bc7-5589951f810f")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/abf657c3-085f-5a19-8843-645cd7576022"
-					(reference "#PWRLOC27")
+					(reference "#PWRLOC10")
 					(unit 1)
 				)
 			)
@@ -29004,8 +28358,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "f2477434-2cbf-5d2d-97b1-17457178b0fc")
-		(property "Reference" "#PWRLOC28"
+		(uuid "8eed13f9-e9a4-5eeb-8e00-65529672e957")
+		(property "Reference" "#PWRLOC11"
 			(at 210.82 109.22 0)
 			(effects
 				(font
@@ -29033,12 +28387,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "eeb0ccef-ec2b-5a08-8ae0-676bd1e0f0ce")
+			(uuid "78f07c09-2ad0-51c8-b46c-9a53d81d988c")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/abf657c3-085f-5a19-8843-645cd7576022"
-					(reference "#PWRLOC28")
+					(reference "#PWRLOC11")
 					(unit 1)
 				)
 			)
@@ -29073,8 +28427,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "fe4a1c79-ddb9-50d4-aefe-c3bfc04444e4")
-		(property "Reference" "#PWRLOC29"
+		(uuid "d3cbde6b-1ff1-5caf-a7e1-1b1de64d0018")
+		(property "Reference" "#PWRLOC12"
 			(at 210.82 111.76 0)
 			(effects
 				(font
@@ -29102,12 +28456,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "3a47239a-3e6b-5463-a322-109d6969107c")
+			(uuid "979b8c9a-74d4-5551-a333-4d7e24b8d6df")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/abf657c3-085f-5a19-8843-645cd7576022"
-					(reference "#PWRLOC29")
+					(reference "#PWRLOC12")
 					(unit 1)
 				)
 			)
@@ -29131,8 +28485,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "ecd18443-cdce-504a-aba3-66a020ac2fac")
-		(property "Reference" "#PWRLOC30"
+		(uuid "a2fa365c-ee98-5898-99b2-1c7df569d9ea")
+		(property "Reference" "#PWRLOC13"
 			(at 210.82 114.3 0)
 			(effects
 				(font
@@ -29160,12 +28514,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "6f45a318-d9ee-5cb7-803e-16d081ce0286")
+			(uuid "3889de91-9cd6-5ed5-a52e-756fadfb19e0")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/abf657c3-085f-5a19-8843-645cd7576022"
-					(reference "#PWRLOC30")
+					(reference "#PWRLOC13")
 					(unit 1)
 				)
 			)
@@ -29189,8 +28543,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "39003b56-6a2d-5357-ad18-96aa63114323")
-		(property "Reference" "#PWRLOC31"
+		(uuid "5c0f6afe-ae7b-5f30-ba64-a04d8d6f3f25")
+		(property "Reference" "#PWRLOC14"
 			(at 210.82 116.84 0)
 			(effects
 				(font
@@ -29218,12 +28572,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "7cdb9477-6d4f-54bf-bc4f-3d40446c12da")
+			(uuid "835d9e65-cc75-56c3-b671-8088951e1c76")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/abf657c3-085f-5a19-8843-645cd7576022"
-					(reference "#PWRLOC31")
+					(reference "#PWRLOC14")
 					(unit 1)
 				)
 			)
@@ -29258,8 +28612,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "0c7ebc44-7980-53e5-80fb-8281eb796f4a")
-		(property "Reference" "#PWRLOC32"
+		(uuid "cb071514-51d8-57cf-ace3-8a046e075baa")
+		(property "Reference" "#PWRLOC15"
 			(at 210.82 119.38 0)
 			(effects
 				(font
@@ -29287,12 +28641,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "640ff684-988f-5a03-bffa-f7c6586dcff9")
+			(uuid "b0a9d639-cf59-5778-ba16-f2354a6dbfd7")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/abf657c3-085f-5a19-8843-645cd7576022"
-					(reference "#PWRLOC32")
+					(reference "#PWRLOC15")
 					(unit 1)
 				)
 			)
@@ -29316,8 +28670,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "c81ff825-f7d4-5d32-8f0b-775957556c31")
-		(property "Reference" "#PWRLOC33"
+		(uuid "3ae83d8d-decd-5d3d-aaca-c9c925049b8f")
+		(property "Reference" "#PWRLOC16"
 			(at 210.82 121.92 0)
 			(effects
 				(font
@@ -29345,12 +28699,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "cf9facea-91d3-5a53-8661-dd789f7fb786")
+			(uuid "c2e0ad69-e6ad-5c6b-bfeb-0b683a2d9de1")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/abf657c3-085f-5a19-8843-645cd7576022"
-					(reference "#PWRLOC33")
+					(reference "#PWRLOC16")
 					(unit 1)
 				)
 			)
@@ -29374,8 +28728,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "51ac2424-1242-5f22-bf6e-f8e2242a0ea9")
-		(property "Reference" "#PWRLOC34"
+		(uuid "b67587fe-76fb-52df-b6d7-2b1cd6109bd0")
+		(property "Reference" "#PWRLOC17"
 			(at 210.82 124.46 0)
 			(effects
 				(font
@@ -29403,12 +28757,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "2b1c8196-5067-5bd8-9972-88773e2e211e")
+			(uuid "00cdf1b7-967e-50b1-a787-9e7928efe8b3")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/abf657c3-085f-5a19-8843-645cd7576022"
-					(reference "#PWRLOC34")
+					(reference "#PWRLOC17")
 					(unit 1)
 				)
 			)
@@ -29453,8 +28807,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "4133651d-d73e-5926-8492-e1c5c049ab14")
-		(property "Reference" "#PWRLOC35"
+		(uuid "9931cece-007b-553b-8e65-50f75d380f85")
+		(property "Reference" "#PWRLOC18"
 			(at 228.6 127 0)
 			(effects
 				(font
@@ -29482,12 +28836,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "9f96a540-284d-581f-827a-79ce83a98494")
+			(uuid "6e03c178-52fb-509b-b1c4-bbc7835a41f4")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/abf657c3-085f-5a19-8843-645cd7576022"
-					(reference "#PWRLOC35")
+					(reference "#PWRLOC18")
 					(unit 1)
 				)
 			)
@@ -29639,8 +28993,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "d4c2fb86-7ab8-521b-8aa0-1f59bd672569")
-		(property "Reference" "#PWRLOC36"
+		(uuid "50a2067e-769c-5fd3-9313-7ee22d22e5d5")
+		(property "Reference" "#PWRLOC19"
 			(at 264.16 54.61 0)
 			(effects
 				(font
@@ -29667,12 +29021,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "d798e2a4-4490-5c7b-8f21-5d9e5691bf8e")
+			(uuid "84dc0b22-752c-5e54-a900-72a718c8447c")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/abf657c3-085f-5a19-8843-645cd7576022"
-					(reference "#PWRLOC36")
+					(reference "#PWRLOC19")
 					(unit 1)
 				)
 			)
@@ -29768,8 +29122,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "3244276c-c9d3-5970-ae29-9b24d6f9559b")
-		(property "Reference" "#PWRLOC37"
+		(uuid "ac074a86-5c0b-509a-8481-c180870beba5")
+		(property "Reference" "#PWRLOC20"
 			(at 266.7 69.85 0)
 			(effects
 				(font
@@ -29796,12 +29150,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "c6602cc4-e817-536e-bcf8-7d582282bcdc")
+			(uuid "e9856b6a-d6a9-50b1-9172-23e80102672c")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/abf657c3-085f-5a19-8843-645cd7576022"
-					(reference "#PWRLOC37")
+					(reference "#PWRLOC20")
 					(unit 1)
 				)
 			)
@@ -29918,8 +29272,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "9a73f5ca-380a-540b-8267-717b30ead68b")
-		(property "Reference" "#PWRLOC38"
+		(uuid "54961c60-4165-55df-aae2-7c60b96d046d")
+		(property "Reference" "#PWRLOC21"
 			(at 261.62 85.09 0)
 			(effects
 				(font
@@ -29946,12 +29300,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "8514270c-c9b9-58b9-8d85-a06328964701")
+			(uuid "0ea56521-ac9c-50db-9489-cc05f305cefd")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/abf657c3-085f-5a19-8843-645cd7576022"
-					(reference "#PWRLOC38")
+					(reference "#PWRLOC21")
 					(unit 1)
 				)
 			)
@@ -29965,8 +29319,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "7b045529-39a7-5dd9-9dae-c3aec2207b52")
-		(property "Reference" "#PWRLOC39"
+		(uuid "6c6f2806-1226-5aa7-add8-f3c1a0145db0")
+		(property "Reference" "#PWRLOC22"
 			(at 292.1 82.55 0)
 			(effects
 				(font
@@ -29993,12 +29347,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "24b2f6ae-c5cb-53ea-8262-12c20f7200d0")
+			(uuid "094856d9-bb6d-5195-804f-ba212cb791f2")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/abf657c3-085f-5a19-8843-645cd7576022"
-					(reference "#PWRLOC39")
+					(reference "#PWRLOC22")
 					(unit 1)
 				)
 			)
@@ -30094,8 +29448,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "54ecd8e1-788e-5e94-a4af-2af6aed4f43b")
-		(property "Reference" "#PWRLOC40"
+		(uuid "078291d4-d4b6-522d-8f46-a15f83ff8f89")
+		(property "Reference" "#PWRLOC23"
 			(at 312.42 87.63 0)
 			(effects
 				(font
@@ -30122,12 +29476,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "dae164f3-e6f6-561d-9c4d-a793113f5a69")
+			(uuid "832ac7c4-077b-5a80-a2ec-07232169c1ba")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/abf657c3-085f-5a19-8843-645cd7576022"
-					(reference "#PWRLOC40")
+					(reference "#PWRLOC23")
 					(unit 1)
 				)
 			)
@@ -30244,8 +29598,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "a8f645b2-6569-5712-ae75-015fb5c13c6d")
-		(property "Reference" "#PWRLOC41"
+		(uuid "87959ba1-bf0f-5eb6-a8f5-9abeddbb8207")
+		(property "Reference" "#PWRLOC24"
 			(at 320.04 62.23 0)
 			(effects
 				(font
@@ -30272,12 +29626,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "c6fc583c-065c-5e08-a8e7-4ab36b33af19")
+			(uuid "fbc52f65-cc8b-5603-ad5a-76cd2ef39b5a")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/abf657c3-085f-5a19-8843-645cd7576022"
-					(reference "#PWRLOC41")
+					(reference "#PWRLOC24")
 					(unit 1)
 				)
 			)
@@ -30455,8 +29809,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "b2b7180b-9237-5c6e-bfb6-fbd88496e217")
-		(property "Reference" "#PWRLOC42"
+		(uuid "5e57a645-fe42-5f18-a767-e7a237315ee7")
+		(property "Reference" "#PWRLOC25"
 			(at 337.82 52.07 0)
 			(effects
 				(font
@@ -30483,12 +29837,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "92362f15-b9fc-5608-8ad8-e39eed9cdf4b")
+			(uuid "3d3480da-b5ca-5e39-8deb-434bf3c1d9a5")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/abf657c3-085f-5a19-8843-645cd7576022"
-					(reference "#PWRLOC42")
+					(reference "#PWRLOC25")
 					(unit 1)
 				)
 			)
@@ -30594,8 +29948,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "aa3af7c4-0b37-5e40-8b71-aa025377f35d")
-		(property "Reference" "#PWRLOC43"
+		(uuid "67f41bb2-8d76-5a24-8250-6512fd071d4d")
+		(property "Reference" "#PWRLOC26"
 			(at 358.14 57.15 0)
 			(effects
 				(font
@@ -30622,12 +29976,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "6f9d1d48-c038-5ff3-8c2e-695acb8f5d2f")
+			(uuid "99999bc7-fcfe-5973-b73c-cba2b74c9ca9")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/abf657c3-085f-5a19-8843-645cd7576022"
-					(reference "#PWRLOC43")
+					(reference "#PWRLOC26")
 					(unit 1)
 				)
 			)
@@ -30883,8 +30237,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "f735e44e-7166-5781-9fac-ae0f53d34c6a")
-		(property "Reference" "#PWRLOC44"
+		(uuid "03ccc45d-e013-58b6-a425-86160bbf5b79")
+		(property "Reference" "#PWRLOC27"
 			(at 264.16 139.7 0)
 			(effects
 				(font
@@ -30911,12 +30265,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "2b8e7e95-5797-5453-9cd3-94dd92dfcaec")
+			(uuid "2b4fa5a0-c080-5fe9-8d6b-5ce2d65c6fe5")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/abf657c3-085f-5a19-8843-645cd7576022"
-					(reference "#PWRLOC44")
+					(reference "#PWRLOC27")
 					(unit 1)
 				)
 			)
@@ -30951,8 +30305,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "7ba114c6-3da9-5659-bc26-cd35d508ceea")
-		(property "Reference" "#PWRLOC45"
+		(uuid "f2477434-2cbf-5d2d-97b1-17457178b0fc")
+		(property "Reference" "#PWRLOC28"
 			(at 274.32 149.86 0)
 			(effects
 				(font
@@ -30979,12 +30333,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "e177c833-a4a4-594d-8f36-f825062e03b5")
+			(uuid "eeb0ccef-ec2b-5a08-8ae0-676bd1e0f0ce")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/abf657c3-085f-5a19-8843-645cd7576022"
-					(reference "#PWRLOC45")
+					(reference "#PWRLOC28")
 					(unit 1)
 				)
 			)
@@ -30998,8 +30352,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "54233bd2-a6bd-55d7-92af-699cc5d60106")
-		(property "Reference" "#PWRLOC46"
+		(uuid "fe4a1c79-ddb9-50d4-aefe-c3bfc04444e4")
+		(property "Reference" "#PWRLOC29"
 			(at 289.56 157.48 0)
 			(effects
 				(font
@@ -31026,12 +30380,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "d8ddfff6-c660-5d71-bfa1-cd8807147cbc")
+			(uuid "3a47239a-3e6b-5463-a322-109d6969107c")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/abf657c3-085f-5a19-8843-645cd7576022"
-					(reference "#PWRLOC46")
+					(reference "#PWRLOC29")
 					(unit 1)
 				)
 			)
@@ -31045,8 +30399,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "f5306e73-2f65-5d53-86eb-9ef2e4933002")
-		(property "Reference" "#PWRLOC47"
+		(uuid "ecd18443-cdce-504a-aba3-66a020ac2fac")
+		(property "Reference" "#PWRLOC30"
 			(at 294.64 157.48 0)
 			(effects
 				(font
@@ -31073,12 +30427,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "9908f960-2f2e-5086-9901-701bf91bdb3b")
+			(uuid "6f45a318-d9ee-5cb7-803e-16d081ce0286")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/abf657c3-085f-5a19-8843-645cd7576022"
-					(reference "#PWRLOC47")
+					(reference "#PWRLOC30")
 					(unit 1)
 				)
 			)
@@ -31184,8 +30538,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "5b13de63-ac0b-5242-9bf4-ff48c1375df5")
-		(property "Reference" "#PWRLOC48"
+		(uuid "39003b56-6a2d-5357-ad18-96aa63114323")
+		(property "Reference" "#PWRLOC31"
 			(at 327.66 139.7 0)
 			(effects
 				(font
@@ -31212,12 +30566,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "5c089f10-9aad-55ed-a4b5-288116ca0ab0")
+			(uuid "7cdb9477-6d4f-54bf-bc4f-3d40446c12da")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/abf657c3-085f-5a19-8843-645cd7576022"
-					(reference "#PWRLOC48")
+					(reference "#PWRLOC31")
 					(unit 1)
 				)
 			)
@@ -31313,8 +30667,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "54c6bd65-c191-5bcb-90d1-0669f9f846e7")
-		(property "Reference" "#PWRLOC49"
+		(uuid "0c7ebc44-7980-53e5-80fb-8281eb796f4a")
+		(property "Reference" "#PWRLOC32"
 			(at 314.96 162.56 0)
 			(effects
 				(font
@@ -31341,12 +30695,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "8ecf12de-395e-5dad-b62e-3e29369b154c")
+			(uuid "640ff684-988f-5a03-bffa-f7c6586dcff9")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/abf657c3-085f-5a19-8843-645cd7576022"
-					(reference "#PWRLOC49")
+					(reference "#PWRLOC32")
 					(unit 1)
 				)
 			)
@@ -31600,8 +30954,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "d1fbaaef-137f-5d27-b7cd-a21013d00160")
-		(property "Reference" "#PWRLOC50"
+		(uuid "c81ff825-f7d4-5d32-8f0b-775957556c31")
+		(property "Reference" "#PWRLOC33"
 			(at 264.16 203.2 0)
 			(effects
 				(font
@@ -31628,12 +30982,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "08707f73-3b7c-5f24-9476-e58a71c6e0e9")
+			(uuid "cf9facea-91d3-5a53-8661-dd789f7fb786")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/abf657c3-085f-5a19-8843-645cd7576022"
-					(reference "#PWRLOC50")
+					(reference "#PWRLOC33")
 					(unit 1)
 				)
 			)
@@ -31668,8 +31022,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "56fc55f4-7229-54b3-a8ca-f66a98087d32")
-		(property "Reference" "#PWRLOC51"
+		(uuid "51ac2424-1242-5f22-bf6e-f8e2242a0ea9")
+		(property "Reference" "#PWRLOC34"
 			(at 274.32 213.36 0)
 			(effects
 				(font
@@ -31696,12 +31050,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "686c2a81-e2fb-5b79-8cec-9556101c8982")
+			(uuid "2b1c8196-5067-5bd8-9972-88773e2e211e")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/abf657c3-085f-5a19-8843-645cd7576022"
-					(reference "#PWRLOC51")
+					(reference "#PWRLOC34")
 					(unit 1)
 				)
 			)
@@ -31715,8 +31069,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "537c3f2d-c080-589c-afb1-4edfda878573")
-		(property "Reference" "#PWRLOC52"
+		(uuid "4133651d-d73e-5926-8492-e1c5c049ab14")
+		(property "Reference" "#PWRLOC35"
 			(at 289.56 220.98 0)
 			(effects
 				(font
@@ -31743,12 +31097,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "b7d27fad-7028-5b69-8659-1714b9f3b03d")
+			(uuid "9f96a540-284d-581f-827a-79ce83a98494")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/abf657c3-085f-5a19-8843-645cd7576022"
-					(reference "#PWRLOC52")
+					(reference "#PWRLOC35")
 					(unit 1)
 				)
 			)
@@ -31762,8 +31116,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "a23b3b97-9be3-598c-8a9f-fc29104cadeb")
-		(property "Reference" "#PWRLOC53"
+		(uuid "d4c2fb86-7ab8-521b-8aa0-1f59bd672569")
+		(property "Reference" "#PWRLOC36"
 			(at 294.64 220.98 0)
 			(effects
 				(font
@@ -31790,12 +31144,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "21e3ead6-86f6-5f93-8f52-77d5b0f356ce")
+			(uuid "d798e2a4-4490-5c7b-8f21-5d9e5691bf8e")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/abf657c3-085f-5a19-8843-645cd7576022"
-					(reference "#PWRLOC53")
+					(reference "#PWRLOC36")
 					(unit 1)
 				)
 			)
@@ -31901,8 +31255,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "b074207e-1cde-502f-b3d7-06d02bdb9c76")
-		(property "Reference" "#PWRLOC54"
+		(uuid "3244276c-c9d3-5970-ae29-9b24d6f9559b")
+		(property "Reference" "#PWRLOC37"
 			(at 327.66 203.2 0)
 			(effects
 				(font
@@ -31929,12 +31283,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "ea458a4b-0a79-5ef6-a786-e6c7da17274c")
+			(uuid "c6602cc4-e817-536e-bcf8-7d582282bcdc")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/abf657c3-085f-5a19-8843-645cd7576022"
-					(reference "#PWRLOC54")
+					(reference "#PWRLOC37")
 					(unit 1)
 				)
 			)
@@ -32030,8 +31384,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "77496da1-df2d-552b-a939-81c4f52f1cfc")
-		(property "Reference" "#PWRLOC55"
+		(uuid "9a73f5ca-380a-540b-8267-717b30ead68b")
+		(property "Reference" "#PWRLOC38"
 			(at 314.96 226.06 0)
 			(effects
 				(font
@@ -32058,12 +31412,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "210d4238-205f-5e92-95f4-73c6db480e64")
+			(uuid "8514270c-c9b9-58b9-8d85-a06328964701")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/abf657c3-085f-5a19-8843-645cd7576022"
-					(reference "#PWRLOC55")
+					(reference "#PWRLOC38")
 					(unit 1)
 				)
 			)
@@ -32251,8 +31605,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "c76d1c1d-5c0f-58ba-b8f5-46b393c049d2")
-		(property "Reference" "#PWRLOC56"
+		(uuid "7b045529-39a7-5dd9-9dae-c3aec2207b52")
+		(property "Reference" "#PWRLOC39"
 			(at 363.22 236.22 0)
 			(effects
 				(font
@@ -32279,12 +31633,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "ab8797ce-80f6-5695-b869-71676ced5aca")
+			(uuid "24b2f6ae-c5cb-53ea-8262-12c20f7200d0")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/abf657c3-085f-5a19-8843-645cd7576022"
-					(reference "#PWRLOC56")
+					(reference "#PWRLOC39")
 					(unit 1)
 				)
 			)
@@ -32380,8 +31734,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "8d3114b9-cdc7-5a00-b7ac-710f1d89e58a")
-		(property "Reference" "#PWRLOC57"
+		(uuid "54ecd8e1-788e-5e94-a4af-2af6aed4f43b")
+		(property "Reference" "#PWRLOC40"
 			(at 373.38 233.68 0)
 			(effects
 				(font
@@ -32408,12 +31762,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "12657622-5a54-5a77-8a3a-8114e1710dad")
+			(uuid "dae164f3-e6f6-561d-9c4d-a793113f5a69")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/abf657c3-085f-5a19-8843-645cd7576022"
-					(reference "#PWRLOC57")
+					(reference "#PWRLOC40")
 					(unit 1)
 				)
 			)
@@ -32630,6 +31984,17 @@
 	)
 	(wire
 		(pts
+			(xy 60.96 53.34)
+			(xy 63.5 53.34)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "d0e8cf1a-848e-5ac7-b858-4faa5c38effb")
+	)
+	(wire
+		(pts
 			(xy 83.82 50.8)
 			(xy 93.98 50.8)
 		)
@@ -32682,6 +32047,17 @@
 			(type default)
 		)
 		(uuid "2339186b-869e-5a03-8c79-f47613eb04e7")
+	)
+	(wire
+		(pts
+			(xy 60.96 58.42)
+			(xy 63.5 58.42)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "66fd613e-ced9-526f-b573-5ff56b63aea1")
 	)
 	(wire
 		(pts
@@ -32740,6 +32116,17 @@
 	)
 	(wire
 		(pts
+			(xy 60.96 63.5)
+			(xy 63.5 63.5)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "9cc2cdfd-2b01-5ca3-9473-c9f2be5a78bd")
+	)
+	(wire
+		(pts
 			(xy 83.82 60.96)
 			(xy 93.98 60.96)
 		)
@@ -32792,6 +32179,17 @@
 			(type default)
 		)
 		(uuid "63a96341-bb6a-5f84-8113-ef862f3ce961")
+	)
+	(wire
+		(pts
+			(xy 60.96 68.58)
+			(xy 63.5 68.58)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "59eb749f-d5dd-5a0e-a35f-f8b44b4a2c91")
 	)
 	(wire
 		(pts
@@ -32850,6 +32248,17 @@
 	)
 	(wire
 		(pts
+			(xy 60.96 73.66)
+			(xy 63.5 73.66)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "9ef3e8dc-f335-565d-a9df-f874af6b6c49")
+	)
+	(wire
+		(pts
 			(xy 83.82 71.12)
 			(xy 93.98 71.12)
 		)
@@ -32902,6 +32311,17 @@
 			(type default)
 		)
 		(uuid "9cc360d6-cac0-5fb7-9f61-46054318da37")
+	)
+	(wire
+		(pts
+			(xy 60.96 78.74)
+			(xy 63.5 78.74)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "f7630e78-f3eb-5a9a-a9db-c3dcf0625a96")
 	)
 	(wire
 		(pts
@@ -32960,6 +32380,17 @@
 	)
 	(wire
 		(pts
+			(xy 60.96 83.82)
+			(xy 63.5 83.82)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "2579e728-b686-5eea-8e1b-bf943a62505f")
+	)
+	(wire
+		(pts
 			(xy 83.82 81.28)
 			(xy 93.98 81.28)
 		)
@@ -33012,6 +32443,17 @@
 			(type default)
 		)
 		(uuid "943aaf95-3160-51e1-a604-4aa987ad0a36")
+	)
+	(wire
+		(pts
+			(xy 60.96 88.9)
+			(xy 63.5 88.9)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "0a0138be-b468-5526-a596-6e4056494812")
 	)
 	(wire
 		(pts
@@ -33070,6 +32512,17 @@
 	)
 	(wire
 		(pts
+			(xy 60.96 93.98)
+			(xy 63.5 93.98)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "e1993035-cba9-5c3c-a73d-8a3a244d1cec")
+	)
+	(wire
+		(pts
 			(xy 83.82 91.44)
 			(xy 93.98 91.44)
 		)
@@ -33122,6 +32575,17 @@
 			(type default)
 		)
 		(uuid "3777da93-78a6-5c1c-aabd-e6d5756e44e6")
+	)
+	(wire
+		(pts
+			(xy 60.96 99.06)
+			(xy 63.5 99.06)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "e127bbd7-fa41-5028-a6c9-a0da255e0bc1")
 	)
 	(wire
 		(pts
@@ -33180,6 +32644,17 @@
 	)
 	(wire
 		(pts
+			(xy 60.96 104.14)
+			(xy 63.5 104.14)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "e13d1cef-3ddb-5617-af92-392b8be98062")
+	)
+	(wire
+		(pts
 			(xy 83.82 101.6)
 			(xy 93.98 101.6)
 		)
@@ -33235,6 +32710,17 @@
 	)
 	(wire
 		(pts
+			(xy 60.96 109.22)
+			(xy 63.5 109.22)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "600a73d1-7844-5884-9db5-05ccc140653a")
+	)
+	(wire
+		(pts
 			(xy 83.82 106.68)
 			(xy 93.98 106.68)
 		)
@@ -33287,6 +32773,17 @@
 			(type default)
 		)
 		(uuid "0603d043-fe09-5a01-aaa0-48c946d597c9")
+	)
+	(wire
+		(pts
+			(xy 60.96 114.3)
+			(xy 63.5 114.3)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "62952c71-3814-5737-9181-28d6514c9044")
 	)
 	(wire
 		(pts
@@ -33364,6 +32861,17 @@
 			(type default)
 		)
 		(uuid "6b2416c2-bff4-5c96-855c-ebae2418d4d8")
+	)
+	(wire
+		(pts
+			(xy 60.96 119.38)
+			(xy 63.5 119.38)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "8df27b7c-2845-5a1f-96c4-3160f63e18ab")
 	)
 	(wire
 		(pts
@@ -33565,6 +33073,17 @@
 	)
 	(wire
 		(pts
+			(xy 60.96 134.62)
+			(xy 63.5 134.62)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "42f51462-11de-5b16-84f4-784cadb6294e")
+	)
+	(wire
+		(pts
 			(xy 40.64 137.16)
 			(xy 50.8 137.16)
 		)
@@ -33598,6 +33117,17 @@
 	)
 	(wire
 		(pts
+			(xy 60.96 139.7)
+			(xy 63.5 139.7)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "d2c54073-2688-5562-b058-bd58a571e0af")
+	)
+	(wire
+		(pts
 			(xy 40.64 142.24)
 			(xy 50.8 142.24)
 		)
@@ -33628,6 +33158,17 @@
 			(type default)
 		)
 		(uuid "9a3d215c-f4ee-5708-a2a7-19278188a66a")
+	)
+	(wire
+		(pts
+			(xy 60.96 144.78)
+			(xy 63.5 144.78)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "55affb74-eb00-5016-b3c3-8e8643a3aac3")
 	)
 	(wire
 		(pts

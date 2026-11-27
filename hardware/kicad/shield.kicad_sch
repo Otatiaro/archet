@@ -25422,7 +25422,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" "I2C4 pull-ups, as I2C5"
+		(property "Description" "I2C4 pull-ups, as I2C5. On +3V3_OUT, as R103 and R29: nothing back-powers a shield whose rail is off"
 			(at 66.04 191.77 0)
 			(effects
 				(font
@@ -25457,50 +25457,24 @@
 			)
 		)
 	)
-	(symbol
-		(lib_id "power:+3V3")
-		(at 66.04 185.42 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "5f3e781f-ab85-548d-a729-33cb084dcc87")
-		(property "Reference" "#PWRSHI01"
-			(at 66.04 185.42 0)
+	(global_label "+3V3_OUT"
+		(shape passive)
+		(at 73.66 185.42 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "7601f642-6eac-54a2-9aae-33d58c254030")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 73.66 185.42 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
 				(hide yes)
-			)
-		)
-		(property "Value" "+3V3"
-			(at 66.04 181.61 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 66.04 185.42 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "cba39a44-65d6-5537-ba1f-b17a2564176d")
-		)
-		(instances
-			(project "archet"
-				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/a50de6e4-a674-5212-922a-b242457c6848"
-					(reference "#PWRSHI01")
-					(unit 1)
-				)
 			)
 		)
 	)
@@ -25628,50 +25602,24 @@
 			)
 		)
 	)
-	(symbol
-		(lib_id "power:+3V3")
-		(at 66.04 203.2 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "f08dc974-5a8d-55dc-8391-b27b5b6765a2")
-		(property "Reference" "#PWRSHI02"
-			(at 66.04 203.2 0)
+	(global_label "+3V3_OUT"
+		(shape passive)
+		(at 73.66 203.2 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "216e7d94-236f-561c-8147-dd89cb76320a")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 73.66 203.2 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
 				(hide yes)
-			)
-		)
-		(property "Value" "+3V3"
-			(at 66.04 199.39 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 66.04 203.2 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "bc73b69c-ad3a-58c1-8b1a-2293b2e21f8e")
-		)
-		(instances
-			(project "archet"
-				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/a50de6e4-a674-5212-922a-b242457c6848"
-					(reference "#PWRSHI02")
-					(unit 1)
-				)
 			)
 		)
 	)
@@ -25799,50 +25747,24 @@
 			)
 		)
 	)
-	(symbol
-		(lib_id "power:+3V3")
-		(at 66.04 220.98 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "4fb793e1-9e40-57bf-9027-1cd1372dcb0c")
-		(property "Reference" "#PWRSHI03"
-			(at 66.04 220.98 0)
+	(global_label "+3V3_OUT"
+		(shape passive)
+		(at 73.66 220.98 0)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left)
+		)
+		(uuid "41dc68d3-8ef0-515a-ba1d-77a5e262de6f")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 73.66 220.98 0)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
 				(hide yes)
-			)
-		)
-		(property "Value" "+3V3"
-			(at 66.04 217.17 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 66.04 220.98 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "7824d0b1-d447-5eb1-a65d-1e0771b5f335")
-		)
-		(instances
-			(project "archet"
-				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/a50de6e4-a674-5212-922a-b242457c6848"
-					(reference "#PWRSHI03")
-					(unit 1)
-				)
 			)
 		)
 	)
@@ -25978,8 +25900,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "cd63a6c4-85a7-5bfc-b049-8f35c0ae1d37")
-		(property "Reference" "#PWRSHI04"
+		(uuid "5f3e781f-ab85-548d-a729-33cb084dcc87")
+		(property "Reference" "#PWRSHI01"
 			(at 66.04 238.76 0)
 			(effects
 				(font
@@ -26006,18 +25928,18 @@
 			)
 		)
 		(pin "1"
-			(uuid "3693d0c5-10ce-5a80-9db9-4f9fe42d10d1")
+			(uuid "cba39a44-65d6-5537-ba1f-b17a2564176d")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/a50de6e4-a674-5212-922a-b242457c6848"
-					(reference "#PWRSHI04")
+					(reference "#PWRSHI01")
 					(unit 1)
 				)
 			)
 		)
 	)
-	(text "I2C4 pull-ups 2 kΩ (as I2C5); reset and presence 10 kΩ.\nThe shield ties PRESENT_N to ground."
+	(text "I2C4 pull-ups 2 kΩ (as I2C5); reset and presence 10 kΩ.\nThe shield ties PRESENT_N to ground.\nSCL, SDA and RESET_N pulled to +3V3_OUT: no back-power into an unpowered shield."
 		(exclude_from_sim no)
 		(at 25.4 259.08 0)
 		(effects
@@ -26183,8 +26105,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "88d94284-9bbc-56ed-9e27-0da0728be87d")
-		(property "Reference" "#PWRSHI05"
+		(uuid "f08dc974-5a8d-55dc-8391-b27b5b6765a2")
+		(property "Reference" "#PWRSHI02"
 			(at 152.4 78.74 0)
 			(effects
 				(font
@@ -26211,12 +26133,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "1173a444-35ec-5fc1-8b11-7a207352d36b")
+			(uuid "bc73b69c-ad3a-58c1-8b1a-2293b2e21f8e")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/a50de6e4-a674-5212-922a-b242457c6848"
-					(reference "#PWRSHI05")
+					(reference "#PWRSHI02")
 					(unit 1)
 				)
 			)
@@ -26376,8 +26298,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "0ee9f875-303d-5fd2-969d-6743b64569df")
-		(property "Reference" "#PWRSHI06"
+		(uuid "4fb793e1-9e40-57bf-9027-1cd1372dcb0c")
+		(property "Reference" "#PWRSHI03"
 			(at 152.4 116.84 0)
 			(effects
 				(font
@@ -26404,12 +26326,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "47803b06-f4a0-5769-934c-2bbebbe1714a")
+			(uuid "7824d0b1-d447-5eb1-a65d-1e0771b5f335")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/a50de6e4-a674-5212-922a-b242457c6848"
-					(reference "#PWRSHI06")
+					(reference "#PWRSHI03")
 					(unit 1)
 				)
 			)
@@ -26569,8 +26491,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "9c3841d4-c55a-5d66-abe6-d431efb17a1b")
-		(property "Reference" "#PWRSHI07"
+		(uuid "cd63a6c4-85a7-5bfc-b049-8f35c0ae1d37")
+		(property "Reference" "#PWRSHI04"
 			(at 152.4 154.94 0)
 			(effects
 				(font
@@ -26597,12 +26519,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "39af4fa2-d4df-5a4d-b8e0-9cb52cf02465")
+			(uuid "3693d0c5-10ce-5a80-9db9-4f9fe42d10d1")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/a50de6e4-a674-5212-922a-b242457c6848"
-					(reference "#PWRSHI07")
+					(reference "#PWRSHI04")
 					(unit 1)
 				)
 			)
@@ -26762,8 +26684,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "5877e179-3922-58a4-91f0-54e2c0d492b9")
-		(property "Reference" "#PWRSHI08"
+		(uuid "88d94284-9bbc-56ed-9e27-0da0728be87d")
+		(property "Reference" "#PWRSHI05"
 			(at 152.4 193.04 0)
 			(effects
 				(font
@@ -26790,12 +26712,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "2a4750ad-44c6-5c4a-9c44-8ef16ff28ab5")
+			(uuid "1173a444-35ec-5fc1-8b11-7a207352d36b")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/a50de6e4-a674-5212-922a-b242457c6848"
-					(reference "#PWRSHI08")
+					(reference "#PWRSHI05")
 					(unit 1)
 				)
 			)
@@ -26955,8 +26877,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "9bb3b10f-d7e4-5efb-a9b2-9930b7acb29d")
-		(property "Reference" "#PWRSHI09"
+		(uuid "0ee9f875-303d-5fd2-969d-6743b64569df")
+		(property "Reference" "#PWRSHI06"
 			(at 241.3 78.74 0)
 			(effects
 				(font
@@ -26983,12 +26905,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "f6519f18-53ac-501f-88f2-d12db209baaf")
+			(uuid "47803b06-f4a0-5769-934c-2bbebbe1714a")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/a50de6e4-a674-5212-922a-b242457c6848"
-					(reference "#PWRSHI09")
+					(reference "#PWRSHI06")
 					(unit 1)
 				)
 			)
@@ -27159,8 +27081,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "ef0f0c1f-f6a8-5684-9ed7-2924c3c2589f")
-		(property "Reference" "#PWRSHI10"
+		(uuid "9c3841d4-c55a-5d66-abe6-d431efb17a1b")
+		(property "Reference" "#PWRSHI07"
 			(at 241.3 116.84 0)
 			(effects
 				(font
@@ -27187,12 +27109,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "ea2f2c7c-375f-52a4-a055-8d034faf4047")
+			(uuid "39af4fa2-d4df-5a4d-b8e0-9cb52cf02465")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/a50de6e4-a674-5212-922a-b242457c6848"
-					(reference "#PWRSHI10")
+					(reference "#PWRSHI07")
 					(unit 1)
 				)
 			)
@@ -27375,8 +27297,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "5cc91832-899d-5102-9d62-c48a10994262")
-		(property "Reference" "#PWRSHI11"
+		(uuid "5877e179-3922-58a4-91f0-54e2c0d492b9")
+		(property "Reference" "#PWRSHI08"
 			(at 241.3 154.94 0)
 			(effects
 				(font
@@ -27403,12 +27325,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "eb7de822-07e3-5864-922c-becba6934c40")
+			(uuid "2a4750ad-44c6-5c4a-9c44-8ef16ff28ab5")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/a50de6e4-a674-5212-922a-b242457c6848"
-					(reference "#PWRSHI11")
+					(reference "#PWRSHI08")
 					(unit 1)
 				)
 			)
@@ -27612,8 +27534,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "050c55e4-74f7-512e-8f6e-d80ff9937898")
-		(property "Reference" "#PWRSHI12"
+		(uuid "9bb3b10f-d7e4-5efb-a9b2-9930b7acb29d")
+		(property "Reference" "#PWRSHI09"
 			(at 317.5 81.28 0)
 			(effects
 				(font
@@ -27641,12 +27563,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "01989059-6738-5eb3-a65f-7593254ebe40")
+			(uuid "f6519f18-53ac-501f-88f2-d12db209baaf")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/a50de6e4-a674-5212-922a-b242457c6848"
-					(reference "#PWRSHI12")
+					(reference "#PWRSHI09")
 					(unit 1)
 				)
 			)
@@ -27820,8 +27742,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "14ba4c8a-a0a9-5544-8f12-9d82b5fac046")
-		(property "Reference" "#PWRSHI13"
+		(uuid "ef0f0c1f-f6a8-5684-9ed7-2924c3c2589f")
+		(property "Reference" "#PWRSHI10"
 			(at 340.36 109.22 0)
 			(effects
 				(font
@@ -27849,12 +27771,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "1263f1a5-24c4-574d-a491-f161cd97cbe2")
+			(uuid "ea2f2c7c-375f-52a4-a055-8d034faf4047")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/a50de6e4-a674-5212-922a-b242457c6848"
-					(reference "#PWRSHI13")
+					(reference "#PWRSHI10")
 					(unit 1)
 				)
 			)
@@ -27907,7 +27829,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" "Shrouded IDC 2 x 17, keyed. Services, then +3V3_OUT, +5V_OUT and VIN_EXT, rail groups split by grounds"
+		(property "Description" "Shrouded IDC 2 x 17, keyed. Services, then +3V3_OUT, +5V_OUT and VIN_EXT, rail groups split by grounds. VIN_EXT pins behind F1 and D1, both ways: a shield feeding the probe meets the TVS, and a shield drawing from J1 is fused"
 			(at 330.2 177.8 0)
 			(effects
 				(font
@@ -28046,8 +27968,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "7d62c6a8-0016-5927-bdd6-6a7687a126c1")
-		(property "Reference" "#PWRSHI14"
+		(uuid "5cc91832-899d-5102-9d62-c48a10994262")
+		(property "Reference" "#PWRSHI11"
 			(at 317.5 170.18 0)
 			(effects
 				(font
@@ -28075,12 +27997,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "2a095f2e-d746-5a40-ae4a-e91fe70a4274")
+			(uuid "eb7de822-07e3-5864-922c-becba6934c40")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/a50de6e4-a674-5212-922a-b242457c6848"
-					(reference "#PWRSHI14")
+					(reference "#PWRSHI11")
 					(unit 1)
 				)
 			)
@@ -28290,8 +28212,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "23c5a862-e2d0-56cf-be4c-745c6ffe8e57")
-		(property "Reference" "#PWRSHI15"
+		(uuid "050c55e4-74f7-512e-8f6e-d80ff9937898")
+		(property "Reference" "#PWRSHI12"
 			(at 322.58 187.96 0)
 			(effects
 				(font
@@ -28319,12 +28241,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "640da9e1-7bb4-569d-8f90-a5fc1cd4f8d6")
+			(uuid "01989059-6738-5eb3-a65f-7593254ebe40")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/a50de6e4-a674-5212-922a-b242457c6848"
-					(reference "#PWRSHI15")
+					(reference "#PWRSHI12")
 					(unit 1)
 				)
 			)
@@ -28338,8 +28260,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "862b606a-77ca-5382-ad27-45e3837c2039")
-		(property "Reference" "#PWRSHI16"
+		(uuid "14ba4c8a-a0a9-5544-8f12-9d82b5fac046")
+		(property "Reference" "#PWRSHI13"
 			(at 340.36 187.96 0)
 			(effects
 				(font
@@ -28367,12 +28289,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "7758f835-7fa8-5fd1-a345-ea52cf539095")
+			(uuid "1263f1a5-24c4-574d-a491-f161cd97cbe2")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/a50de6e4-a674-5212-922a-b242457c6848"
-					(reference "#PWRSHI16")
+					(reference "#PWRSHI13")
 					(unit 1)
 				)
 			)
@@ -28470,8 +28392,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "b40fa220-1eb4-5ac0-b94e-b158fd638a40")
-		(property "Reference" "#PWRSHI17"
+		(uuid "7d62c6a8-0016-5927-bdd6-6a7687a126c1")
+		(property "Reference" "#PWRSHI14"
 			(at 322.58 195.58 0)
 			(effects
 				(font
@@ -28499,12 +28421,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "0b415ff8-c444-5fa2-abfe-a98d32d31224")
+			(uuid "2a095f2e-d746-5a40-ae4a-e91fe70a4274")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/a50de6e4-a674-5212-922a-b242457c6848"
-					(reference "#PWRSHI17")
+					(reference "#PWRSHI14")
 					(unit 1)
 				)
 			)
@@ -28518,8 +28440,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid "d72861af-8fef-56bb-8616-ac05739498b4")
-		(property "Reference" "#PWRSHI18"
+		(uuid "23c5a862-e2d0-56cf-be4c-745c6ffe8e57")
+		(property "Reference" "#PWRSHI15"
 			(at 340.36 195.58 0)
 			(effects
 				(font
@@ -28547,18 +28469,18 @@
 			)
 		)
 		(pin "1"
-			(uuid "a4a1d07b-d353-5c62-9c10-38b25c0d3ab2")
+			(uuid "640da9e1-7bb4-569d-8f90-a5fc1cd4f8d6")
 		)
 		(instances
 			(project "archet"
 				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/a50de6e4-a674-5212-922a-b242457c6848"
-					(reference "#PWRSHI18")
+					(reference "#PWRSHI15")
 					(unit 1)
 				)
 			)
 		)
 	)
-	(global_label "VIN_EXT"
+	(global_label "VIN_EXT_P"
 		(shape passive)
 		(at 312.42 198.12 180)
 		(fields_autoplaced yes)
@@ -28568,7 +28490,7 @@
 			)
 			(justify right)
 		)
-		(uuid "173b17ae-2562-517b-9f27-2c23cf174c28")
+		(uuid "1e486e82-191a-5297-b57a-7a93f88f3acd")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
 			(at 312.42 198.12 0)
 			(effects
@@ -28579,7 +28501,7 @@
 			)
 		)
 	)
-	(global_label "VIN_EXT"
+	(global_label "VIN_EXT_P"
 		(shape passive)
 		(at 350.52 198.12 0)
 		(fields_autoplaced yes)
@@ -28589,7 +28511,7 @@
 			)
 			(justify left)
 		)
-		(uuid "03037a7e-8814-5f1a-85c9-19dd81d68247")
+		(uuid "1471d960-84ed-5d2a-a9d7-d10dee07fa6f")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
 			(at 350.52 198.12 0)
 			(effects
@@ -29281,6 +29203,17 @@
 	)
 	(wire
 		(pts
+			(xy 66.04 185.42)
+			(xy 73.66 185.42)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "225baf2c-803d-5fa4-84b6-b8bf42b002d6")
+	)
+	(wire
+		(pts
 			(xy 45.72 213.36)
 			(xy 66.04 213.36)
 		)
@@ -29314,6 +29247,17 @@
 	)
 	(wire
 		(pts
+			(xy 66.04 203.2)
+			(xy 73.66 203.2)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "d27502ee-62d5-522a-b6e6-4fa7aa48f6a0")
+	)
+	(wire
+		(pts
 			(xy 45.72 231.14)
 			(xy 66.04 231.14)
 		)
@@ -29344,6 +29288,17 @@
 			(type default)
 		)
 		(uuid "75c5d86a-86a1-5c5d-92d8-698fef28c689")
+	)
+	(wire
+		(pts
+			(xy 66.04 220.98)
+			(xy 73.66 220.98)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "c94ac362-4484-5e6f-83a1-33b0f37048df")
 	)
 	(wire
 		(pts

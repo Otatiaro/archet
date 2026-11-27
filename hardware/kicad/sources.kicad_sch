@@ -23050,7 +23050,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" "Bidirectional: 24 V standoff, 26.7 V breakdown, 38.9 V clamp; a reversed supply only meets the LM74700 (-65 V) and the VIN_BUS Schottky"
+		(property "Description" "Bidirectional: 24 V standoff, 26.7 V breakdown, 38.9 V clamp; a reversed supply only meets the LM74700 ideal diodes U1 and U52 (anode -65 V; cathode to anode 75 V, 48.5 V with the boost running)"
 			(at 76.2 69.85 90)
 			(effects
 				(font
@@ -26655,7 +26655,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" "VSYS monitor: everything drawn from the active source (probe, target, shield, boost), I2C5 address 0x41. VIN_BUS fed from VIN_EXT through D18 bypasses it: the TPS27S100 IMON reads that current"
+		(property "Description" "VSYS monitor: everything drawn from the active source (probe, target, shield, boost), I2C5 address 0x41. VIN_BUS fed from VIN_EXT through U52/Q10 bypasses it: the TPS27S100 IMON reads that current"
 			(at 332.74 177.8 0)
 			(effects
 				(font

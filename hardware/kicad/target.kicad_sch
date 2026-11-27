@@ -23445,7 +23445,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "10k"
+		(property "Value" "1k"
 			(at 81.28 76.2 0)
 			(effects
 				(font
@@ -23474,7 +23474,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" "SWDIO in input (B to A) while the iCE40 is unconfigured, its IOs then having weak pull-ups"
+		(property "Description" "SWDIO in input (B to A) while the iCE40 is unconfigured: its weak pull-ups (128 µA max at 3.3 V) give 0.13 V, under the 0.8 V VIL of DIR"
 			(at 78.74 74.93 0)
 			(effects
 				(font
@@ -23484,7 +23484,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C25744"
+		(property "LCSC" "C11702"
 			(at 78.74 74.93 0)
 			(effects
 				(font
@@ -25888,7 +25888,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "10k"
+		(property "Value" "1k"
 			(at 81.28 251.46 0)
 			(effects
 				(font
@@ -25917,7 +25917,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" "Line released while the iCE40 is unconfigured"
+		(property "Description" "Line released while the iCE40 is unconfigured: 0.13 V against its weak pull-up, under the 2N7002 threshold"
 			(at 78.74 250.19 0)
 			(effects
 				(font
@@ -25927,7 +25927,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C25744"
+		(property "LCSC" "C11702"
 			(at 78.74 250.19 0)
 			(effects
 				(font
@@ -26180,7 +26180,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "10k"
+		(property "Value" "1k"
 			(at 81.28 276.86 0)
 			(effects
 				(font
@@ -26209,7 +26209,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" "Line released while the iCE40 is unconfigured"
+		(property "Description" "Line released while the iCE40 is unconfigured: 0.13 V against its weak pull-up, under the 2N7002 threshold"
 			(at 78.74 275.59 0)
 			(effects
 				(font
@@ -26219,7 +26219,7 @@
 				(hide yes)
 			)
 		)
-		(property "LCSC" "C25744"
+		(property "LCSC" "C11702"
 			(at 78.74 275.59 0)
 			(effects
 				(font

@@ -23638,6 +23638,88 @@
 		)
 	)
 	(symbol
+		(lib_id "Device:C")
+		(at 172.72 57.15 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "41ff627a-5dd6-5afe-9546-0026a6bf2fd2")
+		(property "Reference" "C134"
+			(at 165.1 55.88 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "100nF"
+			(at 165.1 58.42 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Capacitor_SMD:C_0402_1005Metric"
+			(at 172.72 57.15 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 172.72 57.15 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Description" "Gate-source: Q4 turns on in ~1 ms (R11), not ~25 µs into the VSYS capacitors. Holds Vgs at 0 on a hot plug (gate-drain would turn it on)"
+			(at 172.72 57.15 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "LCSC" "C307331"
+			(at 172.72 57.15 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "1a4e9499-8c86-5d41-bad8-6bd4c8b8bf5d")
+		)
+		(pin "2"
+			(uuid "e8e81df5-78b5-5005-a22b-90e7c109faf6")
+		)
+		(instances
+			(project "archet"
+				(path "/5766cc04-c63c-534e-8282-048b5d7ae377/d2559de1-5147-5c15-b2e8-33eca0203a67"
+					(reference "C134")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "Device:R")
 		(at 203.2 69.85 0)
 		(unit 1)
@@ -23721,7 +23803,7 @@
 	)
 	(symbol
 		(lib_id "power:+3V3")
-		(at 182.88 68.58 0)
+		(at 187.96 71.12 270)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -23729,7 +23811,7 @@
 		(dnp no)
 		(uuid "008ee2f0-9383-5cea-9294-e900dba89c68")
 		(property "Reference" "#PWRUSB06"
-			(at 182.88 68.58 0)
+			(at 187.96 71.12 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -23738,7 +23820,7 @@
 			)
 		)
 		(property "Value" "+3V3"
-			(at 182.88 64.77 0)
+			(at 187.96 67.31 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -23746,7 +23828,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 182.88 68.58 0)
+			(at 187.96 71.12 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -25063,13 +25145,24 @@
 	(wire
 		(pts
 			(xy 137.16 50.8)
+			(xy 172.72 50.8)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "1ba1fce6-e732-5e7e-b639-218898496d0b")
+	)
+	(wire
+		(pts
+			(xy 172.72 50.8)
 			(xy 190.5 50.8)
 		)
 		(stroke
 			(width 0)
 			(type default)
 		)
-		(uuid "86d7be28-2e19-55e4-8946-2913ecf91c5f")
+		(uuid "e2526834-ac9a-5f0d-a5b1-0e6f8b653a54")
 	)
 	(wire
 		(pts
@@ -25205,6 +25298,39 @@
 	)
 	(wire
 		(pts
+			(xy 172.72 50.8)
+			(xy 172.72 53.34)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "cc2db8ae-5ad5-50fb-aa19-99157121d180")
+	)
+	(wire
+		(pts
+			(xy 172.72 60.96)
+			(xy 172.72 63.5)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "061e8da4-11cc-598c-b799-381c6b7ea8ca")
+	)
+	(wire
+		(pts
+			(xy 172.72 63.5)
+			(xy 190.5 63.5)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "ae1297da-f9bd-5de6-960b-c9892cfddc91")
+	)
+	(wire
+		(pts
 			(xy 203.2 63.5)
 			(xy 203.2 66.04)
 		)
@@ -25261,13 +25387,13 @@
 	(wire
 		(pts
 			(xy 182.88 71.12)
-			(xy 182.88 68.58)
+			(xy 187.96 71.12)
 		)
 		(stroke
 			(width 0)
 			(type default)
 		)
-		(uuid "06d7db67-1d4c-5a23-b45a-2fe52cba05ee")
+		(uuid "e298fddc-8bd2-5376-9688-564afb3c7c7a")
 	)
 	(wire
 		(pts
@@ -25864,6 +25990,12 @@
 		(uuid "ca9eaae0-f033-57b9-8c39-31a21eef5801")
 	)
 	(junction
+		(at 172.72 50.8)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "36c446c8-705f-5d7a-ba0e-afcec5ae6fd5")
+	)
+	(junction
 		(at 182.88 71.12)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -25874,6 +26006,12 @@
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "358f25b8-6c11-5341-92c7-74f3e11f777b")
+	)
+	(junction
+		(at 190.5 63.5)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "bd7792b9-ed28-5ba2-a536-6929f41f2975")
 	)
 	(junction
 		(at 203.2 63.5)

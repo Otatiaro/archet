@@ -45,7 +45,7 @@ def sense(s, rt, rb, cf, net, out, x, yr):
     s.glabel(out, x + 17.78, ym, 0, "output")
 
 
-def ideal_diode(s, n, src, q, u, cap, cin, fx, yr, xbus, x0):
+def ideal_diode(s, n, src, q, u, cap, cin, fx, yr, xbus, x0, out="VSYS_OR"):
     """N-MOS on the row line (source left, drain right, gate down), LM74700 below it."""
     s.place(q, fx, yr + 2.54, rot=270, mirror="x", ref_at=(fx + 2.54, yr - 6.35), val_at=(fx + 2.54, yr - 3.81))
     ly = yr + 25.4
@@ -54,8 +54,8 @@ def ideal_diode(s, n, src, q, u, cap, cin, fx, yr, xbus, x0):
     xa, ya = s.P(u, 6)
     s.w(src, (xa, ya), (xa, yr))
     xk, yk = s.P(u, 4)
-    s.w("VSYS_OR", (xk, yk), (xk, yr))
-    s.w("VSYS_OR", s.P(q, 5), (xbus, yr))
+    s.w(out, (xk, yk), (xk, yr))
+    s.w(out, s.P(q, 5), (xbus, yr))
     s.rail("GND", *s.P(u, 2))
     # charge pump capacitor VCAP-ANODE, EN to ANODE (always on)
     xv, yv = s.P(u, 1)
@@ -66,10 +66,11 @@ def ideal_diode(s, n, src, q, u, cap, cin, fx, yr, xbus, x0):
     xe, ye = s.P(u, 3)
     s.w(src, (xe, ye), (xc - 7.62, ye), (xc - 7.62, yr))
     # input decoupling, ahead of the controller
-    xi = fx - 48.26
-    s.w(src, (xi, yr), (xi, yr + 2.54))
-    vpart(s, cin, xi, yr + 2.54)
-    s.rail("GND", *s.P(cin, 2))
+    if cin:
+        xi = fx - 48.26
+        s.w(src, (xi, yr), (xi, yr + 2.54))
+        vpart(s, cin, xi, yr + 2.54)
+        s.rail("GND", *s.P(cin, 2))
     s.w(src, (x0, yr), s.P(q, 1))
 
 
@@ -192,6 +193,10 @@ def usbc(prj):
     s.w("VBUS_CONN", (xr, yp), (xr, yp + 2.54))
     vpart(s, "R10", xr, yp + 2.54, label_dx=-7.62)
     s.w("VBUS_GATE", s.P("R10", 2), (xr, yg), (gx, yg), (gx, gy))
+    xc4 = xr - 17.78                                   # C134 across R10: slow turn-on, Vgs held on hot plug
+    s.w("VBUS_CONN", (xc4, yp), (xc4, yp + 2.54))
+    vpart(s, "C134", xc4, yp + 2.54, label_dx=-7.62)
+    s.w("VBUS_GATE", s.P("C134", 2), (xc4, yg), (xr, yg))
     s.w("VBUS_GATE", (gx, yg), (gx, yg + 2.54))
     vpart(s, "R11", gx, yg + 2.54)
     ex, ey = s.P("U4", 16)
@@ -199,8 +204,8 @@ def usbc(prj):
 
     # --- STUSB4500 supplies, top ---
     x22, y22 = s.P("U4", 22)
-    s.w("+3V3", (x22, y22), (x22, uy - 35.56), (ux + 43.18, uy - 35.56))
-    s.rail("+3V3", ux + 43.18, uy - 35.56)
+    s.w("+3V3", (x22, y22), (x22, uy - 35.56), (ux + 48.26, uy - 35.56))
+    s.power("+3V3", ux + 48.26, uy - 35.56, 270)        # pointing right: the C134 / R10 gate wire runs above
     vpart(s, "C16", ux + 43.18, uy - 35.56)
     s.rail("GND", *s.P("C16", 2))
     for pin, net, ref, yh, xcap in ((21, "PD_1V2", "C14", uy - 30.48, ux + 30.48),
@@ -429,7 +434,7 @@ def buck5(prj):
 def boost(prj):
     s = prj.sheet("VIN_BUS", "boost.kicad_sch", "VIN_BUS: LM5155 24.5 V boost from VSYS, or VIN_EXT")
     s.text("VIN_BUS BOOST", 20.32, 17.78, 2.54, True)
-    s.text("VIN_BUS = the higher of the boost (24.5 V) and VIN_EXT through D18. With VIN_EXT present, Q9 holds UVLO\n"
+    s.text("VIN_BUS = the higher of the boost (24.5 V) and VIN_EXT through U52/Q10. With VIN_EXT present, Q9 holds UVLO\n"
            "low: a 12 V VIN_EXT is passed through, never boosted. On USB or PoE the firmware enables the boost\n"
            "(BOOST_EN) within the source budget. Values simulated in hardware/sim/boost.py.\n"
            "Layout: C119/C120, Q8, R116 and D17 in one tight loop on the PGND side; CS and FB tracks away from SW.",
@@ -549,11 +554,14 @@ def boost(prj):
         s.w("VIN_BUS", (x, yp), (x, yp + 2.54))
         vpart(s, ref, x, yp + 2.54)
         s.rail("GND", *s.P(ref, 2))
-    x18 = kx + 66.04
-    s.place("D18", x18, yp - 3.81, rot=90, ref_at=(x18 + 5.08, yp - 6.35), val_at=(x18 + 5.08, yp - 3.81))
-    ax, ay = s.P("D18", 2)
-    s.w("VIN_EXT_P", (ax, ay), (ax, ay - 5.08))
-    s.glabel("VIN_EXT_P", ax, ay - 5.08, 90, "input")
+    # VIN_EXT path: ideal diode U52/Q10 on a row below, drain up into the VIN_BUS row
+    x18, y18 = kx + 66.04, 182.88
+    fq = x18 - 25.4
+    ideal_diode(s, 4, "VIN_EXT_P", "Q10", "U52", "C135", None, fq, y18, x18, fq - 50.8, out="VIN_BUS")
+    s.w("VIN_BUS", (x18, y18), (x18, yp))
+    s.glabel("VIN_EXT_P", fq - 50.8, y18, 180, "input")
+    s.text("VIN_EXT path: LM74700 ideal diode, as on the Sources sheet.\nBlocks the boost output (no leakage "
+           "into VIN_EXT_P, which drives Q9),\nand a reversed VIN_EXT with the boost running.", fq - 50.8, y18 + 40.64)
     xf = kx + 81.28
     s.w("VIN_BUS", (xf, yp), (xf, yp + 2.54))
     vpart(s, "R114", xf, yp + 2.54)
@@ -745,6 +753,8 @@ def mcu(prj):
     s.label("USB_FS_VBUS", 457.2 + 1.27, yv, 0)
     vpart(s, "R24", 467.36, yv)
     s.label("BOOT0", *s.P("R24", 2), 270, tag="j5")
+    vpart(s, "R176", 462.28, yv, label_dx=-7.62)          # sinks the D7 leakage with J5 unplugged
+    s.rail("GND", *s.P("R176", 2))
     s.w("VSYS", s.P("D7", 1), (497.84, yv))
     s.glabel("VSYS", 497.84, yv, 0, "bidirectional", tag="j5")
     s.place("U12", 474.98, y5, ref_at=(459.74, y5 + 7.62), val_at=(459.74, y5 + 10.16))
@@ -779,10 +789,12 @@ def mcu(prj):
     s.rail("+3V3", *s.P("SW1", 1))
     yc = s.P("J6", 3)[1]
     vpart(s, "R25", 474.98, yb)
-    s.place("D8", 490.22, yc, rot=180, ref_at=(487.68, yc - 5.08), val_at=(487.68, yc - 2.54))
+    s.place("D8", 490.22, yc, rot=180, ref_at=(495.3, yc - 7.62), val_at=(495.3, yc - 5.08))
     s.w("J6_VCC", s.P("J6", 3), s.P("D8", 2))
     s.label("J6_VCC", s.P("J6", 3)[0] + 3.81, yc, 0)
     s.w("J6_VCC", s.P("R25", 2), (474.98, yc))
+    vpart(s, "R177", 483.87, yc - 7.62, label_dx=-7.62)  # sinks the D8 leakage, as R176; above the console lines
+    s.rail("GND", *s.P("R177", 1), up=True)
     s.w("VSYS", s.P("D8", 1), (497.84, yc))
     s.glabel("VSYS", 497.84, yc, 0, "bidirectional", tag="j6")
     for n, net in ((4, "CONSOLE_RX"), (5, "CONSOLE_TX")):
@@ -859,23 +871,27 @@ def fpga(prj):
     s.w("SHIELD_OE_N", (ox, oy), (ox + 40.64, oy))
     s.glabel("SHIELD_OE_N", ox + 40.64, oy, 0, "output")
     vpart(s, "R29", ox + 35.56, oy - 7.62)
-    s.rail("+3V3", *s.P("R29", 1))
+    px, py = s.P("R29", 1)
+    s.w("+3V3_OUT", (px, py), (px, py - 2.54))
+    s.glabel("+3V3_OUT", px, py - 2.54, 90, "passive")
     for num in ("40", "41"):                          # RGB1, RGB2: LED current sinks, LEDs on the UI sheet
         px, py = s.P("U13", num)
         s.glabel(prj.parts["U13"]["pins"][num], px, py, 0, "output")
     s.text("SHIELD_OE_N on RGB0 (open drain): R29 keeps the\nshield drivers off until the bitstream pulls it low.\n"
            "RGB1, RGB2: constant-current LED sinks (LINK, spare).", ox + 2.54, oy + 12.7)
 
-    # power: +3V3 -> ME6211 -> +1V2 bus -> VCC; VCCPLL through 100 Ω; VPP_2V5 on +3V3
+    # power: +5V -> ME6211 -> +1V2 bus -> VCC (before +3V3: §4.5 sequence); VCCPLL through 100 Ω; VPP_2V5 on +3V3
     yb = 50.8
     s.place("U14", 78.74, yb + 2.54, ref_at=(73.66, yb - 10.16), val_at=(73.66, yb - 7.62))
     ix, iy = s.P("U14", 1)
-    s.w("+3V3", (45.72, iy), (ix, iy))
-    s.power("+3V3", 45.72, iy, 90)
+    s.w("+5V", (45.72, iy), (ix, iy))
+    s.power("+5V", 45.72, iy, 90)
     vpart(s, "C51", 55.88, iy)
     s.rail("GND", *s.P("C51", 2))
     ex, ey = s.P("U14", 3)
-    s.w("+3V3", (ex, ey), (ex - 5.08, ey), (ex - 5.08, iy))
+    s.w("+5V", (ex, ey), (ex - 5.08, ey), (ex - 5.08, iy))
+    s.text("+1V2 from +5V: VCC and VCCPLL reach 0.5 V before SPI_VCCIO1\nand VPP_2V5 (+3V3, buck from +5V), "
+           "UltraPlus datasheet §4.5.", 30.48, yb + 17.78)
     s.rail("GND", *s.P("U14", 2))
     px, py = 215.9, yb + 27.94
     s.place("U13", px, py, unit=4, show_value=False, ref_at=(px + 8.89, py + 5.08))
@@ -1355,7 +1371,7 @@ def tgt_supply(prj):
     s.text("+5V -> TGT_VSUP 1.4-5.2 V (5.44 V worst case), 1 A limit enforced by the firmware from the INA226.\n"
            "TGT_VSET (DAC1_OUT1) injects into the FB node: 0 V -> 5.29 V, 3.3 V -> 1.17 V, ~1 mV per step "
            "(hardware/sim/tgt_vsup.py).\nFirmware: set the DAC before EN, DAC buffer on, ramp the setpoint, stay "
-           "above 1.6 V; DAC pin high-Z -> 4.67 V. PS/SYNC low: power save,\nthe converter never sinks current from a "
+           "within 1.65-5.04 V; DAC pin high-Z -> 4.67 V. PS/SYNC low: power save,\nthe converter never sinks current from a "
            "back-driving target. PG unused. INA226 at 0x45 on I2C5.\n"
            "Layout: input capacitors against VIN/PGND, FB divider next to pin 2 (GND), shunt with Kelvin traces.",
            20.32, 25.4)
@@ -1430,8 +1446,11 @@ def tgt_supply(prj):
     s.place("R59", xR, yi, rot=90, ref_at=(xR - 2.54, yi - 2.54), val_at=(xR + 2.54, yi - 2.54))
     s.w("TGSUP_FB", (xfb, ym), (xfb, yi), s.P("R59", 2))
     s.glabel("TGT_VSET", x0, yi, 180, "input")
-    s.w("TGT_VSET", (x0, yi), s.P("R59", 1))
-    s.w("TGT_VSET", (x0 + 25.4, yi), (x0 + 25.4, yi + 2.54))
+    xr8 = x0 + 12.7                                      # R178 isolates the DAC buffer from C95
+    s.place("R178", xr8, yi, rot=90, ref_at=(xr8 - 2.54, yi - 2.54), val_at=(xr8 + 2.54, yi - 2.54))
+    s.w("TGT_VSET", (x0, yi), s.P("R178", 1))
+    s.w("TGT_VSET_F", s.P("R178", 2), s.P("R59", 1))
+    s.w("TGT_VSET_F", (x0 + 25.4, yi), (x0 + 25.4, yi + 2.54))
     vpart(s, "C95", x0 + 25.4, yi + 2.54)
     s.rail("GND", *s.P("C95", 2))
     s.text("From DAC1_OUT1 (PA4)", x0 - 12.7, yi + 5.08)
@@ -1591,8 +1610,8 @@ def ui_field(prj):
     vpart(s, "R76", xl + 7.62, py)
     s.rail("GND", *s.P("R76", 2))
     vx, vy = s.P("U28", 3)
-    s.w("+5V", (vx, vy), (vx, 53.34), (vx + 10.16, 53.34))
-    s.rail("+5V", vx, 53.34)
+    s.w("+3V3", (vx, vy), (vx, 53.34), (vx + 10.16, 53.34))
+    s.rail("+3V3", vx, 53.34)
     vpart(s, "C101", vx + 10.16, 53.34)
     s.rail("GND", *s.P("C101", 2))
     vpart(s, "C102", vx - 10.16, 53.34)
@@ -1716,8 +1735,14 @@ def shield(prj):
         s.glabel(net, xg, y, 180, SHIELD_SHAPE.get(net, "bidirectional"))
         s.glabel(net, xl, y, 0, SHIELD_SHAPE.get(net, "bidirectional"), "out")
         vpart(s, r, xr, y - 7.62)
-        s.rail("+3V3", *s.P(r, 1))
-    s.text("I2C4 pull-ups 2 kΩ (as I2C5); reset and presence 10 kΩ.\nThe shield ties PRESENT_N to ground.",
+        if r == "R104":
+            s.rail("+3V3", *s.P(r, 1))
+        else:
+            px, py = s.P(r, 1)
+            s.w("+3V3_OUT", (px, py), (px, py - 2.54), (px + 7.62, py - 2.54))
+            s.glabel("+3V3_OUT", px + 7.62, py - 2.54, 0, "passive", f"pu-{r}")
+    s.text("I2C4 pull-ups 2 kΩ (as I2C5); reset and presence 10 kΩ.\nThe shield ties PRESENT_N to ground.\n"
+           "SCL, SDA and RESET_N pulled to +3V3_OUT: no back-power into an unpowered shield.",
            xg - 20.32, 259.08)
 
     # --- ESD, flow-through at the headers ---
@@ -1763,7 +1788,7 @@ def shield(prj):
             if net == "GND":
                 s.w("GND", (px, py), (px - 2.54 if left else px + 2.54, py))
                 s.power("GND", px - 2.54 if left else px + 2.54, py, 270 if left else 90, show=False)
-            elif net in ("+3V3_OUT", "+5V_OUT", "VIN_EXT"):
+            elif net in ("+3V3_OUT", "+5V_OUT", "VIN_EXT_P"):
                 qx = px - 12.7 if left else px + 12.7
                 s.w(net, (px, py), (qx, py))
                 s.glabel(net, qx, py, 180 if left else 0, "passive", f"{j}-{p}")
@@ -1919,10 +1944,15 @@ def local_bus(prj):
         s.w(net, (40.64, y), (end, y))
         s.glabel(net, 40.64, y, 180, shape)
         pull = next(r for r in on(net, "R") if parts[r]["value"] != "49.9")
-        kind = "GND" if "GND" in parts[pull]["pins"].values() else "+3V3"
+        kind = "GND" if "GND" in parts[pull]["pins"].values() else "+3V3_BUS"
         s.place(pull, 57.15, y + 2.54, rot=90, show_ref=False, show_value=False)
         s.w(net, (50.8, y), (50.8, y + 2.54), s.P(pull, 1))
-        s.power(kind, *s.P(pull, 2), 270 if kind == "+3V3" else 90, show=False)
+        if kind == "GND":
+            s.power(kind, *s.P(pull, 2), 90, show=False)
+        else:
+            px, py = s.P(pull, 2)
+            s.w(kind, (px, py), (px + 2.54, py))
+            s.label(kind, px + 2.54, py, 0, tag=f"pu-{sig}")
         if sig in series:
             r1, *r2 = on(net, "R", "49.9")
             s.place(r1, 80.01, y, rot=90, show_ref=False, show_value=False)
@@ -1932,9 +1962,10 @@ def local_bus(prj):
                 s.w(net, (76.2, y), s.P(r2[0], 1))
                 s.w(f"RB_{sig}", s.P(r1, 2), s.P(r2[0], 2))
             s.label(f"RB_{sig}", 93.98, y)
-    s.text("Pull-ups 10 kΩ to +3V3 on CS0-CS11, LATCH, OE, IRQ (R135-R148, R168);\n"
-           "2 kΩ on SDA, SCL (R172-R173). Pull-downs 100 kΩ on SCK, MOSI, MISO\n"
-           "(R169-R171): SPI mode 0 idle; MISO tri-stated with no module selected.\n"
+    s.text("Pull-ups 10 kΩ to +3V3_BUS on CS0-CS11, LATCH, OE, IRQ (R135-R148, R168);\n"
+           "2 kΩ on SDA, SCL (R172-R173): no back-power into the modules with the rail off.\n"
+           "Pull-downs 100 kΩ on SCK, MOSI, MISO (R169-R171): SPI mode 0 idle;\n"
+           " MISO tri-stated with no module selected.\n"
            "Series 49.9 Ω R149-R164; SCK, MOSI, LATCH: second 49.9 Ω in parallel\n"
            "(R165-R167), 25 Ω for the multipoint edges.", 20.32, y0 + pitch * len(rows) + 2.54)
 

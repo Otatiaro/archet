@@ -69,15 +69,16 @@ NMOS = ("Transistor_FET:CSD18543Q3A", "CSD18543Q3A", "Package_SON:VSON-8_3.3x3.3
 IDEAL = ("Power_Management:LM74700", "LM74700QDBVRQ1", "Package_TO_SOT_SMD:SOT-23-6", "C2941042")
 
 
-def ideal_diode(n, src, ctl, fet, cap, cin, note):
-    """LM74700 + N-MOS from `src` to VSYS: source = anode (input), drain = cathode (VSYS).
+def ideal_diode(n, src, ctl, fet, cap, cin, note, out="VSYS_OR"):
+    """LM74700 + N-MOS from `src` to `out`: source = anode (input), drain = cathode (output).
     EN tied to the anode (always on); charge pump capacitor between VCAP and ANODE (datasheet §9.2)."""
-    c.part(fet, NMOS[0], NMOS[1], NMOS[2], NMOS[3], {1: src, 2: src, 3: src, 4: f"GATE{n}", 5: "VSYS_OR"},
+    c.part(fet, NMOS[0], NMOS[1], NMOS[2], NMOS[3], {1: src, 2: src, 3: src, 4: f"GATE{n}", 5: out},
            f"Ideal diode {n} switch; 60 V, 8.1 mΩ at 10 V: 73 mW at 3 A")
     c.part(ctl, IDEAL[0], IDEAL[1], IDEAL[2], IDEAL[3],
-           {1: f"VCAP{n}", 2: "GND", 3: src, 4: "VSYS_OR", 5: f"GATE{n}", 6: src}, note)
+           {1: f"VCAP{n}", 2: "GND", 3: src, 4: out, 5: f"GATE{n}", 6: src}, note)
     c.C(cap, "100nF", src, f"VCAP{n}", note="Charge pump, 0.1 µF minimum between VCAP and ANODE")
-    c.C(cin, "1µF 50V", src, "GND", note="Local decoupling of the source cable")
+    if cin:
+        c.C(cin, "1µF 50V", src, "GND", note="Local decoupling of the source cable")
 
 
 def sense(rt, rb, cf, net, out):
@@ -97,7 +98,7 @@ c.part("F1", "Device:Fuse", "5A 63V", "Fuse:Fuse_1206_3216Metric", "C2980745", {
        "12H1500C fast acting, 50 A breaking; worst case ~3 A at 10.8 V (probe, target, 11.5 W shield, VIN_BUS)")
 c.part("D1", "Device:D_TVS", "SMBJ24CA", SMB, "C78416", {1: "GND", 2: "VIN_EXT_P"},
        "Bidirectional: 24 V standoff, 26.7 V breakdown, 38.9 V clamp; a reversed supply only meets the "
-       "LM74700 (-65 V) and the VIN_BUS Schottky")
+       "LM74700 ideal diodes U1 and U52 (anode -65 V; cathode to anode 75 V, 48.5 V with the boost running)")
 ideal_diode(1, "VIN_EXT_P", "U1", "Q1", "C1", "C2", "Ideal diode, VIN_EXT")
 ideal_diode(2, "VBUS_USB", "U2", "Q2", "C3", "C4", "Ideal diode, USB-C VBUS after the PD sink switch")
 ideal_diode(3, "POE_12V", "U3", "Q3", "C5", "C6", "Ideal diode, PoE module 12 V output")
@@ -114,7 +115,7 @@ c.part("U43", "Sensor_Energy:INA226", "INA226AIDGSR", "Package_SO:TSSOP-10_3x3mm
        {10: "VSYS_OR", 9: "VSYS", 8: "VSYS", 6: "+3V3", 7: "GND", 4: "SYS_SDA", 5: "SYS_SCL",
         3: "INA_ALERT", 1: "GND", 2: "+3V3"},
        "VSYS monitor: everything drawn from the active source (probe, target, shield, boost), I2C5 address "
-       "0x41. VIN_BUS fed from VIN_EXT through D18 bypasses it: the TPS27S100 IMON reads that current")
+       "0x41. VIN_BUS fed from VIN_EXT through U52/Q10 bypasses it: the TPS27S100 IMON reads that current")
 c.C("C126", "100nF", "+3V3", "GND", note="U43")
 
 # --------------------------------------------------------------------------------------------
@@ -146,6 +147,8 @@ c.part("Q4", "Transistor_FET:FDS9435A", "AO4407A", "Package_SO:SOIC-8_3.9x4.9mm_
        "Sink switch, -30 V, 11 mΩ at -10 V: 0.1 W at 3 A. Keeps the VSYS capacitors off VBUS until the "
        "contract (inrush); its body diode only conducts toward the connector, the LM74700 blocks VSYS")
 c.R("R10", "100k", "VBUS_CONN", "VBUS_GATE", note="Gate off when VBUS_EN_SNK is released")
+c.C("C134", "100nF", "VBUS_CONN", "VBUS_GATE", note="Gate-source: Q4 turns on in ~1 ms (R11), not ~25 µs into "
+    "the VSYS capacitors. Holds Vgs at 0 on a hot plug (gate-drain would turn it on)")
 c.R("R11", "10k", "VBUS_GATE", "VBUS_EN_N", note="Vgs = -0.91 VBUS: -18.2 V at 20 V (±25 V max), -4.5 V at 5 V")
 c.part("D3", "Device:D_Dual_CommonAnode_KKA", "ESDA25W", "Package_TO_SOT_SMD:SOT-323_SC-70", "C2935152",
        {1: "CC2", 2: "CC1", 3: "GND"}, "CC lines ESD, 25 V breakdown: above the 22 V short-to-VBUS rating")
@@ -206,9 +209,9 @@ c.R("R15", "8.06k", "+5V", "BUCK5_FB", note="Feedback top: palette value (datash
 c.R("R16", "2k", "BUCK5_FB", "GND", note="Feedback bottom: 1.0 V x (1 + 8.06/2) = 5.03 V")
 
 # --------------------------------------------------------------------------------------------
-c.block("VIN_BUS: LM5155 24.5 V boost from VSYS, or VIN_EXT through a Schottky")
+c.block("VIN_BUS: LM5155 24.5 V boost from VSYS, or VIN_EXT through an ideal diode")
 # Datasheet SNVSB75E; values simulated in hardware/sim/boost.py (loop and cycle by cycle, VSYS 4.5-20 V).
-# VIN_BUS = the higher of the boost (24.5 V) and VIN_EXT - 0.45 V. VIN_EXT present: the boost is held off.
+# VIN_BUS = the higher of the boost (24.5 V) and VIN_EXT. VIN_EXT present: the boost is held off.
 c.part("U42", "Archet:LM5155", "LM5155DSSR", "Archet:WSON-12-1EP_3x2mm_P0.5mm_EP1x2.65", "C545416",
        {1: "VSYS", 2: "BOOST_VCC", 3: "BOOST_GATE", 4: "GND", 5: "BOOST_CS", 6: "BOOST_COMP", 7: "GND",
         8: "BOOST_FB", 9: "BOOST_SS", 10: "BOOST_RT", 12: "BOOST_UVLO", 13: "GND"},
@@ -220,8 +223,11 @@ c.part("L5", "Device:L", "10µH", "Inductor_SMD:L_Changjiang_FXL1040", "C475915"
        "FXL1040-100-M: Isat 8.5 A, 30 mΩ. Peak 3.5 A at 4.5 V / 0.5 A, under the 5.27 A minimum limit")
 c.part("D17", "Device:D_Schottky", "SS54", "Diode_SMD:D_SMA", "C22452", {1: "VIN_BUS", 2: "BOOST_SW"},
        "Boost diode, 40 V 5 A")
-c.part("D18", "Device:D_Schottky", "SS54", "Diode_SMD:D_SMA", "C22452", {1: "VIN_BUS", 2: "VIN_EXT_P"},
-       "VIN_EXT straight to VIN_BUS: 0.5 W at 1 A")
+ideal_diode(4, "VIN_EXT_P", "U52", "Q10", "C135", None,
+            "VIN_EXT straight to VIN_BUS, < 10 mW at 1 A. Blocks the boost output: ~2 µA cathode leakage (a "
+            "Schottky would lift VIN_EXT_P, turn Q9 on and fake a VIN_EXT); a reversed VIN_EXT with the boost "
+            "running puts 48.5 V across Q10 (60 V) and cathode to anode (75 V). Input decoupling: C2",
+            out="VIN_BUS")
 c.R("R116", "15m", "BOOST_ISNS", "GND", fp=R1206, note="Current sense: 100 mV limit -> 5.3-6.9 A over VSYS")
 c.R("R117", "470", "BOOST_ISNS", "BOOST_CSF", note="Slope compensation, with R118: 79 % at 4.5 V")
 c.R("R118", "100", "BOOST_CSF", "BOOST_CS", note="CS filter")
@@ -326,6 +332,8 @@ c.part("D7", *SCHOTTKY[:3], SCHOTTKY[3], {1: "VSYS", 2: "USB_FS_VBUS"},
        "J5 VBUS powers the whole board (150-250 mA in the bootloader); blocks VSYS from the cable")
 c.R("R24", "10k", "USB_FS_VBUS", "BOOT0", note="Plugging J5 enters the ROM bootloader. Remove it to use J5 "
     "as a plain USB FS port")
+c.R("R176", "1k", "USB_FS_VBUS", "GND", note="Sinks the D7 reverse leakage (VSYS up to 24 V, hot) with J5 "
+    "unplugged, so it cannot lift BOOT0; 5 mA from the cable")
 c.part("J6", "Connector_Generic:Conn_01x06", "Console / bootloader (FTDI)",
        "Connector_PinHeader_2.54mm:PinHeader_1x06_P2.54mm_Vertical", "",
        {1: "GND", 2: "BOOT0", 3: "J6_VCC", 4: "CONSOLE_RX", 5: "CONSOLE_TX", 6: "J6_RST"},
@@ -333,6 +341,7 @@ c.part("J6", "Connector_Generic:Conn_01x06", "Console / bootloader (FTDI)",
        "USART3 PD8/PD9 (FT pins: 5 V cables accepted)", bare=True)
 c.part("D8", *SCHOTTKY[:3], SCHOTTKY[3], {1: "VSYS", 2: "J6_VCC"}, "J6 VCC powers the board, as D7")
 c.R("R25", "10k", "BOOT0", "J6_VCC", note="J6 VCC enters the ROM bootloader, as R24")
+c.R("R177", "1k", "GND", "J6_VCC", note="Sinks the D8 reverse leakage, as R176")
 c.part("D9", *SCHOTTKY[:3], SCHOTTKY[3], {1: "J6_RST", 2: "NRST"},
        "RTS low pulls NRST low; RTS high (5 V on a 5 V cable) is blocked: NRST is not 5 V tolerant")
 c.part("SW1", "Switch:SW_Push", "BOOT0", "Archet:SW_Push_1P1T_XKB_TS-1187A", "C318884",
@@ -371,9 +380,11 @@ c.part("U13", FPGA_SYM, "iCE40UP5K-SG48I", "Archet:QFN-48-1EP_7x7mm_P0.5mm_EP5.3
        fpga_pins(), "SWD/JTAG/SWO engine, configured by the MCU as SPI slave (SPI_SS low at CRESET_B release). "
        "Signal pins: hardware/fpga-pins.csv. RGB1/RGB2 drive LEDs (current sinks). Exposed pad = only GND")
 c.part("U14", "Regulator_Linear:ME6211C12M5", "ME6211C12M5G-N", "Package_TO_SOT_SMD:SOT-23-5", "C236672",
-       {1: "+3V3", 2: "GND", 3: "+3V3", 5: "+1V2"},
-       "1.2 V core, 500 mA (UP5K core: a few mA to tens of mA). No basic 1.2 V LDO at JLCPCB")
-c.C("C51", "1µF 50V", "+3V3", "GND", note="LDO input, datasheet 1 µF")
+       {1: "+5V", 2: "GND", 3: "+5V", 5: "+1V2"},
+       "1.2 V core, 500 mA (UP5K core: a few mA to tens of mA). No basic 1.2 V LDO at JLCPCB. Fed from +5V "
+       "(6 V max): VCC and VCCPLL are up before SPI_VCCIO1 and VPP_2V5 (+3V3, buck from +5V), the order the "
+       "UltraPlus datasheet requires (§4.5, 0.5 V before the next supply). 0.1 W at 30 mA")
+c.C("C51", "1µF 50V", "+5V", "GND", note="LDO input, datasheet 1 µF")
 c.C("C52", "1µF 50V", "+1V2", "GND", note="LDO output, datasheet 1 µF ceramic")
 c.C("C53", "100nF", "+1V2", "GND", note="VCC pin 5")
 c.C("C54", "100nF", "+1V2", "GND", note="VCC pin 30")
@@ -386,7 +397,7 @@ for i, pin in zip(range(57, 61), ("1 VCCIO_2", "22 SPI_VCCIO1", "24 VPP_2V5", "3
 c.R("R27", "10k", "FPGA_CRESET_B", "GND", note="FPGA held in reset until the MCU releases it: IOs high-Z while "
     "the MCU is in reset or in the ROM bootloader (QSPI pins shared with I2C2)")
 c.R("R28", "10k", "+3V3", "FPGA_CDONE", note="CDONE pull-up, open drain")
-c.R("R29", "10k", "+3V3", "SHIELD_OE_N", note="Shield drivers off until the bitstream pulls OE_N low (RGB0, "
+c.R("R29", "10k", "+3V3_OUT", "SHIELD_OE_N", note="Shield drivers off until the bitstream pulls OE_N low (RGB0, "
     "open drain)")
 
 # --------------------------------------------------------------------------------------------
@@ -496,8 +507,8 @@ for ca, cb, u in (("C79", "C80", "U18"), ("C81", "C82", "U19"), ("C83", "C84", "
                     ("C85", "C86", "U21")):
     c.C(ca, "100nF", "+3V3", "GND", note=f"{u} VCCA")
     c.C(cb, "100nF", "TGT_VCC", "GND", note=f"{u} VCCB")
-c.R("R44", "10k", "TGT_SWDIO_DIR", "GND", note="SWDIO in input (B to A) while the iCE40 is unconfigured, "
-    "its IOs then having weak pull-ups")
+c.R("R44", "1k", "TGT_SWDIO_DIR", "GND", note="SWDIO in input (B to A) while the iCE40 is unconfigured: "
+    "its weak pull-ups (128 µA max at 3.3 V) give 0.13 V, under the 0.8 V VIL of DIR")
 c.R("R45", "33", "TGT_SWDIO_B", "TGT_SWDIO", note="Series termination of the ribbon, as R46-R48")
 c.R("R46", "33", "TGT_SWCLK_B", "TGT_SWCLK")
 c.R("R47", "33", "TGT_TDI_B", "TGT_TDI")
@@ -514,7 +525,8 @@ c.R("R52", "1k", "TGT_DIR_BUF", "TGT_DIR_OUT", note="Limits back-feed into an un
 for q, r, net in (("Q5", "R53", "TGT_NRST"), ("Q6", "R54", "TGT_IO0")):
     c.part(q, "Transistor_FET:2N7002", "2N7002", "Package_TO_SOT_SMD:SOT-23", "C8545",
            {1: net + "_3V3", 2: "GND", 3: net}, "Gate high = line pulled low")
-    c.R(r, "10k", net + "_3V3", "GND", note="Line released while the iCE40 is unconfigured")
+    c.R(r, "1k", net + "_3V3", "GND", note="Line released while the iCE40 is unconfigured: 0.13 V against "
+        "its weak pull-up, under the 2N7002 threshold")
 c.R("R174", "10k", "TGT_NRST", "TGT_NRST_SENSE", note="nRST readback on PB4 (FT): limits injection from a "
     "5 V target to 0.2 mA")
 # Target VCC sense: PF11 (ADC1_INP2); 200 kΩ also discharges TGT_VCC when no target is connected
@@ -550,8 +562,10 @@ for ref in ("C92", "C93", "C94"):
     c.C(ref, "22µF 25V", "TGT_VSUP_REG", "GND", fp=C1206, note="Output, datasheet 3 x 22 µF")
 c.R("R57", "150k", "TGT_VSUP_REG", "TGSUP_FB", note="FB top (datasheet example 1 MΩ)")
 c.R("R58", "18k", "TGSUP_FB", "GND", note="FB bottom: 4.67 V with the DAC pin in high-Z (reset)")
-c.R("R59", "120k", "TGT_VSET", "TGSUP_FB", note="DAC injection: -1.25 V per DAC volt, 1 mV per 12-bit step")
-c.C("C95", "100nF", "TGT_VSET", "GND", note="DAC noise filter; output ramps in ~3 ms with the buffer off")
+c.R("R178", "1k", "TGT_VSET", "TGT_VSET_F", note="Isolates the DAC buffer from C95 (50 pF maximum load "
+    "buffered); 0.8 % gain error, trimmed through the INA226")
+c.R("R59", "120k", "TGT_VSET_F", "TGSUP_FB", note="DAC injection: -1.25 V per DAC volt, 1 mV per 12-bit step")
+c.C("C95", "100nF", "TGT_VSET_F", "GND", note="DAC noise filter; output ramps in ~3 ms with the buffer off")
 c.R("R60", "100k", "TGT_VSUP_EN", "GND", note="Converter off until the firmware has set the DAC (EN VIH 1.2 V)")
 # Monitor: shunt after the output capacitors, bus voltage read on the connector side.
 c.R("R61", "50m", "TGT_VSUP_REG", "TGT_VSUP", note="Shunt: 81.9 mV full scale = 1.64 A; 50 mV at the 1 A limit")
@@ -612,11 +626,13 @@ c.part("D15", *SCHOTTKY[:3], SCHOTTKY[3], {1: "BUZ_P", 2: "BUZ_N"}, "Flyback acr
 c.part("Q7", "Transistor_FET:2N7002", "2N7002", "Package_TO_SOT_SMD:SOT-23", "C8545",
        {1: "BUZZER", 2: "GND", 3: "BUZ_N"}, "Low-side switch, TIM17_CH1 (PB9)")
 c.R("R74", "10k", "BUZZER", "GND", note="Silent while PB9 is I2C1 SDA in the ROM bootloader")
-# Field bus: TJA1051T/3 (CAN FD) and XL3485 (RS-485) share J9, the termination and the ESD; FIELD_SEL_485 picks one.
-c.part("U28", "Interface_CAN_LIN:TJA1051T-3", "TJA1051T/3/1J", "Package_SO:SOIC-8_3.9x4.9mm_P1.27mm", "C38695",
-       {1: "FIELD_TX", 2: "GND", 3: "+5V", 4: "CAN_RXD", 5: "+3V3", 6: "FIELD_L", 7: "FIELD_H",
-        8: "FIELD_SEL_485"}, "CAN FD 5 Mbit/s, 5 V supply, VIO 3.3 V. S high (RS-485 mode): silent, driver off")
-c.C("C101", "100nF", "+5V", "GND", note="U28 VCC")
+# Field bus: TCAN3413 (CAN FD) and XL3485 (RS-485) share J9, the termination and the ESD; FIELD_SEL_485 picks one.
+c.part("U28", "Interface_CAN_LIN:TJA1051T-3", "TCAN3413DR", "Package_SO:SOIC-8_3.9x4.9mm_P1.27mm", "C22433320",
+       {1: "FIELD_TX", 2: "GND", 3: "+3V3", 4: "CAN_RXD", 5: "+3V3", 6: "FIELD_L", 7: "FIELD_H",
+        8: "FIELD_SEL_485"}, "CAN FD 5 Mbit/s, 3.3 V supply (ISO 11898-2, mixes with 5 V nodes): independent "
+       "of +5V, which sags below 4.5 V on a 5 V USB source. ±58 V bus fault. TJA1051T/3 pinout (symbol); pin 8 "
+       "is STB: high (RS-485 mode) = standby, driver off")
+c.C("C101", "100nF", "+3V3", "GND", note="U28 VCC")
 c.C("C102", "100nF", "+3V3", "GND", note="U28 VIO")
 c.part("U29", "Interface_UART:MAX3485", "XL3485", "Package_SO:SOIC-8_3.9x4.9mm_P1.27mm", "C609753",
        {1: "RS485_RO", 2: "GND", 3: "RS485_DE", 4: "FIELD_TX", 5: "GND", 6: "FIELD_H", 7: "FIELD_L", 8: "+3V3"},
@@ -654,15 +670,18 @@ c.part("J10", IDC34[0], "SHIELD IO", IDC34[1], IDC34[2], io_pins,
 SVC = {2: "SYNC_IN_J", 4: "SYNC_OUT_J", 6: "SHIELD_OE_N_J", 8: "SHIELD_SCL", 10: "SHIELD_SDA",
        12: "SHIELD_SWCLK_J", 14: "SHIELD_SWDIO_J", 16: "SHIELD_UART_TX_J", 18: "SHIELD_UART_RX_J", 20: "SHIELD_RESET_N",
        22: "SHIELD_PRESENT_N", 23: "+3V3_OUT", 24: "+3V3_OUT", 27: "+5V_OUT", 28: "+5V_OUT", 29: "+5V_OUT",
-       30: "+5V_OUT", 33: "VIN_EXT", 34: "VIN_EXT"}
+       30: "+5V_OUT", 33: "VIN_EXT_P", 34: "VIN_EXT_P"}
 SVC.update({p: "GND" for p in list(range(1, 22, 2)) + [25, 26, 31, 32]})
 c.part("J11", IDC34[0], "SHIELD SVC", IDC34[1], IDC34[2], SVC,
-       "Shrouded IDC 2 x 17, keyed. Services, then +3V3_OUT, +5V_OUT and VIN_EXT, rail groups split by grounds")
+       "Shrouded IDC 2 x 17, keyed. Services, then +3V3_OUT, +5V_OUT and VIN_EXT, rail groups split by grounds. "
+       "VIN_EXT pins behind F1 and D1, both ways: a shield feeding the probe meets the TVS, and a shield drawing "
+       "from J1 is fused")
 for r, n in enumerate(SHIELD_IOS + SVC_SERIES, 78):           # R78-R100
     c.R(f"R{r}", "33", n, n + "_J", note="Series termination at the header" if r == 78 else "")
-c.R("R101", "2k", "+3V3", "SHIELD_SCL", note="I2C4 pull-ups, as I2C5")
-c.R("R102", "2k", "+3V3", "SHIELD_SDA")
-c.R("R103", "10k", "+3V3", "SHIELD_RESET_N", note="Shield out of reset unless PG10 (open drain) pulls it low")
+c.R("R101", "2k", "+3V3_OUT", "SHIELD_SCL", note="I2C4 pull-ups, as I2C5. On +3V3_OUT, as R103 and R29: "
+    "nothing back-powers a shield whose rail is off")
+c.R("R102", "2k", "+3V3_OUT", "SHIELD_SDA")
+c.R("R103", "10k", "+3V3_OUT", "SHIELD_RESET_N", note="Shield out of reset unless PG10 (open drain) pulls it low")
 c.R("R104", "10k", "+3V3", "SHIELD_PRESENT_N", note="High with no shield; the shield ties it to ground")
 ESD_LINES = [n + "_J" for n in SHIELD_IOS + SVC_SERIES] + ["SHIELD_SCL", "SHIELD_SDA", "SHIELD_RESET_N",
                                                           "SHIELD_PRESENT_N"]
@@ -741,7 +760,8 @@ c.C("C127", "100nF", "+3V3", "GND", note="U44 input")
 c.C("C128", "10µF 25V", "+3V3_BUS", "GND", fp=C0805, note="U44 output (datasheet: 120 µF max)")
 r = 135
 for sig in [f"CS{i}" for i in range(12)] + ["LATCH", "OE"]:
-    c.R(f"R{r}", "10k", f"BUS_{sig}", "+3V3", note="Inactive (high) while the MCU pin is not configured"
+    c.R(f"R{r}", "10k", f"BUS_{sig}", "+3V3_BUS", note="Inactive (high) while the MCU pin is not configured; "
+        "on +3V3_BUS, as the IRQ and I2C1 pulls: nothing back-powers the modules with the ribbon rail off"
         if sig == "CS0" else "")
     r += 1
 for sig in [f"CS{i}" for i in range(12)] + ["SCK", "MOSI", "LATCH", "OE"]:
@@ -750,12 +770,13 @@ for sig in [f"CS{i}" for i in range(12)] + ["SCK", "MOSI", "LATCH", "OE"]:
 for sig in ("SCK", "MOSI", "LATCH"):     # multipoint edges: 2 x 49.9 in parallel = 25 Ω
     c.R(f"R{r}", "49.9", f"BUS_{sig}", f"RB_{sig}", note="In parallel with the first: 25 Ω, first step above 2 V")
     r += 1
-c.R(f"R{r}", "10k", "BUS_IRQ", "+3V3", note="IRQ: wired-OR of open-drain outputs")
+c.R(f"R{r}", "10k", "BUS_IRQ", "+3V3_BUS", note="IRQ: wired-OR of open-drain outputs (low with the rail off: "
+    "the firmware ignores it then)")
 c.R(f"R{r + 1}", "100k", "BUS_MISO", "GND", note="MISO is tri-stated when no module is selected")
 c.R(f"R{r + 2}", "100k", "BUS_SCK", "GND", note="SCK low while the MCU pin is not configured: mode 0 idle")
 c.R(f"R{r + 3}", "100k", "BUS_MOSI", "GND", note="MOSI defined while the MCU pin is not configured")
-c.R(f"R{r + 4}", "2k", "BUS_SDA", "+3V3", note="I2C1 at 100 kHz, ribbon and 12 modules: rise < 1 µs")
-c.R(f"R{r + 5}", "2k", "BUS_SCL", "+3V3")
+c.R(f"R{r + 4}", "2k", "BUS_SDA", "+3V3_BUS", note="I2C1 at 100 kHz, ribbon and 12 modules: rise < 1 µs")
+c.R(f"R{r + 5}", "2k", "BUS_SCL", "+3V3_BUS")
 assert r + 5 == 173, r
 # ESD of every ribbon signal, at the header (order of the lines on the channels as on Bornier)
 for k, group in enumerate((("RB_CS2", "RB_CS1", "RB_CS3", "RB_CS0"), ("RB_CS7", "RB_CS5", "RB_CS4", "RB_CS6"),
