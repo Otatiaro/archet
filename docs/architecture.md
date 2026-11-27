@@ -210,6 +210,8 @@ Adaptation to the probe:
 
 **Two IDC 2 × 17 headers, the same part as the Bornier bus** (shrouded and keyed, C20920): one part for the three connectors, a 34-way ribbon or a direct plug. A simple shield can be built on perfboard. Pinout of all three: [`hardware/connectors.csv`](../hardware/connectors.csv).
 
+**The shield stacks on top of the probe** (decision of 2026-11-27): same outline, standoffs at the corners, J_SHIELD_IO and J_SHIELD_SVC inside the board under the shield, so its area does not add to the probe's. The shield plugs in with 2 × 17 female headers on its underside (the shroud gives the alignment). The headers stay male and shrouded, so a ribbon still serves a remote shield. Under the shield, nothing stands taller than the standoff height: RJ45, PoE module, USB-C, field-bus terminal and the Bornier local bus (J12) go on the board edges, outside the shield area.
+
 - **J_SHIELD_IO**: the 16 raw IOs (iCE40 3.3 V LVCMOS, 33 Ω series, ESD at the header), each on an even pin between two grounds, as on Bornier: conductor n = pin n, so every IO has a ground on each side in the ribbon. Pins 33–34 are grounds.
 - **J_SHIELD_SVC**: services, then power.
 
@@ -549,7 +551,7 @@ Fixed costs (PCB, assembly setup, stencil) are also divided by the run size. Con
 
 - order 5 boards: JLCPCB makes at least 5 PCBs, the extra 3 cost ~$200 in parts;
 - hand-solder through-hole parts (RJ45, three IDC headers): no through-hole assembly to pay for;
-- passives are pooled into a short palette (`hardware/gen/circuit.py`, 101 BOM lines): a new value or size needs a reason;
+- passives are pooled into a short palette (`hardware/gen/circuit.py`, 97 BOM lines): a new value or size needs a reason;
 - each extended part removed saves $1.50 per board on a run of 2: take the alternatives above, without bending the design;
 - reserve the PoE module, PoE RJ45 and iCE40 (stock < 160) in JLCPCB parts inventory as soon as the schematic is frozen.
 
