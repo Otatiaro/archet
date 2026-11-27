@@ -13,3 +13,8 @@
 (rule "Barrier parts, own pads"
   (constraint clearance (min 0.1mm))
   (condition "(A.memberOfFootprint('J3') && B.memberOfFootprint('J3')) || (A.memberOfFootprint('U6') && B.memberOfFootprint('U6'))"))
+
+# PWR_3A: 110 pads down to 0.24 mm wide; the track necks down to enter them.
+(rule "PWR_3A neck-down"
+  (constraint track_width (min 0.20mm) (opt 0.9mm))
+  (condition "(A.NetName == 'VIN_EXT' || A.NetName == 'VIN_EXT_P' || A.NetName == 'VSYS_OR' || A.NetName == 'VSYS' || A.NetName == 'VBUS_CONN' || A.NetName == 'VBUS_USB' || A.NetName == 'VBUS_HS_CONN' || A.NetName == '/USB-C HS/VBUS_HS' || A.NetName == 'POE_12V' || A.NetName == 'VIN_BUS' || A.NetName == '+5V' || A.NetName == '+5V_OUT' || A.NetName == '/Shield supply/SH5V_RAW' || A.NetName == '/+5V/BUCK5_SW' || A.NetName == '/+3V3/B3V3_SW' || A.NetName == '/VIN_BUS/BOOST_SW' || A.NetName == '/VIN_BUS/BOOST_ISNS')"))

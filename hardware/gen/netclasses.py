@@ -11,8 +11,9 @@ hole_clearance, via_diameter, hole_size and track_width rules on NetName / Type 
 It refuses NetClass, inDiffPair, fromTo and Layer conditions, and a net in two classes: each net gets one
 class here, by its exact name, and the PoE barrier is written on net names.
 
-Report: the pads narrower than the track width of their class. The router lays every track of a net at the
-class width and does not neck down at a pad: such a net needs a copper zone, or a narrower class.
+Pads narrower than the track width of their class get a neck-down rule (decision of 2026-11-27): a
+track_width rule per class, min under the narrowest such pad, opt at the class width. The router lays the
+opt width and necks down only on entering or leaving such a pad.
 """
 import json
 import math
@@ -186,7 +187,7 @@ def any_of(side, names, op="==", join="||"):
     return "(" + f" {join} ".join(f"{side}.NetName {op} '{n}'" for n in names) + ")"
 
 
-def write_dru(by_base):
+def write_dru(by_base, narrow):
     prim = [full for n in POE for full in by_base[n]]
     # KiCad binds || tighter than &&: each pair goes in parentheses
     own = " || ".join(f"(A.memberOfFootprint('{r}') && B.memberOfFootprint('{r}'))" for r in BARRIER_PARTS)
@@ -208,6 +209,19 @@ def write_dru(by_base):
         f'  (condition "{own}"))',
         "",
     ]
+    for cls, nets in ASSIGN.items():
+        pads = [pw for n, _, _, pw in narrow if n in nets]
+        if not pads:
+            continue
+        floor = max(RULES["min_track_width"], math.floor(min(pads) / 0.05 + 1e-9) * 0.05)
+        full = [f for n in nets for f in by_base[n]]
+        lines += [
+            f"# {cls}: {len(pads)} pads down to {min(pads):.2f} mm wide; the track necks down to enter them.",
+            f'(rule "{cls} neck-down"',
+            f"  (constraint track_width (min {floor:.2f}mm) (opt {CLASSES[cls][1]}mm))",
+            f'  (condition "{any_of("A", full)}"))',
+            "",
+        ]
     with open(DRU, "w", encoding="utf-8", newline="\n") as f:
         f.write("\n".join(lines))
 
@@ -245,13 +259,13 @@ def main():
     if missing or twice:
         sys.exit(f"unknown nets {missing}, nets in two classes {twice}")
     count = write_pro(by_base)
-    write_dru(by_base)
+    narrow = narrow_pads()
+    write_dru(by_base, narrow)
     print(f"{len(CLASSES)} classes, {count} nets assigned, rules written")
     for cls, (clr, w, vd, vdr, dpw, dpg, why) in CLASSES.items():
         print(f"  {cls:9s} clr {clr:<5} w {w:<5} via {vd}/{vdr}  {why}")
-    narrow = narrow_pads()
     if narrow:
-        print(f"{len(narrow)} pads narrower than their class track (zone or neck-down needed):")
+        print(f"{len(narrow)} pads narrower than their class track (neck-down rule written):")
         by_net = {}
         for n, w, pad, pw in narrow:
             by_net.setdefault((n, w), []).append(f"{pad} {pw:.2f}")
