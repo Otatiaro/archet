@@ -12,4 +12,4 @@
 # Pad to pad only (both items in the footprint); tracks keep the barrier.
 (rule "Barrier parts, own pads"
   (constraint clearance (min 0.1mm))
-  (condition "A.memberOfFootprint('J3') && B.memberOfFootprint('J3') || A.memberOfFootprint('U6') && B.memberOfFootprint('U6')"))
+  (condition "(A.memberOfFootprint('J3') && B.memberOfFootprint('J3')) || (A.memberOfFootprint('U6') && B.memberOfFootprint('U6'))"))
