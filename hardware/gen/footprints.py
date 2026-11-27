@@ -369,11 +369,29 @@ def _dp_pins():
             "4": (DP_X[3], -DP_Y), "5": (DP_X[1], -DP_Y), "6": (DP_X[0], -DP_Y)}
 
 
+def _dp_keepout():
+    """Copper keep-out of the land pattern (p. 7), the primary / secondary isolation barrier: a band a = 3.00 wide.
+    Drawing frame (pin 1 at the origin, y up): from i = 10.87 (minimum) left of the body, along y = d - a .. d
+    (7.62) to x = e (8.64); down x = b .. e (5.64 .. 8.64) to the body edge (f = 2.11 below the pin row); along it to
+    x = e + g (20.88) + a; up to y = h (4.32); out at y = h - a .. h to i past the right edge of the body. Rule area
+    on all copper layers; to be extended to the board edge on the layout if the board is wider."""
+    a, b, d, e, f, g, h, i = 3.00, 5.64, 7.62, 8.64, 2.11, 12.24, 4.32, 10.87
+    left, right = -(31.75 - 29.01) / 2 - i, 29.01 + (31.75 - 29.01) / 2 + i
+    xg = e + g
+    pts = [(left, d), (e, d), (e, -f + a), (xg, -f + a), (xg, h), (right, h), (right, h - a), (xg + a, h - a),
+           (xg + a, -f), (b, -f), (b, d - a), (left, d - a)]
+    xy = " ".join(f"(xy {_f(x - 14.505)} {_f(DP_Y - y)})" for x, y in pts)
+    return ('  (zone (net 0) (net_name "") (layers "*.Cu") (name "DP5700 isolation") (hatch full 0.5) '
+            '(connect_pads (clearance 0)) (min_thickness 0.25) '
+            '(keepout (tracks not_allowed) (vias not_allowed) (pads not_allowed) (copperpour not_allowed) '
+            '(footprints allowed)) (fill (thermal_gap 0.5) (thermal_bridge_width 0.5)) '
+            f'(polygon (pts {xy})))')
+
+
 def dp5700():
     """SDaPo DP5700 PoE PD module, land pattern p. 7: pads A x B = 3.71 x 1.83 (long side across the rows), C 26.67,
-    D 2.34, E 16.10. Body 31.75 x 20.32 (A, B nominal), assumed centred on the pad pattern as the drawing shows.
-    The drawing also asks for copper keep-out zones under the module (a 3.00, b 5.64, d 7.62, e 8.64, f 2.11,
-    g 12.24, h 4.32, i > 10.87): to be drawn as rule areas on the board."""
+    D 2.34, E 16.10. Body 31.75 x 20.32 (A, B nominal), centred on the pad pattern: f = 2.11 is exactly the gap
+    from the pad row to the body edge (20.32 / 2 - 16.10 / 2). Copper keep-out: see _dp_keepout."""
     items = [pad(num, x, y, 1.83, 3.71, rr=0.1) for num, (x, y) in _dp_pins().items()]
     bx, by = 31.75 / 2, 20.32 / 2
     items.append(rect("F.Fab", -bx, -by, bx, by, 0.1))
@@ -381,6 +399,7 @@ def dp5700():
     items.append(rect("F.CrtYd", -bx - 0.5, -by - 0.5, bx + 0.5, by + 0.5, 0.05))
     items.append(line("F.Fab", -bx, by - 1.5, -bx + 1.5, by, 0.1))
     items.append('  (fp_circle (center -16.6 10.9) (end -16.4 10.9) (stroke (width 0.2) (type solid)) (fill yes) (layer "F.SilkS"))')
+    items.append(_dp_keepout())
     return footprint("DP5700", "SDaPo DP5700 PoE PD module, 6 SMD pads (DP5700 datasheet, package p. 7)",
                      (31.75, 20.32), items, model="${KIPRJMOD}/archet.3dshapes/DP5700.step")
 
