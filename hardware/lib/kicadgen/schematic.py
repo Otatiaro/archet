@@ -231,6 +231,8 @@ class Sheet:
         props = [("Reference", ref, rx0, ry0, not show_ref), ("Value", part["value"], vx0, vy0, not show_value),
                  ("Footprint", fp, x, y, True), ("Datasheet", "~", x, y, True),
                  ("Description", part["note"], x, y, True), ("LCSC", part["lcsc"], x, y, True)]
+        if part.get("decouple"):
+            props.append(("Decouple", part["decouple"], x, y, True))
         for k, v, px, py, hide in props:
             eff = font() + [[Sym("justify"), Sym("left")]]
             if hide:

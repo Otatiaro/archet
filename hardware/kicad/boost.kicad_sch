@@ -22626,6 +22626,16 @@
 				(hide yes)
 			)
 		)
+		(property "Decouple" "L5:1"
+			(at 45.72 69.85 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "a6bd5b97-00a8-5fe1-b1dc-84fed681c72f")
 		)
@@ -22755,6 +22765,16 @@
 				(hide yes)
 			)
 		)
+		(property "Decouple" "L5:1"
+			(at 58.42 69.85 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "36f33c9f-a714-556b-bdcc-42a12b087420")
 		)
@@ -22875,6 +22895,16 @@
 			)
 		)
 		(property "LCSC" "C307331"
+			(at 121.92 69.85 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Decouple" "U42:1"
 			(at 121.92 69.85 0)
 			(effects
 				(font
@@ -23770,6 +23800,16 @@
 			)
 		)
 		(property "LCSC" "C15849"
+			(at 139.7 102.87 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Decouple" "U42:2"
 			(at 139.7 102.87 0)
 			(effects
 				(font
@@ -25227,6 +25267,16 @@
 				(hide yes)
 			)
 		)
+		(property "Decouple" "Q10:5"
+			(at 247.65 69.85 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "d14811dd-8638-57ea-aee9-3fd1e94e65be")
 		)
@@ -25347,6 +25397,16 @@
 			)
 		)
 		(property "LCSC" "C13585"
+			(at 260.35 69.85 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Decouple" "D17:1"
 			(at 260.35 69.85 0)
 			(effects
 				(font
@@ -25485,6 +25545,16 @@
 				(hide yes)
 			)
 		)
+		(property "Decouple" "D17:1"
+			(at 273.05 69.85 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "f41f9e53-c288-5182-9379-be0231ce20be")
 		)
@@ -25605,6 +25675,16 @@
 			)
 		)
 		(property "LCSC" "C13585"
+			(at 285.75 69.85 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Decouple" "D17:1"
 			(at 285.75 69.85 0)
 			(effects
 				(font
@@ -25967,6 +26047,16 @@
 			)
 		)
 		(property "LCSC" "C15849"
+			(at 250.19 207.01 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Decouple" "U52:1"
 			(at 250.19 207.01 0)
 			(effects
 				(font

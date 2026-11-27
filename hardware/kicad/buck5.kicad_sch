@@ -22532,6 +22532,16 @@
 				(hide yes)
 			)
 		)
+		(property "Decouple" "U8:2"
+			(at 50.8 67.31 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "627fe241-d2c4-5ae7-bc00-b85c6b2b13b0")
 		)
@@ -22652,6 +22662,16 @@
 			)
 		)
 		(property "LCSC" "C13585"
+			(at 66.04 67.31 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Decouple" "U8:2"
 			(at 66.04 67.31 0)
 			(effects
 				(font
@@ -22790,6 +22810,16 @@
 				(hide yes)
 			)
 		)
+		(property "Decouple" "U8:2"
+			(at 81.28 67.31 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "1a654c11-b983-5773-a774-10da791168f1")
 		)
@@ -22910,6 +22940,16 @@
 			)
 		)
 		(property "LCSC" "C15849"
+			(at 96.52 77.47 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Decouple" "U8:6"
 			(at 96.52 77.47 0)
 			(effects
 				(font
@@ -23086,6 +23126,16 @@
 			)
 		)
 		(property "LCSC" "C307331"
+			(at 165.1 52.07 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Decouple" "U8:7"
 			(at 165.1 52.07 0)
 			(effects
 				(font
@@ -23565,6 +23615,16 @@
 				(hide yes)
 			)
 		)
+		(property "Decouple" "L1:2"
+			(at 201.93 69.85 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "348035df-3a1a-5340-b16d-2e7cbc8c74ec")
 		)
@@ -23694,6 +23754,16 @@
 				(hide yes)
 			)
 		)
+		(property "Decouple" "L1:2"
+			(at 219.71 69.85 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "61070c1f-588a-583f-9ef4-8d7e3ac3c084")
 		)
@@ -23814,6 +23884,16 @@
 			)
 		)
 		(property "LCSC" "C12891"
+			(at 237.49 69.85 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Decouple" "L1:2"
 			(at 237.49 69.85 0)
 			(effects
 				(font

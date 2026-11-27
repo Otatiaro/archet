@@ -23019,6 +23019,16 @@
 				(hide yes)
 			)
 		)
+		(property "Decouple" "U6:1"
+			(at 210.82 69.85 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "65d6c83b-8929-56a1-a1e1-ffa6a48e8f66")
 		)
@@ -23139,6 +23149,16 @@
 			)
 		)
 		(property "LCSC" "C15850"
+			(at 226.06 69.85 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Decouple" "U6:1"
 			(at 226.06 69.85 0)
 			(effects
 				(font

@@ -835,3 +835,49 @@ for k, group in enumerate((("RB_CS2", "RB_CS1", "RB_CS3", "RB_CS0"), ("RB_CS7", 
     pins = {p: n for p, n in zip((1, 2, 4, 5), group)}
     pins.update({3: "GND", 8: "GND"})
     c.part(f"U{47 + k}", *ESD, pins, "ESD of the ribbon lines at the header, flow-through" if k == 0 else "")
+
+# --------------------------------------------------------------------------------------------
+# Decoupling: the pin each supply capacitor serves ("REF:pin", Decouple field), so the router places it there
+# whatever the run. Signal capacitors (ADC reservoirs, debounce, crystal loads, compensation, soft start)
+# are left out: their net has a single chip pin.
+c.decouple({
+    # Source OR-ing: charge pumps at VCAP, cable decoupling at the anode, C8 at the Q1 drain (sim/oring.py)
+    "C1": "U1:1", "C3": "U2:1", "C5": "U3:1", "C135": "U52:1", "C139": "U53:1",
+    "C2": "U1:6", "C4": "U2:6", "C6": "U3:6", "C140": "U53:6", "C8": "Q1:5", "C7": "Q2:5", "C126": "U43:6",
+    # USB-C ports
+    "C13": "U4:24", "C14": "U4:21", "C15": "U4:23", "C16": "U4:22", "C138": "J5:A4",
+    # PoE module output
+    "C17": "U6:1", "C18": "U6:1",
+    # +5V buck: input at VIN, bootstrap, VCC, output at the inductor
+    "C19": "U8:2", "C20": "U8:2", "C21": "U8:2", "C22": "U8:6", "C23": "U8:7",
+    "C24": "L1:2", "C25": "L1:2", "C26": "L1:2",
+    # VIN_BUS boost: input at L5, output at the diode, C121 at the Q10 drain
+    "C117": "U42:2", "C118": "U42:1", "C119": "L5:1", "C120": "L5:1",
+    "C121": "Q10:5", "C122": "D17:1", "C123": "D17:1", "C124": "D17:1",
+    # +3V3 / +3V3_AUX bucks
+    "C27": "U9:4", "C29": "U10:4", "C28": "L2:2", "C30": "L3:2",
+    # MCU: one 100 nF per VDD pin, bulk, VCAP, VDDA / VREF+, VDD33USB
+    "C31": "U11:17", "C32": "U11:30", "C33": "U11:39", "C34": "U11:52", "C35": "U11:62", "C36": "U11:72",
+    "C37": "U11:84", "C38": "U11:108", "C39": "U11:121", "C40": "U11:131", "C41": "U11:144", "C42": "U11:6",
+    "C43": "U11:71", "C44": "U11:106", "C45": "U11:33", "C46": "U11:32", "C47": "U11:95",
+    # FPGA and its 1.2 V LDO
+    "C51": "U14:1", "C52": "U14:5", "C53": "U13:5", "C54": "U13:30", "C55": "U13:29", "C56": "U13:29",
+    "C57": "U13:1", "C58": "U13:22", "C59": "U13:24", "C60": "U13:33",
+    # USB3320C and its 1.8 V LDO
+    "C61": "U16:1", "C62": "U16:5", "C63": "U15:28", "C64": "U15:30", "C65": "U15:20", "C66": "U15:21",
+    "C67": "U15:32",
+    # LAN8742A, magjack centre tap
+    "C72": "U17:6", "C73": "U17:6", "C74": "U17:9", "C75": "U17:19", "C76": "U17:1", "C77": "U17:1",
+    "C78": "J3:5",
+    # Target translators, target supply
+    "C79": "U18:1", "C80": "U18:6", "C81": "U19:1", "C82": "U19:8", "C83": "U20:1", "C84": "U20:8",
+    "C85": "U21:1", "C86": "U21:6", "C87": "U22:5",
+    "C89": "U25:10", "C90": "U25:11", "C91": "U25:1", "C92": "U25:4", "C93": "U25:5", "C94": "U25:4",
+    "C96": "U26:6", "C97": "J7:1",
+    # UI, flash, field bus
+    "C98": "U27:8", "C101": "U28:3", "C102": "U28:5", "C103": "U29:8", "C104": "U30:5",
+    # Shield supply: eFuse inputs, outputs at the connector, INA226s
+    "C106": "U38:3", "C107": "J11:27", "C108": "U39:6", "C110": "U40:3", "C111": "J11:23", "C112": "U41:6",
+    # Local bus switches
+    "C127": "U44:1", "C128": "U44:6", "C129": "U45:9", "C130": "U45:5", "C131": "U46:9", "C132": "U46:5",
+})

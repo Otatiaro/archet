@@ -25206,6 +25206,16 @@
 				(hide yes)
 			)
 		)
+		(property "Decouple" "U11:17"
+			(at 147.32 105.41 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "23e0458f-0fd2-5337-affa-c607fb84f095")
 		)
@@ -25326,6 +25336,16 @@
 			)
 		)
 		(property "LCSC" "C307331"
+			(at 157.48 105.41 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Decouple" "U11:30"
 			(at 157.48 105.41 0)
 			(effects
 				(font
@@ -25464,6 +25484,16 @@
 				(hide yes)
 			)
 		)
+		(property "Decouple" "U11:39"
+			(at 167.64 105.41 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "28ca0c9b-37fa-5145-8d92-2d947459d1f5")
 		)
@@ -25584,6 +25614,16 @@
 			)
 		)
 		(property "LCSC" "C307331"
+			(at 177.8 105.41 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Decouple" "U11:52"
 			(at 177.8 105.41 0)
 			(effects
 				(font
@@ -25722,6 +25762,16 @@
 				(hide yes)
 			)
 		)
+		(property "Decouple" "U11:62"
+			(at 187.96 105.41 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "19d591c5-753f-5fc7-a874-891d827fdd79")
 		)
@@ -25842,6 +25892,16 @@
 			)
 		)
 		(property "LCSC" "C307331"
+			(at 198.12 105.41 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Decouple" "U11:72"
 			(at 198.12 105.41 0)
 			(effects
 				(font
@@ -25980,6 +26040,16 @@
 				(hide yes)
 			)
 		)
+		(property "Decouple" "U11:84"
+			(at 208.28 105.41 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "f1b04c73-9d7a-5da0-a10c-6c35032fcc07")
 		)
@@ -26100,6 +26170,16 @@
 			)
 		)
 		(property "LCSC" "C307331"
+			(at 218.44 105.41 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Decouple" "U11:108"
 			(at 218.44 105.41 0)
 			(effects
 				(font
@@ -26238,6 +26318,16 @@
 				(hide yes)
 			)
 		)
+		(property "Decouple" "U11:121"
+			(at 228.6 105.41 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "da4b9655-729c-5f07-bb9c-79c82f09f416")
 		)
@@ -26358,6 +26448,16 @@
 			)
 		)
 		(property "LCSC" "C307331"
+			(at 238.76 105.41 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Decouple" "U11:131"
 			(at 238.76 105.41 0)
 			(effects
 				(font
@@ -26496,6 +26596,16 @@
 				(hide yes)
 			)
 		)
+		(property "Decouple" "U11:144"
+			(at 248.92 105.41 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "e9eede5a-370e-5f49-94e7-4b9241e9fd93")
 		)
@@ -26625,6 +26735,16 @@
 				(hide yes)
 			)
 		)
+		(property "Decouple" "U11:6"
+			(at 259.08 105.41 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "0005a00a-8597-55a1-ac4a-a9769a73a4ca")
 		)
@@ -26745,6 +26865,16 @@
 			)
 		)
 		(property "LCSC" "C307331"
+			(at 269.24 105.41 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Decouple" "U11:95"
 			(at 269.24 105.41 0)
 			(effects
 				(font
@@ -27034,6 +27164,16 @@
 				(hide yes)
 			)
 		)
+		(property "Decouple" "U11:33"
+			(at 347.98 97.79 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "0e17d737-08b8-5ce0-88ef-8b1ee73af734")
 		)
@@ -27154,6 +27294,16 @@
 			)
 		)
 		(property "LCSC" "C307331"
+			(at 358.14 97.79 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Decouple" "U11:32"
 			(at 358.14 97.79 0)
 			(effects
 				(font
@@ -28227,6 +28377,16 @@
 				(hide yes)
 			)
 		)
+		(property "Decouple" "U11:71"
+			(at 238.76 280.67 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "ccf56965-1f97-5b3e-8e7a-ed68e0780604")
 		)
@@ -28347,6 +28507,16 @@
 			)
 		)
 		(property "LCSC" "C12530"
+			(at 228.6 280.67 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Decouple" "U11:106"
 			(at 228.6 280.67 0)
 			(effects
 				(font

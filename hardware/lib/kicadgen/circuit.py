@@ -48,7 +48,19 @@ class Circuit:
             raise ValueError(f"duplicate reference {ref}")
         self.parts.append(dict(ref=ref, sym=sym, value=value, fp=fp, lcsc=lcsc,
                                pins={str(k): v for k, v in (pins or {}).items()},
-                               block=self._block, group=self._group, also=also, note=note, dnp=dnp, bare=bare))
+                               block=self._block, group=self._group, also=also, note=note, dnp=dnp, bare=bare,
+                               decouple=""))
+
+    def decouple(self, table):
+        """table: {capacitor: "REF:pin"}, the pin each capacitor serves (written as the Decouple field, read
+        by the router for placement). The pin must sit on one of the capacitor's nets."""
+        parts = self.by_ref()
+        for cap, target in table.items():
+            ref, pin = target.split(":")
+            net = parts[ref]["pins"].get(pin)
+            if net is None or net not in parts[cap]["pins"].values():
+                raise ValueError(f"{cap}: {target} is not on {sorted(set(parts[cap]['pins'].values()))}")
+            parts[cap]["decouple"] = target
 
     def _passive(self, kind, value, fp, lcsc):
         if fp is None and self.palette is not None:

@@ -40,12 +40,14 @@ LOC_FP = os.path.join(KICAD, "archet.pretty")
 # --------------------------------------------------------------------------------------------
 # Process and stack-up
 #
-# JLC04161H-7628: 1.6 mm, outer 1 oz (35 µm + plating), inner 0.5 oz, L1-L2 prepreg 7628 0.2104 mm, er 4.4.
+# JLC04161H-3313: 1.6 mm, outer 1 oz (35 µm + plating), inner 0.5 oz, L1-L2 prepreg 3313 0.0994 mm, er 4.1.
+# Chosen over 7628 (0.2104 mm), where 50 Ω takes 0.35 mm: wider than the ULPI, QSPI and RMII pads (0.25-0.30 mm),
+# and the router does not neck down at a pad.
 # Impedance: Hammerstad-Jensen microstrip with thickness correction, edge-coupled approximation
 # Zdiff = 2 Z0 (1 - 0.48 exp(-0.96 s / h)). To confirm with the JLCPCB impedance calculator before ordering.
-#   50 Ω single:        w 0.35 mm
-#   90 Ω differential:  w 0.255 mm, s 0.15 mm (USB 2.0 HS and FS)
-#   100 Ω differential: w 0.20 mm, s 0.15 mm (Ethernet 100BASE-TX, PHY to magjack)
+#   50 Ω single:        w 0.16 mm
+#   90 Ω differential:  w 0.155 mm, s 0.15 mm (USB 2.0 HS and FS)
+#   100 Ω differential: w 0.125 mm, s 0.15 mm (Ethernet 100BASE-TX, PHY to magjack)
 #
 # Current: IPC-2221 external conductor, I = 0.048 ΔT^0.44 A^0.725 (A in mil²), 1 oz, ΔT 20 °C:
 #   1 A 0.20 mm, 3 A 0.90 mm. Inner layers are 0.5 oz: twice the width; power stays on L1/L4 or in zones.
@@ -88,9 +90,9 @@ CLASSES = {
               "RS-485 / CAN field lines, ±70 V fault on the THVD2450 side: B2 0.6 mm"),
     "POE": (0.6, 0.5, 0.8, 0.4, None, None,
             "PoE primary 57 V (93.6 V clamp): B2 0.6 mm; class 4, 0.6 A per pair: 0.5 mm. Barrier in the .kicad_dru"),
-    "USB_90R": (0.15, 0.255, 0.5, 0.3, 0.255, 0.15, "USB 2.0 HS/FS 90 Ω differential"),
-    "ETH_100R": (0.15, 0.2, 0.5, 0.3, 0.2, 0.15, "100BASE-TX 100 Ω differential, PHY to magjack"),
-    "SE_50R": (0.15, 0.35, 0.5, 0.3, None, None,
+    "USB_90R": (0.15, 0.155, 0.5, 0.3, 0.155, 0.15, "USB 2.0 HS/FS 90 Ω differential"),
+    "ETH_100R": (0.15, 0.125, 0.5, 0.3, 0.125, 0.15, "100BASE-TX 100 Ω differential, PHY to magjack"),
+    "SE_50R": (0.15, 0.16, 0.5, 0.3, None, None,
                "50 Ω single-ended: ULPI 60 MHz, QSPI to the FPGA and the NAND, RMII and PHY clocks"),
 }
 

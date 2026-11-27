@@ -22546,6 +22546,16 @@
 				(hide yes)
 			)
 		)
+		(property "Decouple" "U38:3"
+			(at 53.34 69.85 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "00fd12de-a90a-5afd-b2f2-5d1488fa5355")
 		)
@@ -23450,6 +23460,16 @@
 				(hide yes)
 			)
 		)
+		(property "Decouple" "J11:27"
+			(at 167.64 69.85 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "6cd011a5-55e5-5417-9ec2-f5bef9dbf810")
 		)
@@ -23754,6 +23774,16 @@
 			)
 		)
 		(property "LCSC" "C307331"
+			(at 220.98 87.63 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Decouple" "U39:6"
 			(at 220.98 87.63 0)
 			(effects
 				(font
@@ -24203,6 +24233,16 @@
 			)
 		)
 		(property "LCSC" "C15849"
+			(at 53.34 171.45 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Decouple" "U40:3"
 			(at 53.34 171.45 0)
 			(effects
 				(font
@@ -25116,6 +25156,16 @@
 				(hide yes)
 			)
 		)
+		(property "Decouple" "J11:23"
+			(at 167.64 171.45 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "70e286bb-c847-5752-bb42-6beb474fe5b4")
 		)
@@ -25420,6 +25470,16 @@
 			)
 		)
 		(property "LCSC" "C307331"
+			(at 220.98 189.23 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+				(hide yes)
+			)
+		)
+		(property "Decouple" "U41:6"
 			(at 220.98 189.23 0)
 			(effects
 				(font
