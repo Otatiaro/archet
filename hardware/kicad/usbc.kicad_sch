@@ -22924,7 +22924,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Connector_USB:USB_C_Receptacle_HRO_TYPE-C-31-M-12"
+		(property "Footprint" "Archet:USB_C_Receptacle_HRO_TYPE-C-31-M-12"
 			(at 40.64 119.38 0)
 			(effects
 				(font

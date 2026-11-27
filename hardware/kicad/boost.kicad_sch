@@ -22924,7 +22924,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Package_SON:WSON-12-1EP_3x2mm_P0.5mm_EP1x2.65"
+		(property "Footprint" "Archet:WSON-12-1EP_3x2mm_P0.5mm_EP1x2.65"
 			(at 147.32 127 0)
 			(effects
 				(font

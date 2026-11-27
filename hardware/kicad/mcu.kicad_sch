@@ -29279,7 +29279,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Connector_USB:USB_Micro-B_Molex-105133-0001"
+		(property "Footprint" "Archet:USB_Micro-B_Molex-105133-0001"
 			(at 449.58 129.54 0)
 			(effects
 				(font

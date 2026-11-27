@@ -126,7 +126,7 @@ c.C("C126", "100nF", "+3V3", "GND", note="U43")
 # --------------------------------------------------------------------------------------------
 c.block("USB-C sink: STUSB4500 PD controller, VBUS switch, ESD")
 c.part("J2", "Connector:USB_C_Receptacle_USB2.0_16P", "TYPE-C-31-M-12",
-       "Connector_USB:USB_C_Receptacle_HRO_TYPE-C-31-M-12", "C165948",
+       "Archet:USB_C_Receptacle_HRO_TYPE-C-31-M-12", "C165948",
        {"A4": "VBUS_CONN", "A9": "VBUS_CONN", "B4": "VBUS_CONN", "B9": "VBUS_CONN", "A5": "CC1", "B5": "CC2",
         "A6": "USB_C_DP", "B6": "USB_C_DP", "A7": "USB_C_DM", "B7": "USB_C_DM",
         "A1": "GND", "B1": "GND", "A12": "GND", "B12": "GND", "SH": "GND"},
@@ -194,7 +194,7 @@ c.R("R14", "1k", "POE_12V", "GND", fp=R1206,
 # --------------------------------------------------------------------------------------------
 c.block("+5V: VSYS (4.5-24 V) to 5 V 3 A synchronous buck, LMR33630A at 400 kHz")
 c.part("U8", "Regulator_Switching:LMR33630ADDA", "LMR33630ADDAR",
-       "Package_SO:Texas_HSOP-8-1EP_3.9x4.9mm_P1.27mm_ThermalVias", "C841384",
+       "Archet:Texas_HSOP-8-1EP_3.9x4.9mm_P1.27mm_ThermalVias", "C841384",
        {2: "VSYS", 3: "VSYS", 6: "BUCK5_VCC", 7: "BUCK5_BOOT", 8: "BUCK5_SW", 5: "BUCK5_FB", 1: "GND", 9: "GND"},
        "36 V input, 1.5 x the 24 V maximum. EN tied to VIN: the internal VIN UVLO is enough, the rail "
        "powers the MCU and stays on. PG unused: the MCU it would report to sits on this rail")
@@ -215,7 +215,7 @@ c.R("R16", "24.9k", "BUCK5_FB", "GND", note="Feedback bottom: 1.0 V x (1 + 100/2
 c.block("VIN_BUS: LM5155 24.5 V boost from VSYS, or VIN_EXT through a Schottky")
 # Datasheet SNVSB75E; values simulated in hardware/sim/boost.py (loop and cycle by cycle, VSYS 4.5-20 V).
 # VIN_BUS = the higher of the boost (24.5 V) and VIN_EXT - 0.45 V. VIN_EXT present: the boost is held off.
-c.part("U42", "Archet:LM5155", "LM5155DSSR", "Package_SON:WSON-12-1EP_3x2mm_P0.5mm_EP1x2.65", "C545416",
+c.part("U42", "Archet:LM5155", "LM5155DSSR", "Archet:WSON-12-1EP_3x2mm_P0.5mm_EP1x2.65", "C545416",
        {1: "VSYS", 2: "BOOST_VCC", 3: "BOOST_GATE", 4: "GND", 5: "BOOST_CS", 6: "BOOST_COMP", 7: "GND",
         8: "BOOST_FB", 9: "BOOST_SS", 10: "BOOST_RT", 12: "BOOST_UVLO", 13: "GND"},
        "Peak current mode, 425 kHz. BIAS on VSYS (>= 3.5 V). PGOOD unused: VIN_BUS_SENSE reads the output")
@@ -319,7 +319,7 @@ c.R("R21", "22k", "BOOT0", "GND", note="BOOT0 low: boot from flash. With 5 V on 
 # Programming with no probe (architecture.md, "Programming a board with no debug probe"): the ROM
 # bootloader through USB FS DFU (J5) or USART3 (J6, FTDI cable), BOOT0 raised by the cable's 5 V.
 SCHOTTKY = ("Device:D_Schottky", "1N5819WS", "Diode_SMD:D_SOD-323", "C191023")
-c.part("J5", "Connector:USB_B_Micro", "USB FS (ROM DFU)", "Connector_USB:USB_Micro-B_Molex-105133-0001", "C782257",
+c.part("J5", "Connector:USB_B_Micro", "USB FS (ROM DFU)", "Archet:USB_Micro-B_Molex-105133-0001", "C782257",
        {1: "USB_FS_VBUS", 2: "J5_DM", 3: "J5_DP", 5: "GND", "SH": "GND"},
        "Molex 105133-0001, vertical (as on Bornier): placed anywhere on the board. Prototypes; may be left off in production (firmware DFU over USB HS). ID unused")
 c.part("U12", "Power_Protection:USBLC6-2SC6", "USBLC6-2SC6", "Package_TO_SOT_SMD:SOT-23-6", "C7519",
@@ -373,7 +373,7 @@ def fpga_pins():
     return pins                                      # 40, 41 (RGB1, RGB2): LED_LINK, LED_SPARE (current sinks)
 
 
-c.part("U13", FPGA_SYM, "iCE40UP5K-SG48I", "Package_DFN_QFN:QFN-48-1EP_7x7mm_P0.5mm_EP5.6x5.6mm", "C2678152",
+c.part("U13", FPGA_SYM, "iCE40UP5K-SG48I", "Archet:QFN-48-1EP_7x7mm_P0.5mm_EP5.3x5.3mm", "C2678152",
        fpga_pins(), "SWD/JTAG/SWO engine, configured by the MCU as SPI slave (SPI_SS low at CRESET_B release). "
        "Signal pins: hardware/fpga-pins.csv. RGB1/RGB2 drive LEDs (current sinks). Exposed pad = only GND")
 c.part("U14", "Regulator_Linear:ME6211C12M5", "ME6211C12M5G-N", "Package_TO_SOT_SMD:SOT-23-5", "C236672",
@@ -440,7 +440,7 @@ c.block("Ethernet: LAN8742A RMII PHY, 25 MHz crystal, line termination, RJ45 LED
 # (REGOFF low), single 3.3 V supply (figure 3-23). Straps by the internal pulls: MODE = 111 (all capable,
 # auto-negotiation), PHYAD = 0.
 c.part("U17", "Interface_Ethernet:LAN8742A", "LAN8742A-CZ-TR",
-       "Package_DFN_QFN:VQFN-24-1EP_4x4mm_P0.5mm_EP2.5x2.5mm_ThermalVias", "C621424",
+       "Archet:VQFN-24-1EP_4x4mm_P0.5mm_EP2.5x2.5mm_ThermalVias", "C621424",
        {1: "+3V3", 2: "ETH_LED2", 3: "ETH_LED1", 4: "ETH_XTAL2", 5: "ETH_XTAL1", 6: "ETH_VDDCR",
         7: "RMII_RXD1", 8: "RMII_RXD0", 9: "+3V3", 11: "RMII_CRS_DV", 12: "RMII_MDIO", 13: "RMII_MDC",
         14: "RMII_REF_CLK", 15: "ETH_PHY_RST", 16: "RMII_TX_EN", 17: "RMII_TXD0", 18: "RMII_TXD1", 19: "+3V3",

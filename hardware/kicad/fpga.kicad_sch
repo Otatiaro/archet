@@ -22924,7 +22924,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Package_DFN_QFN:QFN-48-1EP_7x7mm_P0.5mm_EP5.6x5.6mm"
+		(property "Footprint" "Archet:QFN-48-1EP_7x7mm_P0.5mm_EP5.3x5.3mm"
 			(at 101.6 154.94 0)
 			(effects
 				(font
@@ -23835,7 +23835,7 @@
 				(hide yes)
 			)
 		)
-		(property "Footprint" "Package_DFN_QFN:QFN-48-1EP_7x7mm_P0.5mm_EP5.6x5.6mm"
+		(property "Footprint" "Archet:QFN-48-1EP_7x7mm_P0.5mm_EP5.3x5.3mm"
 			(at 304.8 147.32 0)
 			(effects
 				(font
@@ -24437,7 +24437,7 @@
 				(hide yes)
 			)
 		)
-		(property "Footprint" "Package_DFN_QFN:QFN-48-1EP_7x7mm_P0.5mm_EP5.6x5.6mm"
+		(property "Footprint" "Archet:QFN-48-1EP_7x7mm_P0.5mm_EP5.3x5.3mm"
 			(at 304.8 223.52 0)
 			(effects
 				(font
@@ -25403,7 +25403,7 @@
 				(hide yes)
 			)
 		)
-		(property "Footprint" "Package_DFN_QFN:QFN-48-1EP_7x7mm_P0.5mm_EP5.6x5.6mm"
+		(property "Footprint" "Archet:QFN-48-1EP_7x7mm_P0.5mm_EP5.3x5.3mm"
 			(at 215.9 78.74 0)
 			(effects
 				(font
