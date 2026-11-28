@@ -28,5 +28,7 @@ Frame: the board frame of `hardware/gen/board.py` (x from the host edge, y down)
 ## Open points
 
 - The check covers the parts listed in `geom.py`; the rest of the board is not placed yet. After placement, check every part against the lid ceilings (7.4 mm under the target lid) and keep the tab and column footprints at H5 and H6 free.
-- Test prints: light pipe press fit (2.92 mm hole), plunger guide play, USB-C and RJ45 openings, insert holes.
+- Test prints: light pipe press fit (2.92 mm hole), plunger guide play (3.8 mm plunger in a 4.1 mm hole, 9 mm guide), USB-C and RJ45 openings, insert holes.
+
+Plungers, light pipes and buzzer holes sit on the footprint origins exported by `geom.py`, not on the fab outline centres: the TS-1187A fab outline is 1 mm off its actuator, and an off-axis plunger would tilt in its guide.
 - Insert lengths to match the stock.

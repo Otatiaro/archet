@@ -47,7 +47,7 @@ TAB = 2.0;                           // target lid tabs clamped under the host l
 // Light pipes: Bivar PLP2-625, 2.92 mm press-fit hole (panel 1.2-2.4).
 PIPE_HOLE = 2.92;
 // Plungers over the TS-1187A buttons (top 1.5 mm over the board).
-PL_D = 3.8; PL_HOLE = 4.2; PL_GUIDE = 6.0; PL_GUIDE_OD = 7.0; PL_PROUD = 1.0;
+PL_D = 3.8; PL_HOLE = 4.1; PL_GUIDE = 9.0; PL_GUIDE_OD = 7.0; PL_PROUD = 1.0;
 PL_FLANGE = 6.6; PL_FLANGE_H = 1.2;
 
 ENGRAVE = 0.6; FONT = "Arial Black:style=Regular"; FONT_NARROW = "Arial:style=Bold";
@@ -57,6 +57,8 @@ function part(ref) = PARTS[search([ref], PARTS)[0]];
 function hole(ref) = HOLES[search([ref], HOLES)[0]];
 function cx(p) = (p[1] + p[3]) / 2;
 function cy(p) = (p[2] + p[4]) / 2;
+function ox(p) = p[7];                     // footprint origin: actuator, light pipe and buzzer axes
+function oy(p) = p[8];
 
 // Box in board coordinates: x0..x1, y0..y1 (y down), z0..z1.
 module bbox(x0, y0, x1, y1, z0, z1) { translate([x0, -y1, z0]) cube([x1 - x0, y1 - y0, z1 - z0]); }
@@ -168,7 +170,7 @@ module host() {
             for (r = ["H1", "H4"]) at(r) translate([0, 0, TOP]) cylinder(d = COL_D, h = ZH_IN - TOP);
             for (r = ["H5", "H6"]) at(r) translate([0, 0, TOP + TAB]) cylinder(d = COL_D, h = ZH_IN - TOP - TAB);
             // plunger guides
-            for (b = BUTTONS) { p = part(b[0]); translate([cx(p), -cy(p), ZH_IN - PL_GUIDE])
+            for (b = BUTTONS) { p = part(b[0]); translate([ox(p), -oy(p), ZH_IN - PL_GUIDE])
                 cylinder(d = PL_GUIDE_OD, h = PL_GUIDE); }
         }
         bbox(NOTCH[0], NOTCH[2], NOTCH[1], Y1_OUT + 1, ZS, ZH_OUT + 1);                         // J12 well
@@ -185,16 +187,16 @@ module host() {
             hull() for (z = [TOP + 3, TOP + 9]) translate([x, -Y0_OUT + 1, z]) rotate([90, 0, 0]) cylinder(d = 2, h = 4);
         }
         // light pipes, plungers, buzzer
-        for (l = LEDS) { p = part(l[0]); translate([cx(p), -cy(p), ZH_IN - 1]) cylinder(d = PIPE_HOLE, h = 5); }
-        for (b = BUTTONS) { p = part(b[0]); translate([cx(p), -cy(p), ZH_IN - PL_GUIDE - 1])
+        for (l = LEDS) { p = part(l[0]); translate([ox(p), -oy(p), ZH_IN - 1]) cylinder(d = PIPE_HOLE, h = 5); }
+        for (b = BUTTONS) { p = part(b[0]); translate([ox(p), -oy(p), ZH_IN - PL_GUIDE - 1])
             cylinder(d = PL_HOLE, h = PL_GUIDE + 5); }
         bz = part("BZ1");
-        for (a = [0 : 60 : 300]) translate([cx(bz) + 2.6 * cos(a), -cy(bz) + 2.6 * sin(a), ZH_IN - 1]) cylinder(d = 1.5, h = 5);
-        translate([cx(bz), -cy(bz), ZH_IN - 1]) cylinder(d = 1.5, h = 5);
+        for (a = [0 : 60 : 300]) translate([ox(bz) + 2.6 * cos(a), -oy(bz) + 2.6 * sin(a), ZH_IN - 1]) cylinder(d = 1.5, h = 5);
+        translate([ox(bz), -oy(bz), ZH_IN - 1]) cylinder(d = 1.5, h = 5);
         // markings
         // LED pitch 8 mm: narrower font for these
-        for (l = LEDS) { p = part(l[0]); engrave_top(cx(p), cy(p) + l[2] * 3.8, ZH_OUT, l[1], 2.1, FONT_NARROW); }
-        for (b = BUTTONS) { p = part(b[0]); engrave_top(cx(p) + b[2] * (b[2] > 0 ? 10 : 9.5), cy(p), ZH_OUT, b[1], 3.2); }
+        for (l = LEDS) { p = part(l[0]); engrave_top(ox(p), oy(p) + l[2] * 3.8, ZH_OUT, l[1], 2.1, FONT_NARROW); }
+        for (b = BUTTONS) { p = part(b[0]); engrave_top(ox(p) + b[2] * (b[2] > 0 ? 10 : 9.5), oy(p), ZH_OUT, b[1], 3.2); }
         engrave_top(30, 6, ZH_OUT, "ARCHET", 6);
     }
 }
@@ -250,7 +252,7 @@ else if (PART == "assembly") {
     color("dimgray") bottom();
     color("steelblue", 0.85) host();
     color("darkorange", 0.85) target();
-    for (b = BUTTONS) { p = part(b[0]); color("white") translate([cx(p), -cy(p), SW_TOP + 0.1]) plunger(); }
+    for (b = BUTTONS) { p = part(b[0]); color("white") translate([ox(p), -oy(p), SW_TOP + 0.1]) plunger(); }
 }
 else if (PART == "check") {
     // Interference between each shell and the part bodies (boxes from the 3D models, body part only).
