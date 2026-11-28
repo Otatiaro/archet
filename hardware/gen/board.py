@@ -78,12 +78,14 @@ HOST = [("J3", 270, HOST_FACE, "body"), ("J1", 270, HOST_FACE, "body"),
 # it walls nothing in. Courtyard top level with J3's, POE_GAP (above the 2 mm barrier) from J3's courtyard.
 POE = ("U6", 90)
 POE_GAP = 2.5
-# Target edge (x = W), from the top: field bus terminal, then the two vertical probe headers, grouped at the middle
+# Target edge (x = W), from the top: bus termination slide switch (housing front 0.35 mm in, so its front shell
+# tabs keep 0.3 mm to the edge; knob 1.1 mm out through the wall), field bus terminal, then the two vertical
+# probe headers, grouped at the middle
 # with TARGET_GAP between courtyards. Their long axes run along the edge, so the ribbon (it leaves the socket
 # across the long axis) folds outward. Odd row on the outside, pin 1 toward the bottom: STDC14 J7 as CN1 of the
 # STLINK-V3SET (UM2448 fig. 8, rotated 180 degrees: CN1 sits at the left edge of MB1441, odd row outside, pin 1
 # up), so the STLINK cables lie the same way; the ESP-Prog header J8 likewise.
-TARGET = [("J9", 90, 0.0, "body"), ("J7", 90, 0.5, "court"), ("J8", 180, 0.5, "court")]
+TARGET = [("SW4", 90, -1.1, "body"), ("J9", 90, 0.0, "body"), ("J7", 90, 0.5, "court"), ("J8", 180, 0.5, "court")]
 TARGET_GAP = 4.0
 # Local bus J12 on the bottom long edge from the host corner keep: it takes a ribbon to the Bornier.
 J12 = ("J12", 90, 1.0, "body")
@@ -91,6 +93,12 @@ J12 = ("J12", 90, 1.0, "body")
 # target corner keep. Same rotation and pin-1 column, rows a whole number of 2.54 mm steps apart: a perfboard
 # shield takes both.
 PITCH = 2.54
+# User interface, on top at the host end, outside the shield (it stops beyond x ~ 50): the lid takes a
+# light pipe per LED and an actuator per button. Courtyard centres in the board frame, clear of J1/J2/J5
+# (x < 9.4), of J12 (y > 89.5) and of the DP5700 keep-out band (y < 58). LEDs on a 5 mm row, production ones first:
+# PASS, FAIL, STATUS, LINK, spare, local bus fault. GO and STOP 14 mm apart, the buzzer beside them.
+UI = [("D11", 16, 64), ("D12", 21, 64), ("D10", 26, 64), ("D13", 31, 64), ("D14", 36, 64), ("D19", 41, 64),
+      ("SW2", 18, 78), ("SW3", 32, 78), ("BZ1", 44, 78)]
 SHIELD = ("J10", "J11")
 SHIELD_ROT = 90
 SHIELD_INSET = 0.5
@@ -294,6 +302,12 @@ def fixed(fps):
     j3, cy = courtyard(fps["J3"]), courtyard(fp)
     shift(fp, j3[2] + POE_GAP - cy[0], j3[1] - cy[1])
     fp.SetLocked(True)
+    for ref, x, y in UI:
+        fp = fps[ref]
+        fp.SetOrientationDegrees(0)
+        cy = courtyard(fp)
+        shift(fp, x - (cy[0] + cy[2]) / 2, y - (cy[1] + cy[3]) / 2)
+        fp.SetLocked(True)
     # J12 alone, from the host corner keep.
     fp = fps[J12[0]]
     fp.SetOrientationDegrees(J12[1])
@@ -466,7 +480,7 @@ def main():
     print(f"{len(fps)} footprints, {sum(1 for f in fps.values() if f.IsLocked())} locked; "
           f"{unrouted} unrouted connections (DRC lists at most 499)")
     print("violations:", viol or 0, " parity:", parity or 0)
-    for ref in [p[0] for p in HOST + TARGET] + [POE[0], J12[0], *SHIELD]:
+    for ref in [p[0] for p in HOST + TARGET] + [POE[0], J12[0], *SHIELD] + [u[0] for u in UI]:
         b, cy = body(fps[ref]), courtyard(fps[ref])
         x1, y1 = pin1(fps[ref])
         print(f"  {ref:4s} body x {b[0]:6.2f}..{b[2]:6.2f}  y {b[1]:6.2f}..{b[3]:6.2f}   "
