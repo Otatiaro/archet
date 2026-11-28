@@ -4,7 +4,7 @@
 
 Builds ../kicad/archet.kicad_pcb from a fresh netlist of the schematic (docs/architecture.md, Board):
 - 4 layers, JLC04161H-3313 stack-up, 1.6 mm;
-- outline 150 x 100 mm, rounded corners, M3 standoff holes on the corner radius centres (shared with the shield);
+- outline 150 x 100 mm, rounded corners, M3 standoff holes on the corner radius centres (shared with the shield) and two enclosure joint holes;
 - host connectors on the left short edge, faces on the enclosure wall plane (USB-C overhang per the HRO drawing);
   the PoE module behind the magjack, inward; target connectors grouped at the middle of the right short edge,
   cable entries outward; the local bus on the bottom long edge at the host end (it takes a ribbon); the shield
@@ -51,6 +51,10 @@ CORNER_R = 4.0
 HOLE = 4.0              # standoff centres, 4.0 from both edges (corner radius centres)
 HOLE_FP = "MountingHole:MountingHole_3.2mm_M3"   # NPTH 3.2, courtyard Ø 6.95: M3 hex standoff 5.5 AF (6.35 AC)
 CORNER_KEEP = 8.0       # edge parts start this far from a corner: standoff courtyard (7.48) + margin
+# Enclosure joint screws (hardware/enclosure): where the host and target lids meet, 4 mm before the host lid's end
+# wall (x = 62, past J12 so the local bus plug stays under the host lid). Top: on the line of the corner holes;
+# bottom: pulled in behind J12 (courtyard from y 89.53), clear of SW3 (courtyard to x 47.78).
+JOINT = ((58.0, HOLE), (58.0, 86.0))
 
 # Stack-up JLC04161H-3313 (JLCPCB impedance page): outer 1 oz, inner 0.5 oz, prepreg 3313 0.0994 mm (er 4.1),
 # core 1.265 mm. To confirm with the JLCPCB impedance calculator before ordering (netclasses.py, same values).
@@ -238,10 +242,11 @@ def outline(board):
 
 
 def holes(board):
-    for i, (x, y) in enumerate(((HOLE, HOLE), (W - HOLE, HOLE), (W - HOLE, H - HOLE), (HOLE, H - HOLE)), 1):
+    corners = ((HOLE, HOLE), (W - HOLE, HOLE), (W - HOLE, H - HOLE), (HOLE, H - HOLE))
+    for i, (x, y) in enumerate(corners + JOINT, 1):
         fp = load_fp(HOLE_FP)
         fp.SetReference(f"H{i}")
-        fp.SetValue("M3 standoff 11 mm")
+        fp.SetValue("M3 shield and enclosure" if i in (2, 3) else "M3 enclosure")
         fp.Reference().SetVisible(False)
         fp.SetBoardOnly(True)
         fp.SetExcludedFromBOM(True)
