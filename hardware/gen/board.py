@@ -83,26 +83,31 @@ HOST = [("J3", 270, HOST_FACE, "body"), ("J1", 270, HOST_FACE, "body"),
 POE = ("U6", 90)
 POE_GAP = 2.5
 # Target edge (x = W), from the top: bus termination slide switch (housing front 0.35 mm in, so its front shell
-# tabs keep 0.3 mm to the edge; knob 1.1 mm out through the wall), field bus terminal, then the two vertical
-# probe headers, grouped at the middle
-# with TARGET_GAP between courtyards. Their long axes run along the edge, so the ribbon (it leaves the socket
-# across the long axis) folds outward. Odd row on the outside, pin 1 toward the bottom: STDC14 J7 as CN1 of the
-# STLINK-V3SET (UM2448 fig. 8, rotated 180 degrees: CN1 sits at the left edge of MB1441, odd row outside, pin 1
-# up), so the STLINK cables lie the same way; the ESP-Prog header J8 likewise.
-TARGET = [("SW4", 90, -1.1, "body"), ("J9", 90, 0.0, "body"), ("J7", 90, 0.5, "court"), ("J8", 180, 0.5, "court")]
+# tabs keep 0.3 mm to the edge; knob 1.1 mm out through the wall), field bus terminal, then the vertical probe
+# header, centred with TARGET_GAP between courtyards. Its long axis runs along the edge, so the ribbon (it leaves
+# the socket across the long axis) folds outward. Odd row on the outside, pin 1 toward the bottom: STDC14 J7 as
+# CN1 of the STLINK-V3SET (UM2448 fig. 8, rotated 180 degrees: CN1 sits at the left edge of MB1441, odd row
+# outside, pin 1 up), so the STLINK cables lie the same way.
+TARGET = [("SW4", 90, -1.1, "body"), ("J9", 90, 0.0, "body"), ("J7", 90, 0.5, "court")]
 TARGET_GAP = 4.0
 # Local bus J12 on the bottom long edge from the host corner keep: it takes a ribbon to the Bornier.
 J12 = ("J12", 90, 1.0, "body")
+# ESP-Prog header J8 on the top long edge, under the host lid against the joint: its plug (about 9 mm) stands
+# taller than the target lid allows under the shield. Long axis along the edge, odd row outside (rotation 270),
+# courtyard ending J8_END before the joint hole, clear of the target lid tab (x > 53). The lid gives it a well
+# open outward, as for J12.
+J8 = ("J8", 270, 0.5, "court")
+J8_END = 5.5
 # Shield headers on both long edges at the target end, courtyards SHIELD_INSET from the edge and ending at the
 # target corner keep. Same rotation and pin-1 column, rows a whole number of 2.54 mm steps apart: a perfboard
 # shield takes both.
 PITCH = 2.54
 # User interface, on top at the host end, outside the shield (it stops beyond x ~ 50): the lid takes a
 # light pipe per LED and an actuator per button. Courtyard centres in the board frame, clear of J1/J2/J5
-# (x < 9.4), of J12 (y > 89.5) and of the DP5700 keep-out band (y < 58). LEDs in 2 x 3 on an 8 mm pitch, centred
-# on the buzzer: production row PASS, FAIL, STATUS, then LINK, spare, local bus fault. GO and STOP 28 mm apart,
-# the buzzer between them.
-UI = [("D11", 22, 62), ("D12", 30, 62), ("D10", 38, 62), ("D13", 22, 70), ("D14", 30, 70), ("D19", 38, 70),
+# (x < 9.4), of J12 (y > 89.5) and of the DP5700 keep-out band (y < 58). LEDs in 2 x 3 on a 10 mm pitch (room for
+# 2.8 mm engraved labels), centred on the buzzer: production row PASS, FAIL, STATUS, then LINK, spare, local bus
+# fault. GO and STOP 28 mm apart, the buzzer between them.
+UI = [("D11", 20, 62), ("D12", 30, 62), ("D10", 40, 62), ("D13", 20, 70), ("D14", 30, 70), ("D19", 40, 70),
       ("SW2", 16, 83), ("BZ1", 30, 82), ("SW3", 44, 83)]  # TS-1187A courtyard sits 1 mm off its body
 SHIELD = ("J10", "J11")
 SHIELD_ROT = 90
@@ -256,6 +261,27 @@ def holes(board):
         board.Add(fp)
 
 
+def enclosure(board):
+    """Enclosure shells as 3D models (hardware/enclosure/build.py writes them) on a board-only footprint at the
+    board origin: visible in the 3D viewer, absent from the BOM, the placement file and the parity check."""
+    fp = pcbnew.FOOTPRINT(board)
+    fp.SetReference("ENC1")
+    fp.SetValue("Enclosure")
+    fp.Reference().SetVisible(False)
+    fp.Value().SetVisible(False)
+    fp.SetBoardOnly(True)
+    fp.SetExcludedFromBOM(True)
+    fp.SetExcludedFromPosFiles(True)
+    for part, opacity in (("bottom", 0.6), ("host", 0.45), ("target", 0.45), ("plungers", 1.0)):
+        m = pcbnew.FP_3DMODEL()
+        m.m_Filename = f"${{KIPRJMOD}}/../enclosure/out/kicad/{part}.wrz"
+        m.m_Opacity = opacity
+        fp.Add3DModel(m)
+    fp.SetPosition(pt(0, 0))
+    fp.SetLocked(True)
+    board.Add(fp)
+
+
 def edge_row(fps, parts, edge, lo, hi, gap=None):
     """Lays parts along an edge between lo and hi (along-edge coordinates). Without `gap`, equal gaps between
     courtyards and the range ends; with it, that gap between courtyards and the group centred in the range.
@@ -319,6 +345,12 @@ def fixed(fps):
     fp.SetOrientationDegrees(J12[1])
     cy = courtyard(fp)
     edge_row(fps, [J12], "bottom", CORNER_KEEP, CORNER_KEEP + cy[2] - cy[0])
+    # J8 alone, ending before the top joint hole.
+    fp = fps[J8[0]]
+    fp.SetOrientationDegrees(J8[1])
+    cy = courtyard(fp)
+    end = JOINT[0][0] - J8_END
+    edge_row(fps, [J8], "top", end - (cy[2] - cy[0]), end)
     # Shield headers: J10 against the top edge, J11 on the lowest grid row that keeps its courtyard on the board.
     top, bot = (fps[r] for r in SHIELD)
     for fp in (top, bot):
@@ -471,6 +503,7 @@ def main():
     fps = build_footprints(board, comps, pads)
     outline(board)
     holes(board)
+    enclosure(board)
     fixed(fps)
     park(board, fps)
     gnd_plane(board)
@@ -486,7 +519,7 @@ def main():
     print(f"{len(fps)} footprints, {sum(1 for f in fps.values() if f.IsLocked())} locked; "
           f"{unrouted} unrouted connections (DRC lists at most 499)")
     print("violations:", viol or 0, " parity:", parity or 0)
-    for ref in [p[0] for p in HOST + TARGET] + [POE[0], J12[0], *SHIELD] + [u[0] for u in UI]:
+    for ref in [p[0] for p in HOST + TARGET] + [POE[0], J12[0], J8[0], *SHIELD] + [u[0] for u in UI]:
         b, cy = body(fps[ref]), courtyard(fps[ref])
         x1, y1 = pin1(fps[ref])
         print(f"  {ref:4s} body x {b[0]:6.2f}..{b[2]:6.2f}  y {b[1]:6.2f}..{b[3]:6.2f}   "
