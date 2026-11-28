@@ -187,7 +187,7 @@ def any_of(side, names, op="==", join="||"):
     return "(" + f" {join} ".join(f"{side}.NetName {op} '{n}'" for n in names) + ")"
 
 
-def write_dru(by_base, narrow):
+def write_dru(by_base, narrow, tight):
     prim = [full for n in POE for full in by_base[n]]
     # KiCad binds || tighter than &&: each pair goes in parentheses
     own = " || ".join(f"(A.memberOfFootprint('{r}') && B.memberOfFootprint('{r}'))" for r in BARRIER_PARTS)
@@ -209,6 +209,15 @@ def write_dru(by_base, narrow):
         f'  (condition "{own}"))',
         "",
     ]
+    if tight:
+        both = " || ".join(f"(A.memberOfFootprint('{r}') && B.memberOfFootprint('{r}'))" for r in tight)
+        lines += [
+            "# Land patterns with pads of different nets closer than their class (MOSFET gate beside source/drain).",
+            '(rule "Tight parts, own pads"',
+            f"  (constraint clearance (min {RULES['min_clearance']}mm))",
+            f'  (condition "{both}"))',
+            "",
+        ]
     for cls, nets in ASSIGN.items():
         pads = [pw for n, _, _, pw in narrow if n in nets]
         if not pads:
@@ -252,6 +261,40 @@ def narrow_pads():
     return sorted(set(out))
 
 
+def tight_parts():
+    """Parts whose own land pattern puts pads of different nets closer than their class clearance (power MOSFET
+    gate beside source or drain): the manufacturer's geometry, pad to pad only."""
+    clr = {n: CLASSES[cls][0] for cls, nets in ASSIGN.items() for n in nets}
+    default = CLASSES["Default"][0]
+    cache, out = {}, []
+    for p in c.c.parts:
+        if p["ref"] in BARRIER_PARTS:
+            continue
+        if p["fp"] not in cache:
+            lib, name = p["fp"].split(":", 1)
+            path = LOC_FP if lib == "Archet" else os.path.join(SYS_FP, lib + ".pretty")
+            cache[p["fp"]] = pcbnew.FootprintLoad(path, name)
+        fp = cache[p["fp"]]
+        if fp is None:
+            continue
+        pins = {str(k): n for k, n in p["pins"].items()}
+        pads = [(pins.get(pad.GetNumber()), pad.GetBoundingBox()) for pad in fp.Pads()]
+        pads = [(n, b) for n, b in pads if n]
+        for i, (na, a) in enumerate(pads):
+            for nb, b in pads[i + 1:]:
+                if na == nb:
+                    continue
+                gap = max(b.GetLeft() - a.GetRight(), a.GetLeft() - b.GetRight(),
+                          b.GetTop() - a.GetBottom(), a.GetTop() - b.GetBottom()) / 1e6
+                if gap + 1e-6 < max(clr.get(na, default), clr.get(nb, default)):
+                    out.append(p["ref"])
+                    break
+            else:
+                continue
+            break
+    return sorted(set(out), key=lambda r: (re.sub(r"\d+", "", r), int(re.sub(r"\D", "", r) or 0)))
+
+
 def main():
     by_base = kicad_names()
     missing = [n for nets in ASSIGN.values() for n in nets if n not in by_base]
@@ -260,7 +303,9 @@ def main():
         sys.exit(f"unknown nets {missing}, nets in two classes {twice}")
     count = write_pro(by_base)
     narrow = narrow_pads()
-    write_dru(by_base, narrow)
+    tight = tight_parts()
+    write_dru(by_base, narrow, tight)
+    print(f"own pads closer than their class: {', '.join(tight) or 'none'}")
     print(f"{len(CLASSES)} classes, {count} nets assigned, rules written")
     for cls, (clr, w, vd, vdr, dpw, dpg, why) in CLASSES.items():
         print(f"  {cls:9s} clr {clr:<5} w {w:<5} via {vd}/{vdr}  {why}")

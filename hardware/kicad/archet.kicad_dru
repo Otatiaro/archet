@@ -14,6 +14,11 @@
   (constraint clearance (min 0.1mm))
   (condition "(A.memberOfFootprint('J3') && B.memberOfFootprint('J3')) || (A.memberOfFootprint('U6') && B.memberOfFootprint('U6'))"))
 
+# Land patterns with pads of different nets closer than their class (MOSFET gate beside source/drain).
+(rule "Tight parts, own pads"
+  (constraint clearance (min 0.1mm))
+  (condition "(A.memberOfFootprint('D16') && B.memberOfFootprint('D16')) || (A.memberOfFootprint('Q1') && B.memberOfFootprint('Q1')) || (A.memberOfFootprint('Q2') && B.memberOfFootprint('Q2')) || (A.memberOfFootprint('Q3') && B.memberOfFootprint('Q3')) || (A.memberOfFootprint('Q8') && B.memberOfFootprint('Q8')) || (A.memberOfFootprint('Q10') && B.memberOfFootprint('Q10')) || (A.memberOfFootprint('Q12') && B.memberOfFootprint('Q12')) || (A.memberOfFootprint('U4') && B.memberOfFootprint('U4')) || (A.memberOfFootprint('U15') && B.memberOfFootprint('U15')) || (A.memberOfFootprint('U17') && B.memberOfFootprint('U17'))"))
+
 # PWR_3A: 110 pads down to 0.24 mm wide; the track necks down to enter them.
 (rule "PWR_3A neck-down"
   (constraint track_width (min 0.20mm) (opt 0.9mm))

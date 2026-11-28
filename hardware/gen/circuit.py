@@ -489,7 +489,7 @@ c.block("Ethernet: LAN8742A RMII PHY, 25 MHz crystal, line termination, RJ45 LED
 # (REGOFF low), single 3.3 V supply (figure 3-23). Straps by the internal pulls: MODE = 111 (all capable,
 # auto-negotiation), PHYAD = 0.
 c.part("U17", "Interface_Ethernet:LAN8742A", "LAN8742A-CZ-TR",
-       "Archet:VQFN-24-1EP_4x4mm_P0.5mm_EP2.5x2.5mm_ThermalVias", "C621424",
+       "Archet:VQFN-24-1EP_4x4mm_P0.5mm_EP2.5x2.5mm", "C621424",
        {1: "+3V3", 2: "ETH_LED2", 3: "ETH_LED1", 4: "ETH_XTAL2", 5: "ETH_XTAL1", 6: "ETH_VDDCR",
         7: "RMII_RXD1", 8: "RMII_RXD0", 9: "+3V3", 11: "RMII_CRS_DV", 12: "RMII_MDIO", 13: "RMII_MDC",
         14: "RMII_REF_CLK", 15: "ETH_PHY_RST", 16: "RMII_TX_EN", 17: "RMII_TXD0", 18: "RMII_TXD1", 19: "+3V3",

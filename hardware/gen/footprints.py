@@ -234,9 +234,10 @@ def sg48():
 
 def vqfn24():
     """LAN8742A-CZ, Microchip DS00001989 package drawing: 4.00 BSC, e 0.50, exposed pad D2 = E2 = 2.40 / 2.50 /
-    2.60, recommended centre pad 2.60, contacts 0.30 x 0.85: the KiCad EP2.5 footprint is that land. Its model
+    2.60, recommended centre pad 2.60, contacts 0.30 x 0.85: the KiCad EP2.5 footprint is that land. The variant
+    without thermal vias: the library's are 0.2 mm, under the 0.3 mm board minimum; vias go in at layout. Its model
     file is missing; the HVQFN-24 4 x 4 model has the same body and leads."""
-    return _from_kicad("Package_DFN_QFN", "VQFN-24-1EP_4x4mm_P0.5mm_EP2.5x2.5mm_ThermalVias",
+    return _from_kicad("Package_DFN_QFN", "VQFN-24-1EP_4x4mm_P0.5mm_EP2.5x2.5mm",
                        "${KICAD10_3DMODEL_DIR}/Package_DFN_QFN.3dshapes/HVQFN-24-1EP_4x4mm_P0.5mm_EP2.1x2.1mm.step")
 
 
@@ -394,8 +395,11 @@ def _dp_keepout():
     Drawing frame (pin 1 at the origin, y up): from i = 10.87 (minimum) left of the body, along y = d - a .. d
     (7.62) to x = e (8.64); down x = b .. e (5.64 .. 8.64) to the body edge (f = 2.11 below the pin row); along it to
     x = e + g (20.88) + a; up to y = h (4.32); out at y = h - a .. h to i past the right edge of the body. Rule area
-    on all copper layers; to be extended to the board edge on the layout if the board is wider."""
-    a, b, d, e, f, g, h, i = 3.00, 5.64, 7.62, 8.64, 2.11, 12.24, 4.32, 10.87
+    on all copper layers; to be extended to the board edge on the layout if the board is wider.
+    Taken literally, h - a = 1.32 puts the right-hand band 0.54 mm into pads 2 and 3 (A / 2 = 1.855 above their
+    centres), which the drawing shows clear of it: the band keeps its width a and starts 0.2 mm above those pads."""
+    a, b, d, e, f, g, i = 3.00, 5.64, 7.62, 8.64, 2.11, 12.24, 10.87
+    h = max(4.32, 3.71 / 2 + 0.2 + a)
     left, right = -(31.75 - 29.01) / 2 - i, 29.01 + (31.75 - 29.01) / 2 + i
     xg = e + g
     pts = [(left, d), (e, d), (e, -f + a), (xg, -f + a), (xg, h), (right, h), (right, h - a), (xg + a, h - a),

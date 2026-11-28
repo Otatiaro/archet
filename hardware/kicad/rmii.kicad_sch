@@ -22356,7 +22356,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Archet:VQFN-24-1EP_4x4mm_P0.5mm_EP2.5x2.5mm_ThermalVias"
+		(property "Footprint" "Archet:VQFN-24-1EP_4x4mm_P0.5mm_EP2.5x2.5mm"
 			(at 152.4 116.84 0)
 			(effects
 				(font
