@@ -95,10 +95,11 @@ J12 = ("J12", 90, 1.0, "body")
 PITCH = 2.54
 # User interface, on top at the host end, outside the shield (it stops beyond x ~ 50): the lid takes a
 # light pipe per LED and an actuator per button. Courtyard centres in the board frame, clear of J1/J2/J5
-# (x < 9.4), of J12 (y > 89.5) and of the DP5700 keep-out band (y < 58). LEDs on a 5 mm row, production ones first:
-# PASS, FAIL, STATUS, LINK, spare, local bus fault. GO and STOP 14 mm apart, the buzzer beside them.
-UI = [("D11", 16, 64), ("D12", 21, 64), ("D10", 26, 64), ("D13", 31, 64), ("D14", 36, 64), ("D19", 41, 64),
-      ("SW2", 18, 78), ("SW3", 32, 78), ("BZ1", 44, 78)]
+# (x < 9.4), of J12 (y > 89.5) and of the DP5700 keep-out band (y < 58). LEDs in 2 x 3 on an 8 mm pitch, centred
+# on the buzzer: production row PASS, FAIL, STATUS, then LINK, spare, local bus fault. GO and STOP 28 mm apart,
+# the buzzer between them.
+UI = [("D11", 22, 62), ("D12", 30, 62), ("D10", 38, 62), ("D13", 22, 70), ("D14", 30, 70), ("D19", 38, 70),
+      ("SW2", 16, 83), ("BZ1", 30, 82), ("SW3", 44, 83)]  # TS-1187A courtyard sits 1 mm off its body
 SHIELD = ("J10", "J11")
 SHIELD_ROT = 90
 SHIELD_INSET = 0.5
