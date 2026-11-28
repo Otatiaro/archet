@@ -5,9 +5,10 @@
 Builds ../kicad/archet.kicad_pcb from a fresh netlist of the schematic (docs/architecture.md, Board):
 - 4 layers, JLC04161H-3313 stack-up, 1.6 mm;
 - outline 150 x 100 mm, rounded corners, M3 standoff holes on the corner radius centres (shared with the shield);
-- host connectors on the left short edge, target connectors on the right one, the local bus on the bottom long
-  edge near the target corner, mating faces flush with the edge; the shield headers J10/J11 inside, on a common
-  2.54 mm grid so that a perfboard shield fits;
+- host connectors on the left short edge, faces on the enclosure wall plane (USB-C overhang per the HRO drawing);
+  the PoE module behind the magjack, inward; target connectors grouped at the middle of the right short edge,
+  cable entries outward; the local bus on the bottom long edge at the host end (it takes a ribbon); the shield
+  headers J10/J11 on both long edges at the target end, on a common 2.54 mm grid so that a perfboard shield fits;
 - a GND plane on In1.Cu over the whole board.
 These parts are locked. Every other part is parked below the board, grouped by schematic sheet, for the placer.
 
@@ -59,27 +60,40 @@ STACKUP = [("F.Cu", "copper", 0.035, None, None), ("dielectric 1", "prepreg", 0.
            ("B.Cu", "copper", 0.035, None, None)]
 
 # --------------------------------------------------------------------------------------------
-# Edge parts, in order along the edge. Rotation turns the mating face (footprint +y for the connectors) outward.
+# Edge parts, in order along the edge: (ref, rotation, inset, reference box). Rotation turns the mating face
+# (footprint +y for the connectors) outward. Inset: distance from the edge inward to the reference box, "body"
+# (F.Fab: the mating face) or "court" (courtyard: vertical headers, whose cable comes from above and whose pads
+# reach past the body). A negative inset puts the face beyond the edge.
 #
-# Third field: inset of the mating face (the body, F.Fab) from the edge; a negative value is the inset of the
-# courtyard instead, for the vertical headers whose cable comes from above (pads and shroud reach past the body).
-#
-# Host edge (x = 0), from the top corner. The DP5700 stands across the edge, not along it: its land pattern
-# (datasheet p. 7) carries a 3 mm copper keep-out between primary and secondary that runs 10.87 mm past both ends
-# of the module. Along the edge, that band would wall in either the 12 V output (primary inward) or the primary
-# pins (primary toward the edge, with J3's PoE pins inward). Across the edge, the band runs into the board and
-# separates the corner (secondary, 12 V out) from the side of J3 (primary): rotation 180 puts pins 4-6 (VIN+,
-# TYP2-DET, VIN-) toward J3, whose pins 7-10 (PoE pairs) sit at its end next to the module (rotation 270).
-HOST = [("U6", 180, 0.5), ("J3", 270, 0.0), ("J1", 270, 0.0), ("J2", 270, 0.0), ("J5", 270, 0.0)]
-# Target edge (x = W), from the top corner: field bus terminal, then the two vertical probe headers.
-TARGET = [("J9", 90, 0.0), ("J7", 90, -0.5), ("J8", 0, -0.5)]
-# Local bus J12 on the bottom long edge, ending at the target corner keep; pins along x.
-J12 = ("J12", 90, 1.0)
-# Shield headers, under the shield: along the two long edges, pin 1 on the same 2.54 mm grid column, so a
-# perfboard shield takes both (pins 31 x 2.54 = 78.74 mm apart). Pin 1 positions in the board frame; column 16
-# clears the PD module's courtyard by 2 mm.
+# Host edge (x = 0), from the top corner. All faces on one plane, the enclosure wall: the USB-C receptacle's
+# drawing (HRO TYPE-C-31-M-12, C165948) puts the PCB edge 5.79 mm behind the front shell-oval centre line, i.e.
+# at y = +2.66 in the footprint, whose shell front is at +3.70: the shell overhangs the edge by 1.04 mm. The
+# ARJM11 drawing (p. 10) gives no edge or panel position: the magjack and the terminal block take the same plane.
+HOST_FACE = -(3.70 - 2.66)
+HOST = [("J3", 270, HOST_FACE, "body"), ("J1", 270, HOST_FACE, "body"),
+        ("J2", 270, HOST_FACE, "body"), ("J5", 270, HOST_FACE, "body")]
+# PoE module behind the magjack, inward, rotation 90: the primary row (pins 4-6, VIN+, TYP2-DET, VIN-) faces J3,
+# the secondary row (12 V out, GND) faces the board. Its 3 mm primary/secondary keep-out (datasheet p. 7, 10.87 mm
+# past both ends of the module) then runs along y, from y ~ 5 to y ~ 58, between J3 and the rest:
+# it walls nothing in. Courtyard top level with J3's, POE_GAP (above the 2 mm barrier) from J3's courtyard.
+POE = ("U6", 90)
+POE_GAP = 2.5
+# Target edge (x = W), from the top: field bus terminal, then the two vertical probe headers, grouped at the middle
+# with TARGET_GAP between courtyards. Their long axes run along the edge, so the ribbon (it leaves the socket
+# across the long axis) folds outward. Odd row on the outside, pin 1 toward the bottom: STDC14 J7 as CN1 of the
+# STLINK-V3SET (UM2448 fig. 8, rotated 180 degrees: CN1 sits at the left edge of MB1441, odd row outside, pin 1
+# up), so the STLINK cables lie the same way; the ESP-Prog header J8 likewise.
+TARGET = [("J9", 90, 0.0, "body"), ("J7", 90, 0.5, "court"), ("J8", 180, 0.5, "court")]
+TARGET_GAP = 4.0
+# Local bus J12 on the bottom long edge from the host corner keep: it takes a ribbon to the Bornier.
+J12 = ("J12", 90, 1.0, "body")
+# Shield headers on both long edges at the target end, courtyards SHIELD_INSET from the edge and ending at the
+# target corner keep. Same rotation and pin-1 column, rows a whole number of 2.54 mm steps apart: a perfboard
+# shield takes both.
 PITCH = 2.54
-SHIELD = [("J10", 90, 16 * PITCH, 4 * PITCH), ("J11", 90, 16 * PITCH, 35 * PITCH)]
+SHIELD = ("J10", "J11")
+SHIELD_ROT = 90
+SHIELD_INSET = 0.5
 
 PARK_GAP = 2.5          # between parked parts: above the 2 mm PoE barrier
 PARK_Y = H + 15.0       # first row of parked parts, below the board
@@ -228,50 +242,77 @@ def holes(board):
         board.Add(fp)
 
 
-def edge_row(fps, parts, edge, lo, hi):
-    """Lays parts along an edge between lo and hi (along-edge coordinates), equal gaps between courtyards.
-    edge: 'left' (x = 0), 'right' (x = W), 'bottom' (y = H). The body face sits `inset` inside the edge."""
+def edge_row(fps, parts, edge, lo, hi, gap=None):
+    """Lays parts along an edge between lo and hi (along-edge coordinates). Without `gap`, equal gaps between
+    courtyards and the range ends; with it, that gap between courtyards and the group centred in the range.
+    edge: 'left' (x = 0), 'right' (x = W), 'top' (y = 0), 'bottom' (y = H)."""
     vertical = edge in ("left", "right")
     sizes = []
-    for ref, rot, _ in parts:
+    for ref, rot, _, _ in parts:
         fp = fps[ref]
         fp.SetOrientationDegrees(rot)
         b = courtyard(fp)
         sizes.append(b[3] - b[1] if vertical else b[2] - b[0])
-    gap = (hi - lo - sum(sizes)) / (len(parts) + 1)
-    if gap < (0.5 if len(parts) > 1 else -0.01):
+    if gap is None:
+        gap = (hi - lo - sum(sizes)) / (len(parts) + 1)
+        pos = lo + gap
+    else:
+        pos = (lo + hi - sum(sizes) - gap * (len(parts) - 1)) / 2
+    if gap < (0.5 if len(parts) > 1 else -0.01) or pos < lo - 0.01:
         sys.exit(f"{edge} edge: {sum(sizes):.1f} mm of parts in {hi - lo:.1f} mm")
-    pos = lo + gap
-    for (ref, _, inset), size in zip(parts, sizes):
+    for (ref, _, inset, ref_box), size in zip(parts, sizes):
         fp = fps[ref]
-        b, cy = body(fp), courtyard(fp)
-        if inset < 0:
-            b, inset = cy, -inset
+        cy = courtyard(fp)
+        b = cy if ref_box == "court" else body(fp)
         if edge == "left":
             shift(fp, inset - b[0], pos - cy[1])
         elif edge == "right":
             shift(fp, W - inset - b[2], pos - cy[1])
+        elif edge == "top":
+            shift(fp, pos - cy[0], inset - b[1])
         else:
             shift(fp, pos - cy[0], H - inset - b[3])
         fp.SetLocked(True)
         pos += size + gap
 
 
+def pin1(fp):
+    p = next((p for p in fp.Pads() if p.GetNumber() in ("1", "A1")), None)
+    if p is None:
+        return float("nan"), float("nan")
+    p = p.GetPosition()
+    return pcbnew.ToMM(p.x) - X0, pcbnew.ToMM(p.y) - Y0
+
+
 def fixed(fps):
     edge_row(fps, HOST, "left", CORNER_KEEP, H - CORNER_KEEP)
-    edge_row(fps, TARGET, "right", CORNER_KEEP, H - CORNER_KEEP)
-    # J12 alone: its courtyard ends at the target corner keep.
-    ref, rot, inset = J12
+    edge_row(fps, TARGET, "right", CORNER_KEEP, H - CORNER_KEEP, gap=TARGET_GAP)
+    # PoE module behind J3.
+    ref, rot = POE
     fp = fps[ref]
     fp.SetOrientationDegrees(rot)
+    j3, cy = courtyard(fps["J3"]), courtyard(fp)
+    shift(fp, j3[2] + POE_GAP - cy[0], j3[1] - cy[1])
+    fp.SetLocked(True)
+    # J12 alone, from the host corner keep.
+    fp = fps[J12[0]]
+    fp.SetOrientationDegrees(J12[1])
     cy = courtyard(fp)
-    edge_row(fps, [J12], "bottom", W - CORNER_KEEP - (cy[2] - cy[0]), W - CORNER_KEEP)
-    for ref, rot, x, y in SHIELD:
-        fp = fps[ref]
-        fp.SetOrientationDegrees(rot)
-        p1 = next(p for p in fp.Pads() if p.GetNumber() == "1").GetPosition()
-        shift(fp, x - (pcbnew.ToMM(p1.x) - X0), y - (pcbnew.ToMM(p1.y) - Y0))
-        fp.SetLocked(True)
+    edge_row(fps, [J12], "bottom", CORNER_KEEP, CORNER_KEEP + cy[2] - cy[0])
+    # Shield headers: J10 against the top edge, J11 on the lowest grid row that keeps its courtyard on the board.
+    top, bot = (fps[r] for r in SHIELD)
+    for fp in (top, bot):
+        fp.SetOrientationDegrees(SHIELD_ROT)
+    cy = courtyard(top)
+    edge_row(fps, [(SHIELD[0], SHIELD_ROT, SHIELD_INSET, "court")], "top", W - CORNER_KEEP - (cy[2] - cy[0]),
+             W - CORNER_KEEP)
+    x1, y1 = pin1(top)
+    bx, by = pin1(bot)
+    shift(bot, x1 - bx, y1 - by)
+    cy = courtyard(bot)
+    steps = int((H - SHIELD_INSET - cy[3]) / PITCH + 1e-6)
+    shift(bot, 0, steps * PITCH)
+    bot.SetLocked(True)
 
 
 def park(board, fps):
@@ -425,9 +466,11 @@ def main():
     print(f"{len(fps)} footprints, {sum(1 for f in fps.values() if f.IsLocked())} locked; "
           f"{unrouted} unrouted connections (DRC lists at most 499)")
     print("violations:", viol or 0, " parity:", parity or 0)
-    for ref, *_ in HOST + TARGET + [J12]:
-        b = body(fps[ref])
-        print(f"  {ref:4s} body x {b[0]:6.1f}..{b[2]:6.1f}  y {b[1]:6.1f}..{b[3]:6.1f}")
+    for ref in [p[0] for p in HOST + TARGET] + [POE[0], J12[0], *SHIELD]:
+        b, cy = body(fps[ref]), courtyard(fps[ref])
+        x1, y1 = pin1(fps[ref])
+        print(f"  {ref:4s} body x {b[0]:6.2f}..{b[2]:6.2f}  y {b[1]:6.2f}..{b[3]:6.2f}   "
+              f"courtyard x {cy[0]:6.2f}..{cy[2]:6.2f}  y {cy[1]:6.2f}..{cy[3]:6.2f}   pin 1 ({x1:.2f}, {y1:.2f})")
     w, wo = prove_barrier()
     print(f"barrier rule: {w} clearance errors on J3/U6 own pads with it, {wo} without it")
     if wo == 0:
